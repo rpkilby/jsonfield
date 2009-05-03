@@ -1,0 +1,16 @@
+django-jsonfield is a reusable django field that you can use inside your models.
+It makes storage of JSON easy and convenient by handling all of the
+serialization needed silently.
+
+
+To use simply import and the field to one of your models.
+
+from django.db import models
+from jsonfield.fields import JSONField
+
+class MyModel(models.Model):
+	json_field = JSONField()
+
+===
+
+That's it!
