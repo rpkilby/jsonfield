@@ -41,6 +41,7 @@ class JSONField(models.TextField):
 
         return super(JSONField, self).get_db_prep_save(value)
 
+
 class PickledObject(str):
 	"""A subclass of string so it can be told whether a string is
 	   a pickled object or not (if the object is an instance of this class
