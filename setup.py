@@ -1,5 +1,4 @@
 from distutils.core import setup
-setup(name='nosj',
-      version='0.1',
-      packages=['nosj']
-      )
+setup(name='jsonfield',
+      version='0.2',
+      packages=['jsonfield'])
