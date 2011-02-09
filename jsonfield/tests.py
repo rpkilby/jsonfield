@@ -56,3 +56,14 @@ class JSONFieldTest(TestCase):
         new_obj = JsonModel.objects.get(id=obj.id)
 
         self.failUnlessEqual(new_obj.json, json_obj_1)
+
+    def test_json_list(self):
+        """Test storing a JSON list"""
+
+        json_obj = ["my", "list", "of", 1, "objs", {"hello": "there"}]
+
+        obj = JsonModel.objects.create(json=json_obj)
+
+        new_obj = JsonModel.objects.get(id=obj.id)
+
+        self.failUnlessEqual(new_obj.json, json_obj)

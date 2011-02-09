@@ -36,7 +36,7 @@ class JSONField(models.TextField):
         if not value or value == "":
             return None
 
-        if isinstance(value, dict):
+        if isinstance(value, (dict, list)):
             value = json.dumps(value, cls=DjangoJSONEncoder)
 
         return super(JSONField, self).get_db_prep_save(value)
