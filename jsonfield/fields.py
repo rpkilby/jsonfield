@@ -80,4 +80,3 @@ class PickledObjectField(models.Field):
 			return super(PickledObjectField, self).get_db_prep_lookup(lookup_type, value)
 		else:
 			raise TypeError('Lookup type %s is not supported.' % lookup_type)
-
