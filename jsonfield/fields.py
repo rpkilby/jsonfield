@@ -30,7 +30,7 @@ class JSONField(models.TextField):
 
         return value
 
-    def get_db_prep_save(self, value):
+    def get_db_prep_save(self, value, connection):
         """Convert our JSON object to a string before we save"""
 
         if not value or value == "":
@@ -39,7 +39,7 @@ class JSONField(models.TextField):
         if isinstance(value, (dict, list)):
             value = json.dumps(value, cls=DjangoJSONEncoder)
 
-        return super(JSONField, self).get_db_prep_save(value)
+        return super(JSONField, self).get_db_prep_save(value, connection)
 
 
 class PickledObject(str):
@@ -63,7 +63,7 @@ class PickledObjectField(models.Field):
 				# If an error was raised, just return the plain value
 				return value
 	
-	def get_db_prep_save(self, value):
+	def get_db_prep_save(self, value, connection):
 		if value is not None and not isinstance(value, PickledObject):
 			value = PickledObject(pickle.dumps(value))
 		return value
@@ -71,12 +71,14 @@ class PickledObjectField(models.Field):
 	def get_internal_type(self): 
 		return 'TextField'
 	
-	def get_db_prep_lookup(self, lookup_type, value):
+	def get_db_prep_lookup(self, lookup_type, value, connection, prepared=False):
 		if lookup_type == 'exact':
-			value = self.get_db_prep_save(value)
-			return super(PickledObjectField, self).get_db_prep_lookup(lookup_type, value)
+			value = self.get_db_prep_save(value, None)
+			return super(PickledObjectField, self).get_db_prep_lookup(lookup_type, value, connection,
+                            prepared)
 		elif lookup_type == 'in':
-			value = [self.get_db_prep_save(v) for v in value]
-			return super(PickledObjectField, self).get_db_prep_lookup(lookup_type, value)
+			value = [self.get_db_prep_save(v, None) for v in value]
+			return super(PickledObjectField, self).get_db_prep_lookup(lookup_type, value, connection,
+                            prepared)
 		else:
 			raise TypeError('Lookup type %s is not supported.' % lookup_type)
