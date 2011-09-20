@@ -23,7 +23,7 @@ class JSONField(models.TextField):
 
         return value
 
-    def get_db_prep_save(self, value, connection):
+    def get_db_prep_save(self, value):
         """Convert our JSON object to a string before we save"""
 
         if not value or value == "":
@@ -32,7 +32,7 @@ class JSONField(models.TextField):
         if isinstance(value, (dict, list)):
             value = json.dumps(value, cls=DjangoJSONEncoder)
 
-        return super(JSONField, self).get_db_prep_save(value, connection)
+        return super(JSONField, self).get_db_prep_save(value)
 
 try:
     from south.modelsinspector import add_introspection_rules
