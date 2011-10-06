@@ -2,6 +2,7 @@ from django.db import models
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils import simplejson as json
 
+
 class JSONField(models.TextField):
     """JSONField is a generic textfield that neatly serializes/unserializes
     JSON objects seamlessly"""
@@ -26,7 +27,7 @@ class JSONField(models.TextField):
     def get_db_prep_save(self, value, connection=None):
         """Convert our JSON object to a string before we save"""
 
-        if not value or value == "":
+        if not value:
             return None
 
         if isinstance(value, (dict, list)):
