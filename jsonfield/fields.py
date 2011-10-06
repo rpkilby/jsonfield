@@ -10,6 +10,12 @@ class JSONField(models.TextField):
     # Used so to_python() is called
     __metaclass__ = models.SubfieldBase
 
+    def __init__(self, *args, **kwargs):
+        self.dump_kwargs = kwargs.pop('dump_kwargs', {'cls': DjangoJSONEncoder})
+        self.load_kwargs = kwargs.pop('load_kwargs', {})
+
+        super(JSONField, self).__init__(*args, **kwargs)
+
     def to_python(self, value):
         """Convert our string value to JSON after we load it from the DB"""
 
@@ -18,7 +24,8 @@ class JSONField(models.TextField):
 
         try:
             if isinstance(value, basestring):
-                return json.loads(value)
+                return json.loads(value, **self.load_kwargs)
+
         except ValueError:
             pass
 
@@ -30,8 +37,8 @@ class JSONField(models.TextField):
         if not value:
             return None
 
-        if isinstance(value, (dict, list)):
-            value = json.dumps(value, cls=DjangoJSONEncoder)
+        if not isinstance(value, basestring):
+            value = json.dumps(value, **self.dump_kwargs)
 
         return super(JSONField, self).get_db_prep_save(value, connection=connection)
 
