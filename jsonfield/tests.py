@@ -90,6 +90,15 @@ class JSONFieldTest(TestCase):
         new_obj = JsonModel.objects.get(id=obj.id)
         self.failUnlessEqual(new_obj.json, json_obj)
 
+    def test_empty_objects(self):
+        """Test storing empty objects"""
+
+        for json_obj in [{}, [], 0, '', False]:
+            obj = JsonModel.objects.create(json=json_obj)
+            new_obj = JsonModel.objects.get(id=obj.id)
+            self.failUnlessEqual(json_obj, obj.json)
+            self.failUnlessEqual(json_obj, new_obj.json)
+
     def test_custom_encoder(self):
         """Test encoder_cls and object_hook"""
         value = 1 + 3j  # A complex number

@@ -19,23 +19,16 @@ class JSONField(models.TextField):
     def to_python(self, value):
         """Convert our string value to JSON after we load it from the DB"""
 
-        if value == "":
-            return None
-
-        try:
-            if isinstance(value, basestring):
+        if isinstance(value, basestring):
+            try:
                 return json.loads(value, **self.load_kwargs)
-
-        except ValueError:
-            pass
+            except ValueError:
+                pass
 
         return value
 
     def get_db_prep_save(self, value, connection=None):
         """Convert our JSON object to a string before we save"""
-
-        if not value:
-            return None
 
         if not isinstance(value, basestring):
             value = json.dumps(value, **self.dump_kwargs)
