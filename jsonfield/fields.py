@@ -4,8 +4,7 @@ from django.utils import simplejson as json
 
 
 class JSONField(models.TextField):
-    """JSONField is a generic textfield that neatly serializes/unserializes
-    JSON objects seamlessly"""
+    """JSONField is a generic textfield that serializes/unserializes JSON objects"""
 
     # Used so to_python() is called
     __metaclass__ = models.SubfieldBase
@@ -17,7 +16,7 @@ class JSONField(models.TextField):
         super(JSONField, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
-        """Convert our string value to JSON after we load it from the DB"""
+        """Convert string value to JSON"""
 
         if isinstance(value, basestring):
             try:
@@ -27,13 +26,17 @@ class JSONField(models.TextField):
 
         return value
 
-    def get_db_prep_save(self, value, connection=None):
-        """Convert our JSON object to a string before we save"""
+    def get_db_prep_value(self, value):
+        """Convert JSON object to a string"""
 
-        if not isinstance(value, basestring):
-            value = json.dumps(value, **self.dump_kwargs)
+        if isinstance(value, basestring):
+            return value
 
-        return super(JSONField, self).get_db_prep_save(value, connection=connection)
+        return json.dumps(value, **self.dump_kwargs)
+
+    def value_to_string(self, obj):
+        value = self._get_val_from_obj(obj)
+        return self.get_db_prep_value(value)
 
 try:
     from south.modelsinspector import add_introspection_rules
