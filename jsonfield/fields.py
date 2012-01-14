@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.serializers.json import DjangoJSONEncoder
-from django.core.exceptions import ValidationError
 from django.utils import simplejson as json
 from django.utils.translation import ugettext_lazy as _
 
@@ -35,7 +34,7 @@ class JSONField(models.TextField):
             try:
                 return json.loads(value, **self.load_kwargs)
             except ValueError:
-                raise exceptions.ValidationError(_("Enter valid JSON"))
+                pass
         return value
 
     def get_db_prep_value(self, value, connection, prepared=False):
