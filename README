@@ -11,8 +11,3 @@ from jsonfield.fields import JSONField
 
 class MyModel(models.Model):
 	json_field = JSONField()
-
-===
-TODO
-- Bug when saving in admin, turns JSON field to unicode
-
