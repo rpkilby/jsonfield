@@ -1,4 +1,6 @@
 from distutils.core import setup
-setup(name='django-jsonfield',
-      version='0.6',
-      packages=['jsonfield'])
+setup(name='jsonfield',
+      version='0.7',
+      packages=['jsonfield'],
+      license='MIT',
+      long_description="A reusable Django field that allows you to store validated JSON in your model.")
