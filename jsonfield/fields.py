@@ -55,15 +55,16 @@ class JSONField(models.TextField):
     def value_from_object(self, obj):
         return json.dumps(super(JSONField, self).value_from_object(obj))
 
-    def formfield(self, form_class=JSONFormField, **kwargs):
-        defaults = {"help_text": "Enter valid JSON"}
+    def formfield(self, **kwargs):
 
-        if getattr(self, "blank", False):
-            defaults["required"] = False
+        kwargs["form_class"] = JSONFormField
 
-        defaults.update(kwargs)
+        field = super(JSONField, self).formfield(**kwargs)
 
-        return form_class(**defaults)
+        if not field.help_text:
+            field.help_text = "Enter valid JSON"
+
+        return field
 
 try:
     from south.modelsinspector import add_introspection_rules
