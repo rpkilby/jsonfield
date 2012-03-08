@@ -57,7 +57,8 @@ class JSONField(models.TextField):
 
     def formfield(self, **kwargs):
 
-        kwargs["form_class"] = JSONFormField
+        if "form_class" not in kwargs:
+            kwargs["form_class"] = JSONFormField
 
         field = super(JSONField, self).formfield(**kwargs)
 
