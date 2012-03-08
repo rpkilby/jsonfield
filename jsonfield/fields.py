@@ -8,6 +8,10 @@ from django.forms.util import ValidationError as FormValidationError
 
 class JSONFormField(Field):
     def clean(self, value):
+
+        if not value and not self.required:
+            return None
+
         value = super(JSONFormField, self).clean(value)
 
         try:
@@ -50,10 +54,15 @@ class JSONField(models.TextField):
 
     def value_from_object(self, obj):
         return json.dumps(super(JSONField, self).value_from_object(obj))
-        
+
     def formfield(self, form_class=JSONFormField, **kwargs):
         defaults = {"help_text": "Enter valid JSON"}
+
+        if getattr(self, "blank", False):
+            defaults["required"] = False
+
         defaults.update(kwargs)
+
         return form_class(**defaults)
 
 try:
