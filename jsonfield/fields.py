@@ -70,5 +70,5 @@ class JSONField(models.TextField):
 try:
     from south.modelsinspector import add_introspection_rules
     add_introspection_rules([], ["^jsonfield\.fields\.JSONField"])
-except:
+except ImportError:
     pass
