@@ -14,10 +14,11 @@ class JSONFormField(Field):
 
         value = super(JSONFormField, self).clean(value)
 
-        try:
-            json.loads(value)
-        except ValueError:
-            raise FormValidationError(_("Enter valid JSON"))
+        if isinstance(value, basestring):
+            try:
+                json.loads(value)
+            except ValueError:
+                raise FormValidationError(_("Enter valid JSON"))
         return value
 
 class JSONField(models.TextField):
