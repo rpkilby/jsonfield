@@ -1,1 +1,1 @@
-from fields import JSONField
+from fields import JSONField, JSONCharField
