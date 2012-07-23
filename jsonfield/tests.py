@@ -2,12 +2,15 @@ from django.db import models
 from django.test import TestCase
 from django.utils import simplejson as json
 
-from fields import JSONField
+from fields import JSONField, JSONCharField
 
 
 class JsonModel(models.Model):
     json = JSONField()
 
+
+class JsonCharModel(models.Model):
+    json = JSONCharField(max_length=100)
 
 class ComplexEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -37,6 +40,8 @@ class JSONModelCustomEncoders(models.Model):
 
 class JSONFieldTest(TestCase):
     """JSONField Wrapper Tests"""
+    
+    json_model = JsonModel
 
     def test_json_field_create(self):
         """Test saving a JSON object in our JSONField"""
@@ -45,8 +50,8 @@ class JSONFieldTest(TestCase):
             "item_1": "this is a json blah",
             "blergh": "hey, hey, hey"}
 
-        obj = JsonModel.objects.create(json=json_obj)
-        new_obj = JsonModel.objects.get(id=obj.id)
+        obj = self.json_model.objects.create(json=json_obj)
+        new_obj = self.json_model.objects.get(id=obj.id)
 
         self.failUnlessEqual(new_obj.json, json_obj)
 
@@ -56,7 +61,7 @@ class JSONFieldTest(TestCase):
         json_obj_1 = {'a': 1, 'b': 2}
         json_obj_2 = {'a': 3, 'b': 4}
 
-        obj = JsonModel.objects.create(json=json_obj_1)
+        obj = self.json_model.objects.create(json=json_obj_1)
 
         self.failUnlessEqual(obj.json, json_obj_1)
 
@@ -75,9 +80,9 @@ class JSONFieldTest(TestCase):
 
         json_obj_1 = {'a': 1, 'b': 2}
 
-        obj = JsonModel.objects.create(json=json_obj_1)
+        obj = self.json_model.objects.create(json=json_obj_1)
 
-        new_obj = JsonModel.objects.get(id=obj.id)
+        new_obj = self.json_model.objects.get(id=obj.id)
 
         self.failUnlessEqual(new_obj.json, json_obj_1)
 
@@ -86,16 +91,16 @@ class JSONFieldTest(TestCase):
 
         json_obj = ["my", "list", "of", 1, "objs", {"hello": "there"}]
 
-        obj = JsonModel.objects.create(json=json_obj)
-        new_obj = JsonModel.objects.get(id=obj.id)
+        obj = self.json_model.objects.create(json=json_obj)
+        new_obj = self.json_model.objects.get(id=obj.id)
         self.failUnlessEqual(new_obj.json, json_obj)
 
     def test_empty_objects(self):
         """Test storing empty objects"""
 
         for json_obj in [{}, [], 0, '', False]:
-            obj = JsonModel.objects.create(json=json_obj)
-            new_obj = JsonModel.objects.get(id=obj.id)
+            obj = self.json_model.objects.create(json=json_obj)
+            new_obj = self.json_model.objects.get(id=obj.id)
             self.failUnlessEqual(json_obj, obj.json)
             self.failUnlessEqual(json_obj, new_obj.json)
 
@@ -106,3 +111,6 @@ class JSONFieldTest(TestCase):
         obj = JSONModelCustomEncoders.objects.create(json=value)
         new_obj = JSONModelCustomEncoders.objects.get(pk=obj.pk)
         self.failUnlessEqual(value, new_obj.json)
+
+class JSONCharFieldTest(JSONFieldTest):
+    json_model = JsonCharModel
