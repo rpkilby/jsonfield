@@ -21,8 +21,7 @@ class JSONFormField(Field):
                 raise FormValidationError(_("Enter valid JSON"))
         return value
 
-class JSONField(models.TextField):
-    """JSONField is a generic textfield that serializes/unserializes JSON objects"""
+class JSONFieldBase(object):
 
     # Used so to_python() is called
     __metaclass__ = models.SubfieldBase
@@ -31,7 +30,7 @@ class JSONField(models.TextField):
         self.dump_kwargs = kwargs.pop('dump_kwargs', {'cls': DjangoJSONEncoder})
         self.load_kwargs = kwargs.pop('load_kwargs', {})
 
-        super(JSONField, self).__init__(*args, **kwargs)
+        super(JSONFieldBase, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
         """Convert string value to JSON"""
@@ -68,8 +67,16 @@ class JSONField(models.TextField):
 
         return field
 
+class JSONField(JSONFieldBase, models.TextField):
+    """JSONField is a generic textfield that serializes/unserializes JSON objects"""
+
+class JSONCharField(JSONFieldBase, models.CharField):
+    """JSONCharField is a generic textfield that serializes/unserializes JSON objects,
+    stored in the database like a CharField, which enables it to be used
+    e.g. in unique keys"""
+
 try:
     from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^jsonfield\.fields\.JSONField"])
+    add_introspection_rules([], ["^jsonfield\.fields\.(JSONField|JSONCharField)"])
 except ImportError:
     pass
