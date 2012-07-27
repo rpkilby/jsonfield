@@ -4,3 +4,4 @@ dist/
 MANIFEST
 .project
 .pydevproject
+.DS_Store
