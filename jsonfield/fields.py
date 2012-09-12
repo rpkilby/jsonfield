@@ -23,7 +23,7 @@ class JSONFormField(Field):
         return value
 
 
-class JSONFieldBase(object):
+class JSONFieldBase(models.Field):
 
     # Used so to_python() is called
     __metaclass__ = models.SubfieldBase
