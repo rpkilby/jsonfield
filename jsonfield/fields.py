@@ -48,6 +48,8 @@ class JSONFieldBase(models.Field):
 
         if isinstance(value, basestring):
             return value
+        if self.null and value is None:
+            return None
         return json.dumps(value, **self.dump_kwargs)
 
     def value_to_string(self, obj):
@@ -55,7 +57,10 @@ class JSONFieldBase(models.Field):
         return self.get_prep_value(value)
 
     def value_from_object(self, obj):
-        return json.dumps(super(JSONFieldBase, self).value_from_object(obj))
+        value = super(JSONFieldBase, self).value_from_object(obj)
+        if self.null and value is None:
+            return None
+        return json.dumps(value)
 
     def formfield(self, **kwargs):
 
