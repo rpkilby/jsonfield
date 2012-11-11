@@ -5,3 +5,4 @@ MANIFEST
 .project
 .pydevproject
 .DS_Store
+.idea/*
