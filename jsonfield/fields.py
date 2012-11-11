@@ -73,7 +73,7 @@ class JSONFieldBase(models.Field):
 class JSONField(JSONFieldBase, models.TextField):
     """JSONField is a generic textfield that serializes/unserializes JSON objects"""
     def value_from_object(self, obj):
-        value = super(JSONFieldBase, self).value_from_object(obj)
+        value = super(JSONField, self).value_from_object(obj)
         return json.dumps(value, indent=2)
 
 class JSONCharField(JSONFieldBase, models.CharField):
