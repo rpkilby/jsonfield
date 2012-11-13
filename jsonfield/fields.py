@@ -48,6 +48,8 @@ class JSONFieldBase(models.Field):
 
         if isinstance(value, basestring):
             return value
+        if self.null and value is None:
+            return None
         return json.dumps(value, **self.dump_kwargs)
 
     def value_to_string(self, obj):
@@ -55,7 +57,13 @@ class JSONFieldBase(models.Field):
         return self.get_prep_value(value)
 
     def value_from_object(self, obj):
-        return json.dumps(super(JSONFieldBase, self).value_from_object(obj))
+        value = super(JSONFieldBase, self).value_from_object(obj)
+        if self.null and value is None:
+            return None
+        return self.dumps_for_display(value)
+
+    def dumps_for_display(self, value):
+        return json.dumps(value)
 
     def formfield(self, **kwargs):
 
@@ -72,6 +80,8 @@ class JSONFieldBase(models.Field):
 
 class JSONField(JSONFieldBase, models.TextField):
     """JSONField is a generic textfield that serializes/unserializes JSON objects"""
+    def dumps_for_display(self, value):
+        return json.dumps(value, indent=2)
 
 
 class JSONCharField(JSONFieldBase, models.CharField):
