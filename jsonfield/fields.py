@@ -29,7 +29,10 @@ class JSONFieldBase(models.Field):
     __metaclass__ = models.SubfieldBase
 
     def __init__(self, *args, **kwargs):
-        self.dump_kwargs = kwargs.pop('dump_kwargs', {'cls': DjangoJSONEncoder})
+        self.dump_kwargs = kwargs.pop('dump_kwargs', {
+            'cls': DjangoJSONEncoder,
+            'separators': (',', ':')
+        })
         self.load_kwargs = kwargs.pop('load_kwargs', {})
 
         super(JSONFieldBase, self).__init__(*args, **kwargs)
