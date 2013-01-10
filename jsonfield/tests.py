@@ -1,3 +1,4 @@
+from django.core.serializers import deserialize, serialize
 from django.db import models
 from django.test import TestCase
 from django.utils import simplejson as json
@@ -7,7 +8,6 @@ from fields import JSONField, JSONCharField
 
 class JsonModel(models.Model):
     json = JSONField()
-
 
 class JsonCharModel(models.Model):
     json = JSONCharField(max_length=100)
@@ -40,7 +40,7 @@ class JSONModelCustomEncoders(models.Model):
 
 class JSONFieldTest(TestCase):
     """JSONField Wrapper Tests"""
-    
+
     json_model = JsonModel
 
     def test_json_field_create(self):
@@ -111,6 +111,19 @@ class JSONFieldTest(TestCase):
         obj = JSONModelCustomEncoders.objects.create(json=value)
         new_obj = JSONModelCustomEncoders.objects.get(pk=obj.pk)
         self.failUnlessEqual(value, new_obj.json)
+
+    def test_django_serializers(self):
+        for json_obj in [{}, [], 0, '', False, {'key': 'value', 'num': 42,
+                                                'ary': [range(5)],
+                                                'dict': {'k': 'v'}}]:
+            obj = self.json_model.objects.create(json=json_obj)
+            new_obj = self.json_model.objects.get(id=obj.id)
+
+        queryset = self.json_model.objects.all()
+        for dobj in deserialize('json', serialize('json', queryset)):
+            pulled = self.json_model.objects.get(id=obj.pk)
+            self.failUnlessEqual(dobj.json, pulled.json)
+
 
 class JSONCharFieldTest(JSONFieldTest):
     json_model = JsonCharModel
