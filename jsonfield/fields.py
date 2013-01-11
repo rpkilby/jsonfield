@@ -83,6 +83,25 @@ class JSONFieldBase(models.Field):
 
         return field
 
+    def get_default(self):
+        """
+        Returns the default value for this field.
+
+        The default implementation on models.Field calls force_unicode
+        on the default, which means you can't set arbitrary Python
+        objects as the default. To fix this, we just return the value
+        without calling force_unicode on it. Note that if you set a
+        callable as a default, the field will still call it. It will
+        *not* try to pickle and encode it.
+
+        """
+        if self.has_default():
+            if callable(self.default):
+                return self.default()
+            return self.default
+        # If the field doesn't have a default, then we punt to models.Field.
+        return super(JSONFieldBase, self).get_default()
+
 
 class JSONField(JSONFieldBase, models.TextField):
     """JSONField is a generic textfield that serializes/unserializes JSON objects"""

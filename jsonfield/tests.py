@@ -8,9 +8,11 @@ from fields import JSONField, JSONCharField
 
 class JsonModel(models.Model):
     json = JSONField()
+    default_json = JSONField(default={"check":12})
 
 class JsonCharModel(models.Model):
     json = JSONCharField(max_length=100)
+    default_json = JSONField(default={"check":34})
 
 class ComplexEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -125,6 +127,16 @@ class JSONFieldTest(TestCase):
             obj = dobj.object
             pulled = self.json_model.objects.get(id=obj.pk)
             self.failUnlessEqual(obj.json, pulled.json)
+
+    def test_default_parameters(self):
+        """Test providing a default value to the model"""
+        normal_model = JsonModel()
+        normal_model.json = {"check":12}
+        self.assertEqual(type(normal_model.json), dict)
+
+        default_model = JsonModel()
+        self.assertEqual(default_model.default_json, {"check": 12})
+        self.assertEqual(type(default_model.default_json), dict)
 
 
 class JSONCharFieldTest(JSONFieldTest):
