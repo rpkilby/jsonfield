@@ -114,15 +114,17 @@ class JSONFieldTest(TestCase):
 
     def test_django_serializers(self):
         for json_obj in [{}, [], 0, '', False, {'key': 'value', 'num': 42,
-                                                'ary': [range(5)],
+                                                'ary': range(5),
                                                 'dict': {'k': 'v'}}]:
             obj = self.json_model.objects.create(json=json_obj)
             new_obj = self.json_model.objects.get(id=obj.id)
 
         queryset = self.json_model.objects.all()
-        for dobj in deserialize('json', serialize('json', queryset)):
+        ser = serialize('json', queryset)
+        for dobj in deserialize('json', ser):
+            obj = dobj.object
             pulled = self.json_model.objects.get(id=obj.pk)
-            self.failUnlessEqual(dobj.json, pulled.json)
+            self.failUnlessEqual(obj.json, pulled.json)
 
 
 class JSONCharFieldTest(JSONFieldTest):
