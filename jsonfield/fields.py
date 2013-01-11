@@ -43,9 +43,9 @@ class JSONFieldBase(models.Field):
     def to_python(self, value):
         """Convert string value to JSON"""
         if isinstance(value, basestring):
-            # empty value -> None
+            # empty value -> itself
             if value == '':
-                return None
+                return value
             # otherwise try and convert and see how things go, value errors
             # will be propogated so that thigns fail early/obvious
             return json.loads(value, **self.load_kwargs)
