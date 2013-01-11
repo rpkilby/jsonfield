@@ -25,12 +25,10 @@ class ComplexEncoder(json.JSONEncoder):
 
         return json.JSONEncoder.default(self, obj)
 
-
 def as_complex(dct):
     if '__complex__' in dct:
         return complex(dct['real'], dct['imag'])
     return dct
-
 
 class JSONModelCustomEncoders(models.Model):
     # A JSON field that can store complex numbers
@@ -39,7 +37,6 @@ class JSONModelCustomEncoders(models.Model):
         load_kwargs={'object_hook': as_complex},
     )
 
-
 class JSONFieldTest(TestCase):
     """JSONField Wrapper Tests"""
 
@@ -47,7 +44,6 @@ class JSONFieldTest(TestCase):
 
     def test_json_field_create(self):
         """Test saving a JSON object in our JSONField"""
-
         json_obj = {
             "item_1": "this is a json blah",
             "blergh": "hey, hey, hey"}
@@ -59,38 +55,29 @@ class JSONFieldTest(TestCase):
 
     def test_json_field_modify(self):
         """Test modifying a JSON object in our JSONField"""
-
         json_obj_1 = {'a': 1, 'b': 2}
         json_obj_2 = {'a': 3, 'b': 4}
 
         obj = self.json_model.objects.create(json=json_obj_1)
-
         self.failUnlessEqual(obj.json, json_obj_1)
-
         obj.json = json_obj_2
 
         self.failUnlessEqual(obj.json, json_obj_2)
-
         obj.save()
-
         self.failUnlessEqual(obj.json, json_obj_2)
 
         self.assert_(obj)
 
     def test_json_field_load(self):
         """Test loading a JSON object from the DB"""
-
         json_obj_1 = {'a': 1, 'b': 2}
-
         obj = self.json_model.objects.create(json=json_obj_1)
-
         new_obj = self.json_model.objects.get(id=obj.id)
 
         self.failUnlessEqual(new_obj.json, json_obj_1)
 
     def test_json_list(self):
         """Test storing a JSON list"""
-
         json_obj = ["my", "list", "of", 1, "objs", {"hello": "there"}]
 
         obj = self.json_model.objects.create(json=json_obj)
@@ -99,7 +86,6 @@ class JSONFieldTest(TestCase):
 
     def test_empty_objects(self):
         """Test storing empty objects"""
-
         for json_obj in [{}, [], 0, '', False]:
             obj = self.json_model.objects.create(json=json_obj)
             new_obj = self.json_model.objects.get(id=obj.id)
@@ -115,6 +101,7 @@ class JSONFieldTest(TestCase):
         self.failUnlessEqual(value, new_obj.json)
 
     def test_django_serializers(self):
+        """Test serializing/deserializing jsonfield data"""
         for json_obj in [{}, [], 0, '', False, {'key': 'value', 'num': 42,
                                                 'ary': range(5),
                                                 'dict': {'k': 'v'}}]:
