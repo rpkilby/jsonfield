@@ -125,6 +125,15 @@ class JSONFieldTest(TestCase):
         self.assertEqual(model.default_json, {"check": 12})
         self.assertEqual(type(model.default_json), dict)
 
+    def test_invalid_json(self):
+        # invalid json data {] in the json and default_json fields
+        ser = '[{"pk": 1, "model": "jsonfield.jsoncharmodel", ' \
+            '"fields": {"json": "{]", "default_json": "{]"}}]'
+        with self.assertRaises(ValueError) as cm:
+            dobj = deserialize('json', ser).next()
+        self.assertEquals('Expecting property name: line 1 column 1 (char 1)',
+                          cm.exception.args[0])
+
 
 class JSONCharFieldTest(JSONFieldTest):
     json_model = JsonCharModel
