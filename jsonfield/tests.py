@@ -117,13 +117,13 @@ class JSONFieldTest(TestCase):
 
     def test_default_parameters(self):
         """Test providing a default value to the model"""
-        normal_model = JsonModel()
-        normal_model.json = {"check":12}
-        self.assertEqual(type(normal_model.json), dict)
+        model = JsonModel()
+        model.json = {"check": 12}
+        self.assertEqual(model.json, {"check": 12})
+        self.assertEqual(type(model.json), dict)
 
-        default_model = JsonModel()
-        self.assertEqual(default_model.default_json, {"check": 12})
-        self.assertEqual(type(default_model.default_json), dict)
+        self.assertEqual(model.default_json, {"check": 12})
+        self.assertEqual(type(model.default_json), dict)
 
 
 class JSONCharFieldTest(JSONFieldTest):
