@@ -47,7 +47,7 @@ class JSONFieldBase(models.Field):
             if value == '':
                 return value
             # otherwise try and convert and see how things go, value errors
-            # will be propogated so that thigns fail early/obvious
+            # will be propogated so that things fail early/obvious
             return json.loads(value, **self.load_kwargs)
         return value
 
