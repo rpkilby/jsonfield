@@ -1,4 +1,5 @@
 from django.core.serializers import deserialize, serialize
+from django.core.serializers.base import DeserializationError
 from django.db import models
 from django.test import TestCase
 from django.utils import simplejson as json
@@ -124,6 +125,17 @@ class JSONFieldTest(TestCase):
 
         self.assertEqual(model.default_json, {"check": 12})
         self.assertEqual(type(model.default_json), dict)
+
+    def test_invalid_json(self):
+        # invalid json data {] in the json and default_json fields
+        ser = '[{"pk": 1, "model": "jsonfield.jsoncharmodel", ' \
+            '"fields": {"json": "{]", "default_json": "{]"}}]'
+        with self.assertRaises(DeserializationError) as cm:
+            dobj = deserialize('json', ser).next()
+        inner = cm.exception.args[0]
+        self.assertTrue(isinstance(inner, ValueError))
+        self.assertEquals('Expecting property name: line 1 column 1 (char 1)',
+                          inner.args[0])
 
 
 class JSONCharFieldTest(JSONFieldTest):
