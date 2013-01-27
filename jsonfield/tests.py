@@ -13,7 +13,7 @@ class JsonModel(models.Model):
 
 class JsonCharModel(models.Model):
     json = JSONCharField(max_length=100)
-    default_json = JSONField(default={"check":34})
+    default_json = JSONCharField(max_length=100, default={"check":34})
 
 class ComplexEncoder(json.JSONEncoder):
     def default(self, obj):
