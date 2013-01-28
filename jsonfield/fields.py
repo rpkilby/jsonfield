@@ -46,9 +46,10 @@ class JSONFieldBase(models.Field):
             # empty value -> itself
             if value == '':
                 return value
-            # otherwise try and convert and see how things go, value errors
-            # will be propogated so that things fail early/obvious
-            return json.loads(value, **self.load_kwargs)
+            try:
+                json.loads(value, **self.load_kwargs)
+            except ValueError:
+                raise FormValidationError(_("Enter valid JSON"))
         return value
 
     def get_db_prep_value(self, value, connection, prepared=False):
