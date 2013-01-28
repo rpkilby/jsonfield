@@ -7,7 +7,7 @@ except ImportError:
     from django.utils import simplejson as json
 
 from django.forms.fields import Field
-from django.forms.util import ValidationError as FormValidationError
+from django.forms.util import ValidationError
 
 
 class JSONFormField(Field):
@@ -22,7 +22,7 @@ class JSONFormField(Field):
             try:
                 json.loads(value)
             except ValueError:
-                raise FormValidationError(_("Enter valid JSON"))
+                raise ValidationError(_("Enter valid JSON"))
         return value
 
 
@@ -47,8 +47,11 @@ class JSONFieldBase(models.Field):
             if value == '':
                 return value
             # otherwise try and convert and see how things go, value errors
-            # will be propogated so that things fail early/obvious
-            return json.loads(value, **self.load_kwargs)
+            # will be re-raised as a ValidationError
+            try:
+                return json.loads(value, **self.load_kwargs)
+            except ValueError:
+                raise ValidationError(_("Enter valid JSON"))
         return value
 
     def get_db_prep_value(self, value, connection, prepared=False):

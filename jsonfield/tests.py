@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.utils import simplejson as json
 
 from fields import JSONField, JSONCharField
+from django.forms.util import ValidationError
 
 
 class JsonModel(models.Model):
@@ -133,9 +134,8 @@ class JSONFieldTest(TestCase):
         with self.assertRaises(DeserializationError) as cm:
             dobj = deserialize('json', ser).next()
         inner = cm.exception.args[0]
-        self.assertTrue(isinstance(inner, ValueError))
-        self.assertEquals('Expecting property name: line 1 column 1 (char 1)',
-                          inner.args[0])
+        self.assertTrue(isinstance(inner, ValidationError))
+        self.assertEquals('Enter valid JSON', inner.messages[0])
 
 
 class JSONCharFieldTest(JSONFieldTest):
