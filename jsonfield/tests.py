@@ -7,6 +7,8 @@ from django.utils import simplejson as json
 from fields import JSONField, JSONCharField
 from django.forms.util import ValidationError
 
+from collections import OrderedDict
+
 
 class JsonModel(models.Model):
     json = JSONField()
@@ -140,9 +142,6 @@ class JSONFieldTest(TestCase):
 
 class JSONCharFieldTest(JSONFieldTest):
     json_model = JsonCharModel
-
-
-from collections import OrderedDict
 
 
 class OrderedJsonModel(models.Model):
