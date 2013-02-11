@@ -140,3 +140,36 @@ class JSONFieldTest(TestCase):
 
 class JSONCharFieldTest(JSONFieldTest):
     json_model = JsonCharModel
+
+
+from collections import OrderedDict
+
+
+class OrderedJsonModel(models.Model):
+    json = JSONField(load_kwargs={'object_pairs_hook': OrderedDict})
+
+
+class OrderedDictSerializationTest(TestCase):
+    ordered_dict = OrderedDict([
+        ('number', [1, 2, 3, 4]),
+        ('notes', True),
+    ])
+    expected_key_order = ['number', 'notes']
+
+    def test_ordered_dict_differs_from_normal_dict(self):
+        self.assertEqual(self.ordered_dict.keys(), self.expected_key_order)
+        self.assertNotEqual(dict(self.ordered_dict).keys(), self.expected_key_order)
+
+    def test_default_behaviour_loses_sort_order(self):
+        mod = JsonModel.objects.create(json=self.ordered_dict)
+        self.assertEqual(mod.json.keys(), self.expected_key_order)
+        mod_from_db = JsonModel.objects.get(id=mod.id)
+
+        # mod_from_db lost ordering information during json.loads()
+        self.assertNotEqual(mod_from_db.json.keys(), self.expected_key_order)
+
+    def test_load_kwargs_hook_does_not_lose_sort_order(self):
+        mod = OrderedJsonModel.objects.create(json=self.ordered_dict)
+        self.assertEqual(mod.json.keys(), self.expected_key_order)
+        mod_from_db = OrderedJsonModel.objects.get(id=mod.id)
+        self.assertEqual(mod_from_db.json.keys(), self.expected_key_order)
