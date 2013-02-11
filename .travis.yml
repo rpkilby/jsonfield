@@ -1,0 +1,11 @@
+language: python
+python:
+ - "2.7"
+
+install: python setup.py -q install
+script: python setup.py test
+
+notifications:
+  email:
+    recipients:
+      - dr@nwebs.de
