@@ -2,7 +2,12 @@ language: python
 python:
   - "2.7"
 
-install: python setup.py -q install
+env:
+  - DJANGO=1.5
+
+install:
+  - pip install -q Django==$DJANGO --use-mirrors
+
 script: python setup.py test
 
 notifications:
