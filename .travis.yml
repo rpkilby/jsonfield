@@ -8,4 +8,4 @@ script: python setup.py test
 notifications:
   email:
     recipients:
-      - dr@nwebs.de
+      - bjasper@gmail.com
