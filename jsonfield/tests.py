@@ -37,7 +37,7 @@ def as_complex(dct):
 class JSONModelCustomEncoders(models.Model):
     # A JSON field that can store complex numbers
     json = JSONField(
-        dump_kwargs={'cls': ComplexEncoder},
+        dump_kwargs={'cls': ComplexEncoder, "indent": 4},
         load_kwargs={'object_hook': as_complex},
     )
 
