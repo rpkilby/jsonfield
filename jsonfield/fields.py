@@ -74,7 +74,7 @@ class JSONFieldBase(models.Field):
         return self.dumps_for_display(value)
 
     def dumps_for_display(self, value):
-        return json.dumps(value)
+        return json.dumps(value, **self.dump_kwargs)
 
     def formfield(self, **kwargs):
 
@@ -111,7 +111,9 @@ class JSONFieldBase(models.Field):
 class JSONField(JSONFieldBase, models.TextField):
     """JSONField is a generic textfield that serializes/unserializes JSON objects"""
     def dumps_for_display(self, value):
-        return json.dumps(value, indent=self.dump_kwargs.get("indent", 2))
+        kwargs = { "indent": 2 }
+        kwargs.update(self.dump_kwargs)
+        return json.dumps(value, **kwargs)
 
 
 class JSONCharField(JSONFieldBase, models.CharField):
