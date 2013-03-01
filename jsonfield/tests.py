@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.core.serializers import deserialize, serialize
 from django.core.serializers.base import DeserializationError
 from django.db import models
@@ -56,6 +57,40 @@ class JSONFieldTest(TestCase):
         new_obj = self.json_model.objects.get(id=obj.id)
 
         self.failUnlessEqual(new_obj.json, json_obj)
+
+    def test_string_in_json_field(self):
+        """Test saving an ordinary Python string in our JSONField"""
+        json_obj = 'blah blah'
+        obj = self.json_model.objects.create(json=json_obj)
+        new_obj = self.json_model.objects.get(id=obj.id)
+
+        self.failUnlessEqual(new_obj.json, json_obj)
+
+    def test_float_in_json_field(self):
+        """Test saving an Python float in our JSONField"""
+        json_obj = 1.23
+        obj = self.json_model.objects.create(json=json_obj)
+        new_obj = self.json_model.objects.get(id=obj.id)
+
+        self.failUnlessEqual(new_obj.json, json_obj)
+
+    def test_int_in_json_field(self):
+        """Test saving an Python integer in our JSONField"""
+        json_obj = 1234567
+        obj = self.json_model.objects.create(json=json_obj)
+        new_obj = self.json_model.objects.get(id=obj.id)
+
+        self.failUnlessEqual(new_obj.json, json_obj)
+
+    def test_decimal_in_json_field(self):
+        """Test saving an Python integer in our JSONField"""
+        json_obj = Decimal(12.34)
+        obj = self.json_model.objects.create(json=json_obj)
+        new_obj = self.json_model.objects.get(id=obj.id)
+
+        # here we must know to convert the returned string back to Decimal,
+        # since json does not support that format
+        self.failUnlessEqual(Decimal(new_obj.json), json_obj)
 
     def test_json_field_modify(self):
         """Test modifying a JSON object in our JSONField"""
