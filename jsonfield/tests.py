@@ -67,7 +67,7 @@ class JSONFieldTest(TestCase):
         self.failUnlessEqual(new_obj.json, json_obj)
 
     def test_float_in_json_field(self):
-        """Test saving an Python float in our JSONField"""
+        """Test saving a Python float in our JSONField"""
         json_obj = 1.23
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
@@ -75,7 +75,7 @@ class JSONFieldTest(TestCase):
         self.failUnlessEqual(new_obj.json, json_obj)
 
     def test_int_in_json_field(self):
-        """Test saving an Python integer in our JSONField"""
+        """Test saving a Python integer in our JSONField"""
         json_obj = 1234567
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
@@ -83,7 +83,7 @@ class JSONFieldTest(TestCase):
         self.failUnlessEqual(new_obj.json, json_obj)
 
     def test_decimal_in_json_field(self):
-        """Test saving an Python integer in our JSONField"""
+        """Test saving a Python Decimal in our JSONField"""
         json_obj = Decimal(12.34)
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
