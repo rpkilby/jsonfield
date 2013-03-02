@@ -51,6 +51,13 @@ class JSONFieldBase(models.Field):
             try:
                 return json.loads(value, **self.load_kwargs)
             except ValueError:
+                # try to solve ambiguity, if value shall be interpreted as
+                # normal string rather than as JSON deserializable
+                if value[0] not in ('{', '['):
+                    try:
+                        return json.loads('"' + value + '"', **self.load_kwargs)
+                    except:
+                        pass
                 raise ValidationError(_("Enter valid JSON"))
         return value
 
