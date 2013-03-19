@@ -174,6 +174,21 @@ class JSONFieldTest(TestCase):
         self.assertTrue(isinstance(inner, ValidationError))
         self.assertEquals('Enter valid JSON', inner.messages[0])
 
+    def test_integer_in_string_in_json_field(self):
+        """Test saving the Python string '123' in our JSONField"""
+        json_obj = '123'
+        obj = self.json_model.objects.create(json=json_obj)
+        new_obj = self.json_model.objects.get(id=obj.id)
+
+        self.failUnlessEqual(new_obj.json, json_obj)
+
+    def test_boolean_in_string_in_json_field(self):
+        """Test saving the Python string 'true' in our JSONField"""
+        json_obj = 'true'
+        obj = self.json_model.objects.create(json=json_obj)
+        new_obj = self.json_model.objects.get(id=obj.id)
+
+        self.failUnlessEqual(new_obj.json, json_obj)
 
 class JSONCharFieldTest(JSONFieldTest):
     json_model = JsonCharModel
