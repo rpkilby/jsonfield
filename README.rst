@@ -8,11 +8,15 @@ It silently takes care of serialization. To use, simply add the field to one of 
 Install
 -------
 
+.. code-block:: python
+
     pip install jsonfield
 
 
 Usage
 -----
+
+.. code-block:: python
 
     from django.db import models
     from jsonfield import JSONField
@@ -27,6 +31,8 @@ Advanced Usage
 By default python deserializes json into dict objects. This behavior differs from the standard json behavior because python dicts do not have ordered keys.
 
 To overcome this limitation and keep the sort order of OrderedDict keys the deserialisation can be adjusted on model initialisation:
+
+.. code-block:: python
 
     import collections
     class MyModel(models.Model):
