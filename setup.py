@@ -21,9 +21,16 @@ class TestCommand(Command):
 
 
 setup(name='jsonfield',
-      version='0.9.7',
-      packages=['jsonfield'],
-      license='MIT',
-      long_description="A reusable Django field that allows you to store validated JSON in your model.",
-      cmdclass={'test': TestCommand}
-      )
+    version='0.9.8',
+    packages=['jsonfield'],
+    license='MIT',
+    author='Brad Jasper',
+    author_email='bjasper@gmail.com',
+    url='http://bradjasper.com',
+    description='A reusable Django field that allows you to store validated JSON in your model.',
+    long_description=open("README.rst").read(),
+    cmdclass={'test': TestCommand},
+    install_requires=[
+                "Django >= 1.4.3",
+            ],
+)
