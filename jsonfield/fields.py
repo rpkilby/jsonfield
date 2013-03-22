@@ -9,6 +9,8 @@ except ImportError:
 from django.forms.fields import Field
 from django.forms.util import ValidationError
 
+from .subclassing import SubfieldBase
+
 
 class JSONFormField(Field):
     def clean(self, value):
@@ -29,7 +31,7 @@ class JSONFormField(Field):
 class JSONFieldBase(models.Field):
 
     # Used so to_python() is called
-    __metaclass__ = models.SubfieldBase
+    __metaclass__ = SubfieldBase
 
     def __init__(self, *args, **kwargs):
         self.dump_kwargs = kwargs.pop('dump_kwargs', {
@@ -40,32 +42,29 @@ class JSONFieldBase(models.Field):
 
         super(JSONFieldBase, self).__init__(*args, **kwargs)
 
+    def pre_init(self, value, obj):
+        """Convert a string value to JSON only if it needs to be deserialized.
+        
+        SubfieldBase meteaclass has been modified to call this method instead of
+        to_python so that we can check the obj state and determine if it needs to be
+        deserialized"""
+
+        if obj._state.adding and obj.pk is not None:
+            if isinstance(value, basestring):
+                try:
+                    return json.loads(value, **self.load_kwargs)
+                except ValueError:
+                    raise ValidationError(_("Enter valid JSON"))
+
+        return value
+
     def to_python(self, value):
-        """Convert string value to JSON"""
-        if isinstance(value, basestring):
-            # empty value -> itself
-            if value == '':
-                return value
-            # otherwise try and convert and see how things go, value errors
-            # will be re-raised as a ValidationError
-            try:
-                return json.loads(value, **self.load_kwargs)
-            except ValueError:
-                # try to solve ambiguity, if value shall be interpreted as
-                # normal string rather than as JSON deserializable
-                if value[0] not in ('{', '['):
-                    try:
-                        return json.loads('"' + value + '"', **self.load_kwargs)
-                    except:
-                        pass
-                raise ValidationError(_("Enter valid JSON"))
+        """The SubfieldBase metaclass calls pre_init instead of to_python, however to_python
+        is still necessary for Django's deserializer"""
         return value
 
     def get_db_prep_value(self, value, connection, prepared=False):
         """Convert JSON object to a string"""
-
-        if isinstance(value, basestring):
-            return value
         if self.null and value is None:
             return None
         return json.dumps(value, **self.dump_kwargs)

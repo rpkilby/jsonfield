@@ -169,7 +169,7 @@ class JSONFieldTest(TestCase):
         ser = '[{"pk": 1, "model": "jsonfield.jsoncharmodel", ' \
             '"fields": {"json": "{]", "default_json": "{]"}}]'
         with self.assertRaises(DeserializationError) as cm:
-            dobj = deserialize('json', ser).next()
+            deserialize('json', ser).next()
         inner = cm.exception.args[0]
         self.assertTrue(isinstance(inner, ValidationError))
         self.assertEquals('Enter valid JSON', inner.messages[0])
