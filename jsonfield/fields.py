@@ -1,3 +1,4 @@
+import copy
 from django.db import models
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.translation import ugettext_lazy as _
@@ -109,7 +110,7 @@ class JSONFieldBase(models.Field):
         if self.has_default():
             if callable(self.default):
                 return self.default()
-            return self.default
+            return copy.deepcopy(self.default)
         # If the field doesn't have a default, then we punt to models.Field.
         return super(JSONFieldBase, self).get_default()
 

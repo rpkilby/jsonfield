@@ -10,10 +10,10 @@ from django.forms.util import ValidationError
 
 from collections import OrderedDict
 
-
 class JsonModel(models.Model):
     json = JSONField()
     default_json = JSONField(default={"check":12})
+    complex_default_json = JSONField(default=[{"checkcheck": 1212}])
 
 class JsonCharModel(models.Model):
     json = JSONCharField(max_length=100)
@@ -189,6 +189,21 @@ class JSONFieldTest(TestCase):
         new_obj = self.json_model.objects.get(id=obj.id)
 
         self.failUnlessEqual(new_obj.json, json_obj)
+
+
+    def test_pass_by_reference_pollution(self):
+        """Make sure the default parameter is copied rather than passed by reference"""
+        model = JsonModel()
+        model.default_json["check"] = 144
+        model.complex_default_json[0]["checkcheck"] = 144
+        self.assertEqual(model.default_json["check"], 144)
+        self.assertEqual(model.complex_default_json[0]["checkcheck"], 144)
+
+        # Make sure when we create a new model, it resets to the default value
+        # and not to what we just set it to (it would be if it were passed by reference)
+        model = JsonModel()
+        self.assertEqual(model.default_json["check"], 12)
+        self.assertEqual(model.complex_default_json[0]["checkcheck"], 1212)
 
 class JSONCharFieldTest(JSONFieldTest):
     json_model = JsonCharModel
