@@ -50,3 +50,14 @@ Contact
 -------
 
 http://bradjasper.com
+
+Changes
+-------
+
+v0.9.9/10/11, 03/21/2013 -- PyPi changes
+
+v0.9.8, 03/21/2013 -- Added support for native PostgreSQL JSON data type
+
+v0.9.7, 03/21/2013 -- Fix bug #33 where JSONField didn't correctly store some values inside of
+strings
+
