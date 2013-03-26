@@ -54,6 +54,8 @@ http://bradjasper.com
 Changes
 -------
 
+v0.9.11/12/13, 03/26/2013 -- PyPi changes
+
 v0.9.9/10/11, 03/21/2013 -- PyPi changes
 
 v0.9.8, 03/21/2013 -- Added support for native PostgreSQL JSON data type
