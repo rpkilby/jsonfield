@@ -26,7 +26,6 @@ Usage
     class MyModel(models.Model):
       json = JSONField()
 
-
 Advanced Usage
 --------------
 
@@ -48,16 +47,33 @@ Other Fields
 
 If you need to use your JSON field in an index or other constraint, you can use **JSONCharField** which subclasses **CharField** instead of **TextField**. You'll also need to specify a **max_length** parameter if you use this field.
 
-Contact
--------
 
-http://bradjasper.com
+Compatibility
+--------------
+
+django-jsonfield supports Python 2.7-Python 3.3 and Django 1.4+
+
+**Why doesn't it support Python 2.6?**
+
+You actually might be OK if you don't use an OrderedDict, but there are some issues with the simplejson API that make it cumbersome to support.
+
+**Why doesn't it support Django 1.3?**
+
+There was a bug that could only be fixed by a feature in Django 1.4. `Read More`_ if you're interested in the details.
+
+.. _Read More: https://github.com/bradjasper/django-jsonfield/issues/33
 
 
 Travis CI
 ---------
 
 .. image:: https://travis-ci.org/bradjasper/django-jsonfield.png?branch=master
+
+
+Contact
+-------
+
+http://bradjasper.com
 
 Changes
 -------
