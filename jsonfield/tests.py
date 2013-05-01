@@ -56,7 +56,7 @@ class JSONFieldTest(TestCase):
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
 
-        self.failUnlessEqual(new_obj.json, json_obj)
+        self.assertEqual(new_obj.json, json_obj)
 
     def test_string_in_json_field(self):
         """Test saving an ordinary Python string in our JSONField"""
@@ -64,7 +64,7 @@ class JSONFieldTest(TestCase):
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
 
-        self.failUnlessEqual(new_obj.json, json_obj)
+        self.assertEqual(new_obj.json, json_obj)
 
     def test_float_in_json_field(self):
         """Test saving a Python float in our JSONField"""
@@ -72,7 +72,7 @@ class JSONFieldTest(TestCase):
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
 
-        self.failUnlessEqual(new_obj.json, json_obj)
+        self.assertEqual(new_obj.json, json_obj)
 
     def test_int_in_json_field(self):
         """Test saving a Python integer in our JSONField"""
@@ -80,7 +80,7 @@ class JSONFieldTest(TestCase):
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
 
-        self.failUnlessEqual(new_obj.json, json_obj)
+        self.assertEqual(new_obj.json, json_obj)
 
     def test_decimal_in_json_field(self):
         """Test saving a Python Decimal in our JSONField"""
@@ -90,7 +90,7 @@ class JSONFieldTest(TestCase):
 
         # here we must know to convert the returned string back to Decimal,
         # since json does not support that format
-        self.failUnlessEqual(Decimal(new_obj.json), json_obj)
+        self.assertEqual(Decimal(new_obj.json), json_obj)
 
     def test_json_field_modify(self):
         """Test modifying a JSON object in our JSONField"""
@@ -98,14 +98,14 @@ class JSONFieldTest(TestCase):
         json_obj_2 = {'a': 3, 'b': 4}
 
         obj = self.json_model.objects.create(json=json_obj_1)
-        self.failUnlessEqual(obj.json, json_obj_1)
+        self.assertEqual(obj.json, json_obj_1)
         obj.json = json_obj_2
 
-        self.failUnlessEqual(obj.json, json_obj_2)
+        self.assertEqual(obj.json, json_obj_2)
         obj.save()
-        self.failUnlessEqual(obj.json, json_obj_2)
+        self.assertEqual(obj.json, json_obj_2)
 
-        self.assert_(obj)
+        self.assertTrue(obj)
 
     def test_json_field_load(self):
         """Test loading a JSON object from the DB"""
@@ -113,7 +113,7 @@ class JSONFieldTest(TestCase):
         obj = self.json_model.objects.create(json=json_obj_1)
         new_obj = self.json_model.objects.get(id=obj.id)
 
-        self.failUnlessEqual(new_obj.json, json_obj_1)
+        self.assertEqual(new_obj.json, json_obj_1)
 
     def test_json_list(self):
         """Test storing a JSON list"""
@@ -121,15 +121,15 @@ class JSONFieldTest(TestCase):
 
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
-        self.failUnlessEqual(new_obj.json, json_obj)
+        self.assertEqual(new_obj.json, json_obj)
 
     def test_empty_objects(self):
         """Test storing empty objects"""
         for json_obj in [{}, [], 0, '', False]:
             obj = self.json_model.objects.create(json=json_obj)
             new_obj = self.json_model.objects.get(id=obj.id)
-            self.failUnlessEqual(json_obj, obj.json)
-            self.failUnlessEqual(json_obj, new_obj.json)
+            self.assertEqual(json_obj, obj.json)
+            self.assertEqual(json_obj, new_obj.json)
 
     def test_custom_encoder(self):
         """Test encoder_cls and object_hook"""
@@ -137,12 +137,12 @@ class JSONFieldTest(TestCase):
 
         obj = JSONModelCustomEncoders.objects.create(json=value)
         new_obj = JSONModelCustomEncoders.objects.get(pk=obj.pk)
-        self.failUnlessEqual(value, new_obj.json)
+        self.assertEqual(value, new_obj.json)
 
     def test_django_serializers(self):
         """Test serializing/deserializing jsonfield data"""
         for json_obj in [{}, [], 0, '', False, {'key': 'value', 'num': 42,
-                                                'ary': range(5),
+                                                'ary': list(range(5)),
                                                 'dict': {'k': 'v'}}]:
             obj = self.json_model.objects.create(json=json_obj)
             new_obj = self.json_model.objects.get(id=obj.id)
@@ -152,7 +152,7 @@ class JSONFieldTest(TestCase):
         for dobj in deserialize('json', ser):
             obj = dobj.object
             pulled = self.json_model.objects.get(id=obj.pk)
-            self.failUnlessEqual(obj.json, pulled.json)
+            self.assertEqual(obj.json, pulled.json)
 
     def test_default_parameters(self):
         """Test providing a default value to the model"""
@@ -169,10 +169,10 @@ class JSONFieldTest(TestCase):
         ser = '[{"pk": 1, "model": "jsonfield.jsoncharmodel", ' \
             '"fields": {"json": "{]", "default_json": "{]"}}]'
         with self.assertRaises(DeserializationError) as cm:
-            deserialize('json', ser).next()
+            next(deserialize('json', ser))
         inner = cm.exception.args[0]
         self.assertTrue(isinstance(inner, ValidationError))
-        self.assertEquals('Enter valid JSON', inner.messages[0])
+        self.assertEqual('Enter valid JSON', inner.messages[0])
 
     def test_integer_in_string_in_json_field(self):
         """Test saving the Python string '123' in our JSONField"""
@@ -180,7 +180,7 @@ class JSONFieldTest(TestCase):
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
 
-        self.failUnlessEqual(new_obj.json, json_obj)
+        self.assertEqual(new_obj.json, json_obj)
 
     def test_boolean_in_string_in_json_field(self):
         """Test saving the Python string 'true' in our JSONField"""
@@ -188,7 +188,7 @@ class JSONFieldTest(TestCase):
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
 
-        self.failUnlessEqual(new_obj.json, json_obj)
+        self.assertEqual(new_obj.json, json_obj)
 
 
     def test_pass_by_reference_pollution(self):
@@ -221,12 +221,12 @@ class OrderedDictSerializationTest(TestCase):
     expected_key_order = ['number', 'notes']
 
     def test_ordered_dict_differs_from_normal_dict(self):
-        self.assertEqual(self.ordered_dict.keys(), self.expected_key_order)
+        self.assertEqual(list(self.ordered_dict.keys()), self.expected_key_order)
         self.assertNotEqual(dict(self.ordered_dict).keys(), self.expected_key_order)
 
     def test_default_behaviour_loses_sort_order(self):
         mod = JsonModel.objects.create(json=self.ordered_dict)
-        self.assertEqual(mod.json.keys(), self.expected_key_order)
+        self.assertEqual(list(mod.json.keys()), self.expected_key_order)
         mod_from_db = JsonModel.objects.get(id=mod.id)
 
         # mod_from_db lost ordering information during json.loads()
@@ -234,6 +234,6 @@ class OrderedDictSerializationTest(TestCase):
 
     def test_load_kwargs_hook_does_not_lose_sort_order(self):
         mod = OrderedJsonModel.objects.create(json=self.ordered_dict)
-        self.assertEqual(mod.json.keys(), self.expected_key_order)
+        self.assertEqual(list(mod.json.keys()), self.expected_key_order)
         mod_from_db = OrderedJsonModel.objects.get(id=mod.id)
-        self.assertEqual(mod_from_db.json.keys(), self.expected_key_order)
+        self.assertEqual(list(mod_from_db.json.keys()), self.expected_key_order)
