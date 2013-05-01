@@ -2,6 +2,8 @@ import copy
 from django.db import models
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.translation import ugettext_lazy as _
+from django.utils import six
+
 try:
     import json
 except ImportError:
@@ -21,7 +23,7 @@ class JSONFormField(Field):
 
         value = super(JSONFormField, self).clean(value)
 
-        if isinstance(value, basestring):
+        if isinstance(value, six.string_types):
             try:
                 json.loads(value)
             except ValueError:
@@ -29,10 +31,7 @@ class JSONFormField(Field):
         return value
 
 
-class JSONFieldBase(models.Field):
-
-    # Used so to_python() is called
-    __metaclass__ = SubfieldBase
+class JSONFieldBase(six.with_metaclass(SubfieldBase, base=models.Field)):
 
     def __init__(self, *args, **kwargs):
         self.dump_kwargs = kwargs.pop('dump_kwargs', {
@@ -51,7 +50,7 @@ class JSONFieldBase(models.Field):
         deserialized"""
 
         if obj._state.adding and obj.pk is not None:
-            if isinstance(value, basestring):
+            if isinstance(value, six.string_types):
                 try:
                     return json.loads(value, **self.load_kwargs)
                 except ValueError:
@@ -119,7 +118,6 @@ class JSONFieldBase(models.Field):
             return 'json'
         else:
             return super(JSONFieldBase, self).db_type(connection)
-
 
 class JSONField(JSONFieldBase, models.TextField):
     """JSONField is a generic textfield that serializes/unserializes JSON objects"""
