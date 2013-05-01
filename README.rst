@@ -78,7 +78,7 @@ http://bradjasper.com
 Changes
 -------
 
-v0.9.14/15, 04/29/2013 -- Python 3 support added!
+v0.9.14/15/16, 04/29/2013 -- Python 3 support added!
 
 v0.9.11/12/13, 03/26/2013 -- PyPi changes
 
