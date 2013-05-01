@@ -5,7 +5,7 @@ from django.db import models
 from django.test import TestCase
 from django.utils import simplejson as json
 
-from fields import JSONField, JSONCharField
+from .fields import JSONField, JSONCharField
 from django.forms.util import ValidationError
 
 from collections import OrderedDict
