@@ -12,26 +12,39 @@ try:
 except ImportError:
     from django.utils import simplejson as json
 
-from django.forms.fields import Field
+from django.forms import fields
 from django.forms.util import ValidationError
 
 from .subclassing import SubfieldBase
 
 
-class JSONFormField(Field):
+class JSONFormFieldBase(object):
+
+    def to_python(self, value):
+        if isinstance(value, six.string_types):
+            try:
+                return json.loads(value)
+            except ValueError:
+                raise ValidationError(_("Enter valid JSON"))
+        return value
+
     def clean(self, value):
 
         if not value and not self.required:
             return None
 
-        value = super(JSONFormField, self).clean(value)
+        # Trap cleaning errors & bubble them up as JSON errors
+        try:
+            return super(JSONFormFieldBase, self).clean(value)
+        except TypeError:
+           raise ValidationError(_("Enter valid JSON"))
+            
 
-        if isinstance(value, six.string_types):
-            try:
-                json.loads(value)
-            except ValueError:
-                raise ValidationError(_("Enter valid JSON"))
-        return value
+class JSONFormField(JSONFormFieldBase, fields.Field):
+    pass
+
+class JSONCharFormField(JSONFormFieldBase, fields.CharField):
+    pass
 
 
 class JSONFieldBase(six.with_metaclass(SubfieldBase, base=models.Field)):
@@ -88,7 +101,7 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, base=models.Field)):
     def formfield(self, **kwargs):
 
         if "form_class" not in kwargs:
-            kwargs["form_class"] = JSONFormField
+            kwargs["form_class"] = self.form_class
 
         field = super(JSONFieldBase, self).formfield(**kwargs)
 
@@ -124,6 +137,7 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, base=models.Field)):
 
 class JSONField(JSONFieldBase, models.TextField):
     """JSONField is a generic textfield that serializes/unserializes JSON objects"""
+    form_class = JSONFormField
     def dumps_for_display(self, value):
         kwargs = { "indent": 2 }
         kwargs.update(self.dump_kwargs)
@@ -134,6 +148,7 @@ class JSONCharField(JSONFieldBase, models.CharField):
     """JSONCharField is a generic textfield that serializes/unserializes JSON objects,
     stored in the database like a CharField, which enables it to be used
     e.g. in unique keys"""
+    form_class = JSONCharFormField
 
 
 try:
