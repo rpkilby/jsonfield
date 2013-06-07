@@ -78,6 +78,8 @@ http://bradjasper.com
 Changes
 -------
 
+v0.9.17, 06/07/2013 -- Fixed bugs in JSONCharField admin form
+
 v0.9.14/15/16, 04/29/2013 -- Python 3 support added!
 
 v0.9.11/12/13, 03/26/2013 -- PyPi changes
