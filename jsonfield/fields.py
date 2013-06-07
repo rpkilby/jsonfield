@@ -2,7 +2,10 @@ import copy
 from django.db import models
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.translation import ugettext_lazy as _
-from django.utils import six
+try:
+    from django.utils import six
+except ImportError:
+    import six
 
 try:
     import json
