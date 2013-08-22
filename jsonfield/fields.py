@@ -65,12 +65,16 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, base=models.Field)):
         to_python so that we can check the obj state and determine if it needs to be
         deserialized"""
 
-        if obj._state.adding and obj.pk is not None:
-            if isinstance(value, six.string_types):
-                try:
-                    return json.loads(value, **self.load_kwargs)
-                except ValueError:
-                    raise ValidationError(_("Enter valid JSON"))
+        if obj._state.adding:
+            # Make sure the primary key actually exists on the object before
+            # checking if it's empty. This is a special case for South datamigrations
+            # see: https://github.com/bradjasper/django-jsonfield/issues/52
+            if not hasattr(obj, "pk") or obj.pk is not None:
+                if isinstance(value, six.string_types):
+                    try:
+                        return json.loads(value, **self.load_kwargs)
+                    except ValueError:
+                        raise ValidationError(_("Enter valid JSON"))
 
         return value
 
