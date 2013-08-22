@@ -65,12 +65,18 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, base=models.Field)):
         to_python so that we can check the obj state and determine if it needs to be
         deserialized"""
 
-        if obj._state.adding and obj.pk is not None:
-            if isinstance(value, six.string_types):
-                try:
-                    return json.loads(value, **self.load_kwargs)
-                except ValueError:
-                    raise ValidationError(_("Enter valid JSON"))
+        try:
+            if obj._state.adding and obj.pk is not None:
+                if isinstance(value, six.string_types):
+                    try:
+                        return json.loads(value, **self.load_kwargs)
+                    except ValueError:
+                        raise ValidationError(_("Enter valid JSON"))
+        except AttributeError:
+            # south fake meta class doesn't create proper attributes
+            # see this:
+            # https://github.com/bradjasper/django-jsonfield/issues/52
+            pass
 
         return value
 
