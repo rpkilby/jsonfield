@@ -78,6 +78,8 @@ http://bradjasper.com
 Changes
 -------
 
+v0.9.19, 09/18/2013 -- Fixed changes to django.six.with_metaclass that broke django-jsonfield for Django 1.6
+
 v0.9.18, 08/23/2013 -- Fixed bugs with South datamigration
 
 v0.9.17, 06/07/2013 -- Fixed bugs in JSONCharField admin form
