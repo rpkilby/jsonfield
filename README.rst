@@ -78,6 +78,8 @@ http://bradjasper.com
 Changes
 -------
 
+v0.9.20, 11/14/2013 -- Fixed load_kwargs on form fields, added Django 1.6 to automated tests
+
 v0.9.19, 09/18/2013 -- Fixed changes to django.six.with_metaclass that broke django-jsonfield for Django 1.6
 
 v0.9.18, 08/23/2013 -- Fixed bugs with South datamigration
