@@ -23,7 +23,7 @@ class JSONFormFieldBase(object):
     def to_python(self, value):
         if isinstance(value, six.string_types):
             try:
-                return json.loads(value)
+                return json.loads(value, **self.load_kwargs)
             except ValueError:
                 raise ValidationError(_("Enter valid JSON"))
         return value
@@ -37,8 +37,8 @@ class JSONFormFieldBase(object):
         try:
             return super(JSONFormFieldBase, self).clean(value)
         except TypeError:
-           raise ValidationError(_("Enter valid JSON"))
-            
+            raise ValidationError(_("Enter valid JSON"))
+
 
 class JSONFormField(JSONFormFieldBase, fields.Field):
     pass
@@ -60,7 +60,7 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
 
     def pre_init(self, value, obj):
         """Convert a string value to JSON only if it needs to be deserialized.
-        
+
         SubfieldBase meteaclass has been modified to call this method instead of
         to_python so that we can check the obj state and determine if it needs to be
         deserialized"""
@@ -142,6 +142,11 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
 class JSONField(JSONFieldBase, models.TextField):
     """JSONField is a generic textfield that serializes/unserializes JSON objects"""
     form_class = JSONFormField
+
+    def __init__(self, *args, **kwargs):
+        super(JSONField, self).__init__(*args, **kwargs)
+        self.form_class.load_kwargs = self.load_kwargs
+
     def dumps_for_display(self, value):
         kwargs = { "indent": 2 }
         kwargs.update(self.dump_kwargs)
