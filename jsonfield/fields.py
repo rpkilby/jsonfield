@@ -31,12 +31,10 @@ class JSONFormFieldBase(object):
         return value
 
     def clean(self, value):
-
         if not value and not self.required:
+            if value == '':
+                return ''
             return None
-
-        if value == '':
-            return ''
 
         # Trap cleaning errors & bubble them up as JSON errors
         try:
