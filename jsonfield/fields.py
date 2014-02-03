@@ -22,6 +22,8 @@ class JSONFormFieldBase(object):
 
     def to_python(self, value):
         if isinstance(value, six.string_types):
+            if value == '':
+                return ''
             try:
                 return json.loads(value, **self.load_kwargs)
             except ValueError:
@@ -32,6 +34,9 @@ class JSONFormFieldBase(object):
 
         if not value and not self.required:
             return None
+
+        if value == '':
+            return ''
 
         # Trap cleaning errors & bubble them up as JSON errors
         try:
