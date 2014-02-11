@@ -72,11 +72,13 @@ Travis CI
 
 Contact
 -------
-Email: `contact@bradjasper.com`_
+Web: http://bradjasper.com
 
 Twitter: `@bradjasper`_
 
-Web: http://bradjasper.com
+Email: `contact@bradjasper.com`_
+
+
 
 .. _contact@bradjasper.com: mailto:contact@bradjasper.com
 .. _@bradjasper: https://twitter.com/bradjasper
