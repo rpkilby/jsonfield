@@ -109,6 +109,9 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
 
         field = super(JSONFieldBase, self).formfield(**kwargs)
 
+        if isinstance(field, JSONFormFieldBase):
+            field.load_kwargs = self.load_kwargs
+
         if not field.help_text:
             field.help_text = "Enter valid JSON"
 
@@ -142,10 +145,6 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
 class JSONField(JSONFieldBase, models.TextField):
     """JSONField is a generic textfield that serializes/unserializes JSON objects"""
     form_class = JSONFormField
-
-    def __init__(self, *args, **kwargs):
-        super(JSONField, self).__init__(*args, **kwargs)
-        self.form_class.load_kwargs = self.load_kwargs
 
     def dumps_for_display(self, value):
         kwargs = { "indent": 2 }
