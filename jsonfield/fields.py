@@ -13,7 +13,10 @@ except ImportError:
     from django.utils import simplejson as json
 
 from django.forms import fields
-from django.forms.util import ValidationError
+try:
+    from django.forms.utils import ValidationError
+except ImportError:
+    from django.forms.util import ValidationError
 
 from .subclassing import SubfieldBase
 
