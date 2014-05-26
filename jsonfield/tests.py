@@ -205,6 +205,19 @@ class JSONFieldTest(TestCase):
         self.assertEqual(model.default_json["check"], 12)
         self.assertEqual(model.complex_default_json[0]["checkcheck"], 1212)
 
+    def test_normal_regex_filter(self):
+        """Make sure JSON model can filter regex"""
+
+        JsonModel.objects.create(json={"boom": "town"})
+        JsonModel.objects.create(json={"move": "town"})
+        JsonModel.objects.create(json={"save": "town"})
+
+        self.assertEqual(JsonModel.objects.count(), 3)
+
+        self.assertEqual(JsonModel.objects.filter(json__regex=r"boom").count(), 1)
+        self.assertEqual(JsonModel.objects.filter(json__regex=r"town").count(), 3)
+
+
 class JSONCharFieldTest(JSONFieldTest):
     json_model = JsonCharModel
 

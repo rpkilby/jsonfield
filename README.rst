@@ -86,7 +86,7 @@ Email: `contact@bradjasper.com`_
 Changes
 -------
 
-v0.9.21, 5/26/2014 -- Added better support for Python 3
+v0.9.21, 5/26/2014 -- Added better support for Python 3 and tests for regex lookups
 
 v0.9.20, 11/14/2013 -- Fixed load_kwargs on form fields, added Django 1.6 to automated tests
 
