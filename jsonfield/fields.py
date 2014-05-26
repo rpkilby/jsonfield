@@ -75,7 +75,8 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
             if not hasattr(obj, "pk") or obj.pk is not None:
                 if isinstance(value, six.string_types):
                     try:
-                        return json.loads(value, **self.load_kwargs)
+                        return value if value == "" \
+                            else json.loads(value, **self.load_kwargs)
                     except ValueError:
                         raise ValidationError(_("Enter valid JSON"))
 
