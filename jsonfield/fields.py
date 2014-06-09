@@ -43,7 +43,7 @@ class JSONFormFieldBase(object):
             raise ValidationError(_("Enter valid JSON"))
 
 
-class JSONFormField(JSONFormFieldBase, fields.Field):
+class JSONFormField(JSONFormFieldBase, fields.CharField):
     pass
 
 class JSONCharFormField(JSONFormFieldBase, fields.CharField):
