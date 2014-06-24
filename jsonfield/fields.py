@@ -58,6 +58,7 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
             'separators': (',', ':')
         })
         self.load_kwargs = kwargs.pop('load_kwargs', {})
+        self.use_pg_json = kwargs.pop('use_pg_json', True)
 
         super(JSONFieldBase, self).__init__(*args, **kwargs)
 
@@ -140,7 +141,8 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
         return super(JSONFieldBase, self).get_default()
 
     def db_type(self, connection):
-        if connection.vendor == 'postgresql' and connection.pg_version >= 90300:
+        if (self.use_pg_json and connection.vendor == 'postgresql' and
+                connection.pg_version >= 90300):
             return 'json'
         else:
             return super(JSONFieldBase, self).db_type(connection)
