@@ -19,7 +19,9 @@ class TestCommand(Command):
             INSTALLED_APPS=('jsonfield',))
         from django.core.management import call_command
         import django
-        django.setup()
+
+        if django.VERSION[:2] >= (1, 7):
+            django.setup()
         call_command('test', 'jsonfield')
 
 
