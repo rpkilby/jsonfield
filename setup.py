@@ -2,6 +2,7 @@ from distutils.core import setup
 from distutils.core import Command
 
 
+
 class TestCommand(Command):
     user_options = []
 
@@ -17,6 +18,8 @@ class TestCommand(Command):
             'ENGINE': 'django.db.backends.sqlite3'}},
             INSTALLED_APPS=('jsonfield',))
         from django.core.management import call_command
+        import django
+        django.setup()
         call_command('test', 'jsonfield')
 
 
