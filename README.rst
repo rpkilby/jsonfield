@@ -88,6 +88,8 @@ Email: `contact@bradjasper.com`_
 Changes
 -------
 
+v0.9.23, 9/3/2014 -- Allowed tests to run in older versions of Django
+
 v0.9.22, 7/10/2014 -- Added Django 1.7 support
 
 v0.9.21, 5/26/2014 -- Added better support for Python 3 and tests for regex lookups
