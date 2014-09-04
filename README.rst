@@ -7,7 +7,7 @@ It silently takes care of serialization. To use, simply add the field to one of 
 
 Python 3 & Django 1.7 supported!
 
-**Use PostgreSQL?** 1.0.0 introduced a breaking change to the underlying data type, so if you were using < 1.0.0 please see https://github.com/bradjasper/django-jsonfield/issues/57
+**Use PostgreSQL?** 1.0.0 introduced a breaking change to the underlying data type, so if you were using < 1.0.0 please see before upgrading https://github.com/bradjasper/django-jsonfield/issues/57
 
 Install
 -------
