@@ -53,7 +53,7 @@ If you need to use your JSON field in an index or other constraint, you can use 
 Compatibility
 --------------
 
-django-jsonfield supports Python 2.7-Python 3.3 and Django 1.4+
+django-jsonfield supports Python 2.7 to Python 3.4 and Django 1.4 to 1.7
 
 **Why doesn't it support Python 2.6?**
 
