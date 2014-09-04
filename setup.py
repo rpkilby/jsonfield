@@ -1,8 +1,6 @@
 from distutils.core import setup
 from distutils.core import Command
 
-
-
 class TestCommand(Command):
     user_options = []
 
@@ -24,9 +22,8 @@ class TestCommand(Command):
             django.setup()
         call_command('test', 'jsonfield')
 
-
 setup(name='jsonfield',
-    version='0.9.23',
+    version='1.0.0',
     packages=['jsonfield'],
     license='MIT',
     author='Brad Jasper',
@@ -46,6 +43,7 @@ setup(name='jsonfield',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Framework :: Django',
     ],
 )
