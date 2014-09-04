@@ -88,7 +88,7 @@ Email: `contact@bradjasper.com`_
 Changes
 -------
 
-v1.0.0, 9/4/2014 -- Removed native JSON datatype support for PostgreSQL & added Python 3.4 to tests
+v1.0.0, 9/4/2014 -- Removed native JSON datatype support for PostgreSQL (breaking change) & added Python 3.4 to tests
 
 v0.9.23, 9/3/2014 -- Allowed tests to run in older versions of Django
 
