@@ -1,5 +1,5 @@
 django-jsonfield
-j---------------
+----------------
 
 django-jsonfield is a reusable Django field that allows you to store validated JSON in your model.
 
