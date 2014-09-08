@@ -3,7 +3,10 @@ from django.core.serializers import deserialize, serialize
 from django.core.serializers.base import DeserializationError
 from django.db import models
 from django.test import TestCase
-from django.utils import simplejson as json
+try:
+    import json
+except ImportError:
+    from django.utils import simplejson as json
 
 from .fields import JSONField, JSONCharField
 from django.forms.util import ValidationError
@@ -14,6 +17,7 @@ class JsonModel(models.Model):
     json = JSONField()
     default_json = JSONField(default={"check":12})
     complex_default_json = JSONField(default=[{"checkcheck": 1212}])
+    empty_default = JSONField(default={})
 
 class JsonCharModel(models.Model):
     json = JSONCharField(max_length=100)
@@ -146,6 +150,7 @@ class JSONFieldTest(TestCase):
                                                 'dict': {'k': 'v'}}]:
             obj = self.json_model.objects.create(json=json_obj)
             new_obj = self.json_model.objects.get(id=obj.id)
+            self.assert_(new_obj)
 
         queryset = self.json_model.objects.all()
         ser = serialize('json', queryset)
@@ -204,6 +209,35 @@ class JSONFieldTest(TestCase):
         model = JsonModel()
         self.assertEqual(model.default_json["check"], 12)
         self.assertEqual(model.complex_default_json[0]["checkcheck"], 1212)
+
+    def test_normal_regex_filter(self):
+        """Make sure JSON model can filter regex"""
+
+        JsonModel.objects.create(json={"boom": "town"})
+        JsonModel.objects.create(json={"move": "town"})
+        JsonModel.objects.create(json={"save": "town"})
+
+        self.assertEqual(JsonModel.objects.count(), 3)
+
+        self.assertEqual(JsonModel.objects.filter(json__regex=r"boom").count(), 1)
+        self.assertEqual(JsonModel.objects.filter(json__regex=r"town").count(), 3)
+
+    def test_save_blank_object(self):
+        """Test that JSON model can save a blank object as none"""
+
+        model = JsonModel()
+        self.assertEqual(model.empty_default, {})
+
+        model.save()
+        self.assertEqual(model.empty_default, {})
+
+        model1 = JsonModel(empty_default={"hey": "now"})
+        self.assertEqual(model1.empty_default, {"hey": "now"})
+
+        model1.save()
+        self.assertEqual(model1.empty_default, {"hey": "now"})
+
+
 
 class JSONCharFieldTest(JSONFieldTest):
     json_model = JsonCharModel
