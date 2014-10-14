@@ -26,7 +26,7 @@ class JSONFormFieldBase(object):
     def to_python(self, value):
         if isinstance(value, six.string_types):
             try:
-                return json.loads(value, **self.load_kwargs)
+                return json.loads(value)
             except ValueError:
                 raise ValidationError(_("Enter valid JSON"))
         return value
