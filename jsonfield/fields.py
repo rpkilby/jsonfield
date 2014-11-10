@@ -21,32 +21,31 @@ except ImportError:
 from .subclassing import SubfieldBase
 
 
-class JSONFormFieldBase(object):
+class JSONFormFieldBase(fields.CharField):
+    default_error_messages = {
+        'invalid': _('Enter valid JSON.'),
+    }
 
     def to_python(self, value):
         if isinstance(value, six.string_types):
             try:
                 return json.loads(value, **self.load_kwargs)
             except ValueError:
-                raise ValidationError(_("Enter valid JSON"))
+                raise ValidationError(self.error_messages['invalid'], code='invalid')
         return value
 
     def clean(self, value):
-
-        if not value and not self.required:
-            return None
-
-        # Trap cleaning errors & bubble them up as JSON errors
-        try:
-            return super(JSONFormFieldBase, self).clean(value)
-        except TypeError:
-            raise ValidationError(_("Enter valid JSON"))
+        self.validate(value)  # Checks for required
+        value = self.to_python(value)
+        self.run_validators(value)
+        return value
 
 
-class JSONFormField(JSONFormFieldBase, fields.CharField):
+class JSONFormField(JSONFormFieldBase):
     pass
 
-class JSONCharFormField(JSONFormFieldBase, fields.CharField):
+
+class JSONCharFormField(JSONFormFieldBase):
     pass
 
 
