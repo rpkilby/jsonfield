@@ -69,15 +69,10 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
         deserialized"""
 
         if obj._state.adding:
-            meta_pk = obj._meta.pk
-            if isinstance(meta_pk, models.OneToOneField):
-                real_pk_name = meta_pk.related_field.name
-            else:
-                real_pk_name = meta_pk.name
             # Make sure the primary key actually exists on the object before
             # checking if it's empty. This is a special case for South datamigrations
             # see: https://github.com/bradjasper/django-jsonfield/issues/52
-            if getattr(obj, real_pk_name, None) is not None:
+            if getattr(obj, "pk", None) is not None:
                 if isinstance(value, six.string_types):
                     try:
                         return json.loads(value, **self.load_kwargs)
