@@ -22,11 +22,14 @@ from .subclassing import SubfieldBase
 
 
 class JSONFormFieldBase(object):
+    
+    def __init__(self, *args, **kwargs):
+        self.load_kwargs = kwargs.pop('load_kwargs', {})
 
     def to_python(self, value):
         if isinstance(value, six.string_types):
             try:
-                return json.loads(value)
+                return json.loads(value, **self.load_kwargs)
             except ValueError:
                 raise ValidationError(_("Enter valid JSON"))
         return value
