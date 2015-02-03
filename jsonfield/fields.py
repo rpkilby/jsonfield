@@ -1,6 +1,5 @@
 import copy
 from django.db import models
-from django.core.serializers.json import DjangoJSONEncoder
 from django.utils.translation import ugettext_lazy as _
 try:
     from django.utils import six
@@ -19,6 +18,7 @@ except ImportError:
     from django.forms.util import ValidationError
 
 from .subclassing import SubfieldBase
+from .encoder import JSONEncoder
 
 
 class JSONFormFieldBase(object):
@@ -54,7 +54,7 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
 
     def __init__(self, *args, **kwargs):
         self.dump_kwargs = kwargs.pop('dump_kwargs', {
-            'cls': DjangoJSONEncoder,
+            'cls': JSONEncoder,
             'separators': (',', ':')
         })
         self.load_kwargs = kwargs.pop('load_kwargs', {})
