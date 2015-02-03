@@ -5,7 +5,7 @@ django-jsonfield is a reusable Django field that allows you to store validated J
 
 It silently takes care of serialization. To use, simply add the field to one of your models.
 
-Python 3 & Django 1.7 supported!
+Python 3 & Django 1.8 supported!
 
 **Use PostgreSQL?** 1.0.0 introduced a breaking change to the underlying data type, so if you were using < 1.0.0 please read https://github.com/bradjasper/django-jsonfield/issues/57 before upgrading.
 
@@ -53,7 +53,7 @@ If you need to use your JSON field in an index or other constraint, you can use 
 Compatibility
 --------------
 
-django-jsonfield supports Python 2.7 to Python 3.4 and Django 1.4 to 1.7
+django-jsonfield supports Python 2.7 to Python 3.4 and Django 1.4 to 1.8
 
 **Why doesn't it support Python 2.6?**
 
@@ -87,6 +87,8 @@ Email: `contact@bradjasper.com`_
 
 Changes
 -------
+
+v1.0.1, 2/2/2015 -- Added Django 1.8 support
 
 v1.0.0, 9/4/2014 -- Removed native JSON datatype support for PostgreSQL (breaking change) & added Python 3.4 to tests
 
