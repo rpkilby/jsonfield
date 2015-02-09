@@ -10,6 +10,7 @@ env:
   - DJANGO=1.5.1
   - DJANGO=1.6
   - DJANGO=1.7
+  - DJANGO=1.8a1
 
 install:
   - pip install -q Django==$DJANGO --use-mirrors
