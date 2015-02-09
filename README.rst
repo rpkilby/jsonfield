@@ -88,6 +88,8 @@ Email: `contact@bradjasper.com`_
 Changes
 -------
 
+v1.0.2, 2/9/2015 -- Re-added fix for south migration bug
+
 v1.0.1, 2/2/2015 -- Added Django 1.8 support
 
 v1.0.0, 9/4/2014 -- Removed native JSON datatype support for PostgreSQL (breaking change) & added Python 3.4 to tests
