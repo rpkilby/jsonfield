@@ -70,15 +70,11 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
 
         try:
             if obj._state.adding:
-                # Make sure the primary key actually exists on the object before
-                # checking if it's empty. This is a special case for South datamigrations
-                # see: https://github.com/bradjasper/django-jsonfield/issues/52
-                if getattr(obj, "pk", None) is not None:
-                    if isinstance(value, six.string_types):
-                        try:
-                            return json.loads(value, **self.load_kwargs)
-                        except ValueError:
-                            raise ValidationError(_("Enter valid JSON"))
+                if isinstance(value, six.string_types):
+                    try:
+                        return json.loads(value, **self.load_kwargs)
+                    except ValueError:
+                        raise ValidationError(_("Enter valid JSON"))
 
         except AttributeError:
             # south fake meta class doesn't create proper attributes
