@@ -88,6 +88,8 @@ Email: `contact@bradjasper.com`_
 Changes
 -------
 
+v1.0.3, 2/23/2015 -- Added fix to setup.py to allow PIP install
+
 v1.0.2, 2/9/2015 -- Re-added fix for south migration bug
 
 v1.0.1, 2/2/2015 -- Added Django 1.8 support
