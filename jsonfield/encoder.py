@@ -38,7 +38,7 @@ class JSONEncoder(json.JSONEncoder):
                 representation = representation[:12]
             return representation
         elif isinstance(obj, datetime.timedelta):
-            return six.text_type(total_seconds(obj))
+            return six.text_type(obj.total_seconds())
         elif isinstance(obj, decimal.Decimal):
             # Serializers will coerce decimals to strings by default.
             return float(obj)
