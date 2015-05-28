@@ -44,9 +44,12 @@ class JSONFormFieldBase(object):
 
 
 class JSONFormField(JSONFormFieldBase, fields.CharField):
-    pass
+    def __init__(self, *args, **kwargs):
+        self.load_kwargs = kwargs.pop('load_kwargs', {})
+        super(JSONFormField, self).__init__(*args, **kwargs)
 
-class JSONCharFormField(JSONFormFieldBase, fields.CharField):
+
+class JSONCharFormField(JSONFormField):
     pass
 
 
