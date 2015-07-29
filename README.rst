@@ -11,6 +11,9 @@ Python 3 & Django 1.8 supported!
 
 **Note:** There are a couple of JSONField's for Django. This one is django-jsonfield here on GitHub but jsonfield on PyPi.
 
+**Note:** Semvar is followed after the 1.0 released.
+
+
 Install
 -------
 
