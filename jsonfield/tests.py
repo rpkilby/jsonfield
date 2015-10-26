@@ -9,7 +9,10 @@ except ImportError:
     from django.utils import simplejson as json
 
 from .fields import JSONField, JSONCharField
-from django.forms.util import ValidationError
+try:
+    from django.forms.utils import ValidationError
+except ImportError:
+    from django.forms.util import ValidationError
 
 from collections import OrderedDict
 
