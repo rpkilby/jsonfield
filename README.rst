@@ -1,5 +1,9 @@
-django-jsonfield
-----------------
+django-nged-jsonfield
+---------------------
+
+This fork is a combination of https://github.com/Nuevosmedios/django-jsonfield and https://github.com/bradjasper/django-jsonfield .
+
+The Nuevosmedios fork provides validation of a blank field better than the original bradjasper version.
 
 **django-jsonfield is looking for maintainers that want to help keep the software up-to-date with bug patches & Django versions. Please email bjasper@gmail.com if interested.**
 

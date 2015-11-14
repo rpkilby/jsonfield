@@ -21,32 +21,43 @@ from .subclassing import SubfieldBase
 from .encoder import JSONEncoder
 
 
-class JSONFormFieldBase(object):
+class JSONFormFieldBase(fields.CharField):
+    default_error_messages = {
+        'invalid': _('Enter valid JSON.'),
+    }
 
     def to_python(self, value):
         if isinstance(value, six.string_types):
+	    if value == '':
+		return ''
             try:
                 return json.loads(value, **self.load_kwargs)
             except ValueError:
-                raise ValidationError(_("Enter valid JSON"))
+                raise ValidationError(self.error_messages['invalid'], code='invalid')
         return value
 
     def clean(self, value):
 
         if not value and not self.required:
+	    if value == '':
+		return ''
             return None
 
         # Trap cleaning errors & bubble them up as JSON errors
         try:
-            return super(JSONFormFieldBase, self).clean(value)
+            self.validate(value)  # Checks for required
+            value = self.to_python(value)
+            self.run_validators(value)
+            return value
         except TypeError:
             raise ValidationError(_("Enter valid JSON"))
 
 
-class JSONFormField(JSONFormFieldBase, fields.CharField):
+class JSONFormField(JSONFormFieldBase):
     pass
 
-class JSONCharFormField(JSONFormFieldBase, fields.CharField):
+
+class JSONCharFormField(JSONFormFieldBase):
     pass
 
 
@@ -75,6 +86,8 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
                 # see: https://github.com/bradjasper/django-jsonfield/issues/52
                 if getattr(obj, "pk", None) is not None:
                     if isinstance(value, six.string_types):
+                        if value == '':
+	  		    return ''
                         try:
                             return json.loads(value, **self.load_kwargs)
                         except ValueError:
@@ -97,6 +110,8 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
         """Convert JSON object to a string"""
         if self.null and value is None:
             return None
+	if value == '':
+	    return ''
         return json.dumps(value, **self.dump_kwargs)
 
     def value_to_string(self, obj):
@@ -107,6 +122,8 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
         value = super(JSONFieldBase, self).value_from_object(obj)
         if self.null and value is None:
             return None
+	if value == '':
+	    return ''
         return self.dumps_for_display(value)
 
     def dumps_for_display(self, value):
