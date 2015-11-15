@@ -16,15 +16,18 @@ except ImportError:
 
 from collections import OrderedDict
 
+
 class JsonModel(models.Model):
     json = JSONField()
-    default_json = JSONField(default={"check":12})
+    default_json = JSONField(default={"check": 12})
     complex_default_json = JSONField(default=[{"checkcheck": 1212}])
     empty_default = JSONField(default={})
 
+
 class JsonCharModel(models.Model):
     json = JSONCharField(max_length=100)
-    default_json = JSONCharField(max_length=100, default={"check":34})
+    default_json = JSONCharField(max_length=100, default={"check": 34})
+
 
 class ComplexEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -37,10 +40,12 @@ class ComplexEncoder(json.JSONEncoder):
 
         return json.JSONEncoder.default(self, obj)
 
+
 def as_complex(dct):
     if '__complex__' in dct:
         return complex(dct['real'], dct['imag'])
     return dct
+
 
 class JSONModelCustomEncoders(models.Model):
     # A JSON field that can store complex numbers
@@ -48,6 +53,7 @@ class JSONModelCustomEncoders(models.Model):
         dump_kwargs={'cls': ComplexEncoder, "indent": 4},
         load_kwargs={'object_hook': as_complex},
     )
+
 
 class JSONFieldTest(TestCase):
     """JSONField Wrapper Tests"""
@@ -67,11 +73,11 @@ class JSONFieldTest(TestCase):
 
     def test_string_in_json_field(self):
         """Test saving an ordinary Python string in our JSONField"""
-        json_obj = 'blah blah'
+        json_obj = '"blah blah"'
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
 
-        self.assertEqual(new_obj.json, json_obj)
+        self.assertEqual(new_obj.json, json_obj.strip('"'))
 
     def test_float_in_json_field(self):
         """Test saving a Python float in our JSONField"""
@@ -84,6 +90,14 @@ class JSONFieldTest(TestCase):
     def test_int_in_json_field(self):
         """Test saving a Python integer in our JSONField"""
         json_obj = 1234567
+        obj = self.json_model.objects.create(json=json_obj)
+        new_obj = self.json_model.objects.get(id=obj.id)
+
+        self.assertEqual(new_obj.json, json_obj)
+
+    def test_boolean_in_json_field(self):
+        """Test saving the Python boolean True in our JSONField"""
+        json_obj = True
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
 
@@ -132,7 +146,7 @@ class JSONFieldTest(TestCase):
 
     def test_empty_objects(self):
         """Test storing empty objects"""
-        for json_obj in [{}, [], 0, '', False]:
+        for json_obj in [{}, [], 0, '', False, None]:
             obj = self.json_model.objects.create(json=json_obj)
             new_obj = self.json_model.objects.get(id=obj.id)
             self.assertEqual(json_obj, obj.json)
@@ -188,7 +202,15 @@ class JSONFieldTest(TestCase):
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
 
-        self.assertEqual(new_obj.json, json_obj)
+        self.assertEqual(new_obj.json, int(json_obj))
+
+    def test_float_in_string_in_json_field(self):
+        """Test saving the Python string '1.23' in our JSONField"""
+        json_obj = '1.23'
+        obj = self.json_model.objects.create(json=json_obj)
+        new_obj = self.json_model.objects.get(id=obj.id)
+
+        self.assertEqual(new_obj.json, float(json_obj))
 
     def test_boolean_in_string_in_json_field(self):
         """Test saving the Python string 'true' in our JSONField"""
@@ -196,11 +218,11 @@ class JSONFieldTest(TestCase):
         obj = self.json_model.objects.create(json=json_obj)
         new_obj = self.json_model.objects.get(id=obj.id)
 
-        self.assertEqual(new_obj.json, json_obj)
-
+        self.assertEqual(new_obj.json, True)
 
     def test_pass_by_reference_pollution(self):
-        """Make sure the default parameter is copied rather than passed by reference"""
+        """Make sure the default parameter is copied rather than passed by
+        reference"""
         model = JsonModel()
         model.default_json["check"] = 144
         model.complex_default_json[0]["checkcheck"] = 144
@@ -208,7 +230,8 @@ class JSONFieldTest(TestCase):
         self.assertEqual(model.complex_default_json[0]["checkcheck"], 144)
 
         # Make sure when we create a new model, it resets to the default value
-        # and not to what we just set it to (it would be if it were passed by reference)
+        # and not to what we just set it to (it would be if it were passed
+        # by reference)
         model = JsonModel()
         self.assertEqual(model.default_json["check"], 12)
         self.assertEqual(model.complex_default_json[0]["checkcheck"], 1212)
@@ -222,8 +245,10 @@ class JSONFieldTest(TestCase):
 
         self.assertEqual(JsonModel.objects.count(), 3)
 
-        self.assertEqual(JsonModel.objects.filter(json__regex=r"boom").count(), 1)
-        self.assertEqual(JsonModel.objects.filter(json__regex=r"town").count(), 3)
+        self.assertEqual(JsonModel.objects.filter(json__regex=r"boom").count(),
+                         1)
+        self.assertEqual(JsonModel.objects.filter(json__regex=r"town").count(),
+                         3)
 
     def test_save_blank_object(self):
         """Test that JSON model can save a blank object as none"""
@@ -239,7 +264,6 @@ class JSONFieldTest(TestCase):
 
         model1.save()
         self.assertEqual(model1.empty_default, {"hey": "now"})
-
 
 
 class JSONCharFieldTest(JSONFieldTest):
@@ -258,8 +282,10 @@ class OrderedDictSerializationTest(TestCase):
     expected_key_order = ['number', 'notes']
 
     def test_ordered_dict_differs_from_normal_dict(self):
-        self.assertEqual(list(self.ordered_dict.keys()), self.expected_key_order)
-        self.assertNotEqual(dict(self.ordered_dict).keys(), self.expected_key_order)
+        self.assertEqual(list(self.ordered_dict.keys()),
+                         self.expected_key_order)
+        self.assertNotEqual(dict(self.ordered_dict).keys(),
+                            self.expected_key_order)
 
     def test_default_behaviour_loses_sort_order(self):
         mod = JsonModel.objects.create(json=self.ordered_dict)
@@ -273,4 +299,5 @@ class OrderedDictSerializationTest(TestCase):
         mod = OrderedJsonModel.objects.create(json=self.ordered_dict)
         self.assertEqual(list(mod.json.keys()), self.expected_key_order)
         mod_from_db = OrderedJsonModel.objects.get(id=mod.id)
-        self.assertEqual(list(mod_from_db.json.keys()), self.expected_key_order)
+        self.assertEqual(list(mod_from_db.json.keys()),
+                         self.expected_key_order)
