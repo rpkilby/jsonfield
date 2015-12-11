@@ -1,0 +1,7 @@
+[run]
+source = jsonfield
+omit = jsonfield/tests.py
+branch = 1
+
+[report]
+omit = jsonfield/tests.py

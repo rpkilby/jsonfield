@@ -4,7 +4,6 @@ from django.utils.encoding import force_text
 from django.utils.functional import Promise
 import datetime
 import decimal
-import types
 import json
 import uuid
 
@@ -16,7 +15,7 @@ class JSONEncoder(json.JSONEncoder):
 
     Taken from https://github.com/tomchristie/django-rest-framework/blob/master/rest_framework/utils/encoders.py
     """
-    def default(self, obj):
+    def default(self, obj):  # noqa
         # For Date Time string spec, see ECMA 262
         # http://ecma-international.org/ecma-262/5.1/#sec-15.9.1.15
         if isinstance(obj, Promise):
@@ -38,7 +37,7 @@ class JSONEncoder(json.JSONEncoder):
                 representation = representation[:12]
             return representation
         elif isinstance(obj, datetime.timedelta):
-            return six.text_type(total_seconds(obj))
+            return six.text_type(obj.total_seconds())
         elif isinstance(obj, decimal.Decimal):
             # Serializers will coerce decimals to strings by default.
             return float(obj)

@@ -1,3 +1,6 @@
+.coverage
+.tox
+htmlcov
 *.pyc
 build/
 dist/
