@@ -16,15 +16,18 @@ except ImportError:
 
 from collections import OrderedDict
 
+
 class JsonModel(models.Model):
     json = JSONField()
-    default_json = JSONField(default={"check":12})
+    default_json = JSONField(default={"check": 12})
     complex_default_json = JSONField(default=[{"checkcheck": 1212}])
     empty_default = JSONField(default={})
 
+
 class JsonCharModel(models.Model):
     json = JSONCharField(max_length=100)
-    default_json = JSONCharField(max_length=100, default={"check":34})
+    default_json = JSONCharField(max_length=100, default={"check": 34})
+
 
 class ComplexEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -37,10 +40,12 @@ class ComplexEncoder(json.JSONEncoder):
 
         return json.JSONEncoder.default(self, obj)
 
+
 def as_complex(dct):
     if '__complex__' in dct:
         return complex(dct['real'], dct['imag'])
     return dct
+
 
 class JSONModelCustomEncoders(models.Model):
     # A JSON field that can store complex numbers
@@ -48,6 +53,7 @@ class JSONModelCustomEncoders(models.Model):
         dump_kwargs={'cls': ComplexEncoder, "indent": 4},
         load_kwargs={'object_hook': as_complex},
     )
+
 
 class JSONFieldTest(TestCase):
     """JSONField Wrapper Tests"""
@@ -198,7 +204,6 @@ class JSONFieldTest(TestCase):
 
         self.assertEqual(new_obj.json, json_obj)
 
-
     def test_pass_by_reference_pollution(self):
         """Make sure the default parameter is copied rather than passed by reference"""
         model = JsonModel()
@@ -239,7 +244,6 @@ class JSONFieldTest(TestCase):
 
         model1.save()
         self.assertEqual(model1.empty_default, {"hey": "now"})
-
 
 
 class JSONCharFieldTest(JSONFieldTest):

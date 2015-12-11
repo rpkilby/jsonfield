@@ -1,5 +1,5 @@
-## This file was copied from django.db.models.fields.subclassing so that we could
-## change the Creator.__set__ behavior. Read the comment below for full details.
+# This file was copied from django.db.models.fields.subclassing so that we could
+# change the Creator.__set__ behavior. Read the comment below for full details.
 
 """
 Convenience routines for creating non-trivial Field subclasses, as well as
@@ -8,6 +8,7 @@ backwards compatibility utilities.
 Add SubfieldBase as the __metaclass__ for your Field subclass, implement
 to_python() and the other necessary methods and everything will work seamlessly.
 """
+
 
 class SubfieldBase(type):
     """
@@ -20,6 +21,7 @@ class SubfieldBase(type):
             new_class, attrs.get('contribute_to_class')
         )
         return new_class
+
 
 class Creator(object):
     """
