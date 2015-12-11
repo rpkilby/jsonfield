@@ -255,11 +255,16 @@ class OrderedJsonModel(models.Model):
 
 
 class OrderedDictSerializationTest(TestCase):
-    ordered_dict = OrderedDict([
-        ('number', [1, 2, 3, 4]),
-        ('notes', True),
-    ])
-    expected_key_order = ['number', 'notes']
+    def setUp(self):
+        self.ordered_dict = OrderedDict([
+            ('number', [1, 2, 3, 4]),
+            ('notes', True),
+            ('alpha', True),
+            ('romeo', True),
+            ('juliet', True),
+            ('bravo', True),
+        ])
+        self.expected_key_order = ['number', 'notes', 'alpha', 'romeo', 'juliet', 'bravo']
 
     def test_ordered_dict_differs_from_normal_dict(self):
         self.assertEqual(list(self.ordered_dict.keys()), self.expected_key_order)
