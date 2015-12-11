@@ -1,32 +1,59 @@
 language: python
+sudo: false
 python:
-  - 2.7
-  - 3.2
-  - 3.3
-  - 3.4
-
+  - "2.7"
+  - "3.2"
+  - "3.3"
+  - "3.4"
+  - "3.5"
 env:
-  - DJANGO='django>=1.4,<1.5'
-  - DJANGO='django>=1.5,<1.6'
-  - DJANGO='django>=1.6,<1.7'
-  - DJANGO='django>=1.7,<1.8'
-  - DJANGO='django>=1.8a,<1.9'
-
-install:
-  - pip install -q $DJANGO
-
-script: python setup.py test
-
+  - DJANGO=1.4
+  - DJANGO=1.5
+  - DJANGO=1.6
+  - DJANGO=1.7
+  - DJANGO=1.8
+  - DJANGO=1.9
+  - DJANGO=master
 matrix:
   exclude:
-    - python: 3.2
-      env: DJANGO='django>=1.4,<1.5'
-    - python: 3.3
-      env: DJANGO='django>=1.4,<1.5'
-    - python: 3.4
-      env: DJANGO='django>=1.4,<1.5'
-
+    - python: "3.2"
+      env: DJANGO=1.4
+    - python: "3.2"
+      env: DJANGO=1.8
+    - python: "3.2"
+      env: DJANGO=1.9
+    - python: "3.2"
+      env: DJANGO=master
+    - python: "3.3"
+      env: DJANGO=1.4
+    - python: "3.3"
+      env: DJANGO=1.8
+    - python: "3.3"
+      env: DJANGO=1.9
+    - python: "3.3"
+      env: DJANGO=master
+    - python: "3.4"
+      env: DJANGO=1.4
+    - python: "3.4"
+      env: DJANGO=1.5
+    - python: "3.4"
+      env: DJANGO=1.6
+    - python: "3.5"
+      env: DJANGO=1.4
+    - python: "3.5"
+      env: DJANGO=1.5
+    - python: "3.5"
+      env: DJANGO=1.6
+    - python: "3.5"
+      env: DJANGO=1.7
+install:
+  - pip install tox coveralls
+script:
+  - tox -e py${TRAVIS_PYTHON_VERSION//[.]/}-$DJANGO
+after_success:
+  - coveralls
 notifications:
-  email:
-    recipients:
-      - bjasper@gmail.com
+    email:
+        recipients:
+            - bjasper@gmail.com
+            - paltman@gmail.com
