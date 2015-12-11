@@ -1,5 +1,6 @@
-from distutils.core import setup
 from distutils.core import Command
+from setuptools import setup
+
 
 class TestCommand(Command):
     user_options = []
@@ -12,9 +13,10 @@ class TestCommand(Command):
 
     def run(self):
         from django.conf import settings
-        settings.configure(DATABASES={'default': {'NAME': ':memory:',
-            'ENGINE': 'django.db.backends.sqlite3'}},
-            INSTALLED_APPS=('jsonfield',))
+        settings.configure(
+            DATABASES={'default': {'NAME': ':memory:', 'ENGINE': 'django.db.backends.sqlite3'}},
+            INSTALLED_APPS=('jsonfield',)
+        )
         from django.core.management import call_command
         import django
 
@@ -22,11 +24,12 @@ class TestCommand(Command):
             django.setup()
         call_command('test', 'jsonfield')
 
-setup(name='jsonfield',
+
+setup(
+    name='jsonfield',
     version='1.0.3',
     packages=['jsonfield'],
     license='MIT',
-    include_package_data=True,
     author='Brad Jasper',
     author_email='bjasper@gmail.com',
     url='https://github.com/bradjasper/django-jsonfield/',
