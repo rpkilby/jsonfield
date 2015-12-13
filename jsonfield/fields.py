@@ -22,6 +22,10 @@ from .encoder import JSONEncoder
 
 
 class JSONFormFieldBase(object):
+    
+    def __init__(self, *args, **kwargs):
+        self.load_kwargs = kwargs.pop('load_kwargs', {})
+        super(JSONFormFieldBase, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
         if isinstance(value, six.string_types):
@@ -123,7 +127,7 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
         if isinstance(field, JSONFormFieldBase):
             field.load_kwargs = self.load_kwargs
 
-        if not field.help_text:
+        if not getattr(field, 'help_text',''):
             field.help_text = "Enter valid JSON"
 
         return field
