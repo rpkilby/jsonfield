@@ -22,6 +22,9 @@ from .encoder import JSONEncoder
 
 
 class JSONFormFieldBase(object):
+    def __init__(self, *args, **kwargs):
+        self.load_kwargs = kwargs.pop('load_kwargs', {})
+        super(JSONFormFieldBase, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
         if isinstance(value, six.string_types):
