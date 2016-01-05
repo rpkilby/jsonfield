@@ -97,7 +97,7 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
         is still necessary for Django's deserializer"""
         return value
 
-    def get_db_prep_value(self, value, connection, prepared=False):
+    def get_prep_value(self, value):
         """Convert JSON object to a string"""
         if self.null and value is None:
             return None
