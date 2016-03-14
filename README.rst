@@ -77,7 +77,7 @@ Travis CI
 ---------
 
 .. image:: https://travis-ci.org/bradjasper/django-jsonfield.png?branch=master
-
+    :target: https://travis-ci.org/bradjasper/django-jsonfield
 
 Contact
 -------
