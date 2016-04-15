@@ -18,6 +18,7 @@ try:
 except ImportError:
     from django.forms.util import ValidationError
 
+from .subclassing import SubfieldBase
 from .encoder import JSONEncoder
 
 
@@ -97,7 +98,7 @@ class JSONFieldBase(JSONFieldBaseField):
             pass
 
         return value
-        
+
     def from_db_value(self, value, expression, connection, context):
         return self.to_python(value)
 
