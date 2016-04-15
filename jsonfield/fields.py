@@ -1,4 +1,5 @@
 import copy
+import django
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 try:
@@ -17,8 +18,13 @@ try:
 except ImportError:
     from django.forms.util import ValidationError
 
-from .subclassing import SubfieldBase
 from .encoder import JSONEncoder
+
+
+if django.VERSION < (1, 8):
+    JSONFieldBaseField = six.with_metaclass(models.SubfieldBase, models.TextField)
+else:
+    JSONFieldBaseField = models.TextField
 
 
 class JSONFormFieldBase(object):
@@ -54,7 +60,7 @@ class JSONCharFormField(JSONFormFieldBase, fields.CharField):
     pass
 
 
-class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
+class JSONFieldBase(JSONFieldBaseField):
 
     def __init__(self, *args, **kwargs):
         self.dump_kwargs = kwargs.pop('dump_kwargs', {
@@ -91,6 +97,9 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
             pass
 
         return value
+        
+    def from_db_value(self, value, expression, connection, context):
+        return self.to_python(value)
 
     def to_python(self, value):
         """The SubfieldBase metaclass calls pre_init instead of to_python, however to_python
