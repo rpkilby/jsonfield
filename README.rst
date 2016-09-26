@@ -76,7 +76,7 @@ There was a bug that could only be fixed by a feature in Django 1.4. `Read More`
 Travis CI
 ---------
 
-.. image:: https://travis-ci.org/bradjasper/django-jsonfield.png?branch=master
+.. image:: https://travis-ci.org/bradjasper/django-jsonfield.svg?branch=master
 
 
 Contact
