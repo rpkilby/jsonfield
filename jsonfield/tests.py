@@ -1,3 +1,4 @@
+import uuid
 from decimal import Decimal
 from django.core.serializers import deserialize, serialize
 from django.core.serializers.base import DeserializationError
@@ -23,10 +24,20 @@ class JsonModel(models.Model):
     complex_default_json = JSONField(default=[{"checkcheck": 1212}])
     empty_default = JSONField(default={})
 
+    natural_id = models.CharField(max_length=255, unique=True, default=lambda: uuid.uuid4().hex)
+
+    def natural_key(self):
+        return self.natural_id
+
 
 class JsonCharModel(models.Model):
     json = JSONCharField(max_length=100)
     default_json = JSONCharField(max_length=100, default={"check": 34})
+
+    natural_id = models.CharField(max_length=255, unique=True, default=lambda: uuid.uuid4().hex)
+
+    def natural_key(self):
+        return self.natural_id
 
 
 class ComplexEncoder(json.JSONEncoder):
@@ -166,6 +177,22 @@ class JSONFieldTest(TestCase):
         for dobj in deserialize('json', ser):
             obj = dobj.object
             pulled = self.json_model.objects.get(id=obj.pk)
+            self.assertEqual(obj.json, pulled.json)
+
+    def test_django_serializers_using_natural_keys(self):
+        """Test serializing/deserializing jsonfield data"""
+        for json_obj in [{}, [], 0, '', False, {'key': 'value', 'num': 42,
+                                                'ary': list(range(5)),
+                                                'dict': {'k': 'v'}}]:
+            obj = self.json_model.objects.create(json=json_obj)
+            new_obj = self.json_model.objects.get(id=obj.id)
+            self.assert_(new_obj)
+
+        queryset = self.json_model.objects.all()
+        ser = serialize('json', queryset, use_natural_primary_keys=True)
+        for dobj in deserialize('json', ser):
+            obj = dobj.object
+            pulled = self.json_model.objects.get(natural_id=obj.natural_id)
             self.assertEqual(obj.json, pulled.json)
 
     def test_default_parameters(self):
