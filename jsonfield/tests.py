@@ -1,4 +1,5 @@
 from decimal import Decimal
+import django
 from django.core.serializers import deserialize, serialize
 from django.core.serializers.base import DeserializationError
 from django.db import models
@@ -184,7 +185,11 @@ class JSONFieldTest(TestCase):
             '"fields": {"json": "{]", "default_json": "{]"}}]'
         with self.assertRaises(DeserializationError) as cm:
             next(deserialize('json', ser))
-        inner = cm.exception.args[0]
+        # Django 2.0+ uses PEP 3134 exception chaining
+        if django.VERSION < (2, 0,):
+            inner = cm.exception.args[0]
+        else:
+            inner = cm.exception.__context__
         self.assertTrue(isinstance(inner, ValidationError))
         self.assertEqual('Enter valid JSON', inner.messages[0])
 

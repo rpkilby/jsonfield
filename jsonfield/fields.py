@@ -103,6 +103,14 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
             return None
         return json.dumps(value, **self.dump_kwargs)
 
+    def _get_val_from_obj(self, obj):
+        # This function created to replace Django deprecated version
+        # https://code.djangoproject.com/ticket/24716
+        if obj is not None:
+            return getattr(obj, self.attname)
+        else:
+            return self.get_default()
+
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
         return self.get_db_prep_value(value, None)
