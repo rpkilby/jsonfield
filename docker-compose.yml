@@ -1,0 +1,4 @@
+tox:
+  build: .
+  volumes:
+    - ".:/src:ro"
