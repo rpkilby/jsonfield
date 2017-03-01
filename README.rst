@@ -13,7 +13,7 @@ Python 3 & Django 1.8 supported!
 
 **Note:** There are a couple of JSONField's for Django. This one is django-jsonfield here on GitHub but jsonfield on PyPi.
 
-**Note:** Semvar is followed after the 1.0 released.
+**Note:** Semver is followed after the 1.0 release.
 
 
 Install
@@ -60,17 +60,29 @@ If you need to use your JSON field in an index or other constraint, you can use 
 Compatibility
 --------------
 
-django-jsonfield supports Python 2.7 to Python 3.4 and Django 1.4 to 1.8
+django-jsonfield aims to support the same versions of Django currently maintained by the main Django project. See `Django supported versions`_, currently:
 
-**Why doesn't it support Python 2.6?**
+  * Django 1.8 (LTS) with Python 2.7, 3.3, 3.4, or 3.5
+  * Django 1.9 with Python 2.7, 3.4, or 3.5
+  * Django 1.10 with Python 2.7, 3.4, or 3.5
 
-You actually might be OK if you don't use an OrderedDict, but there are some issues with the simplejson API that make it cumbersome to support.
+.. _Django supported versions: https://www.djangoproject.com/download/#supported-versions
 
-**Why doesn't it support Django 1.3?**
 
-There was a bug that could only be fixed by a feature in Django 1.4. `Read More`_ if you're interested in the details.
+Testing django-jsonfield Locally
+--------------------------------
 
-.. _Read More: https://github.com/bradjasper/django-jsonfield/issues/33
+To test against all supported versions of Django:
+
+.. code-block:: shell
+
+    $ docker-compose build && docker-compose up
+
+Or just one version (for example Django 1.10 on Python 3.5):
+
+.. code-block:: shell
+
+    $ docker-compose build && docker-compose run tox tox -e py35-1.10
 
 
 Travis CI
@@ -94,6 +106,8 @@ Email: `contact@bradjasper.com`_
 
 Changes
 -------
+
+v2.0.0, 2/28/2017 -- Remove support for Django versions older than 1.8
 
 v1.0.3, 2/23/2015 -- Added fix to setup.py to allow PIP install
 
