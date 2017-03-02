@@ -27,7 +27,7 @@ class JSONFormFieldBase(object):
         super(JSONFormFieldBase, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, six.string_types) and value:
             try:
                 return json.loads(value, **self.load_kwargs)
             except ValueError:
