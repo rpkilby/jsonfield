@@ -27,7 +27,7 @@ class TestCommand(Command):
 
 setup(
     name='jsonfield',
-    version='1.0.3',
+    version='2.0.0',
     packages=['jsonfield'],
     license='MIT',
     author='Brad Jasper',
