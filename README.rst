@@ -88,7 +88,7 @@ Or just one version (for example Django 1.10 on Python 3.5):
 Travis CI
 ---------
 
-.. image:: https://travis-ci.org/bradjasper/django-jsonfield.png?branch=master
+.. image:: https://travis-ci.org/bradjasper/django-jsonfield.svg?branch=master
 
 
 Contact
