@@ -107,7 +107,7 @@ Email: `contact@bradjasper.com`_
 Changes
 -------
 
-v2.0.0, 3/2/2017 -- Added Django 1.9 and 1.10 support, removed support for Django versions older than 1.8, fixed to_python to allow for empty string
+v2.0.0, 3/4/2017 -- Added Django 1.9 and 1.10 support, removed support for Django versions older than 1.8, fixed to_python to allow for empty string
 
 v1.0.3, 2/23/2015 -- Added fix to setup.py to allow PIP install
 
