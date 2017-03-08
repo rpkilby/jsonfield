@@ -27,9 +27,10 @@ class TestCommand(Command):
 
 setup(
     name='jsonfield',
-    version='2.0.0',
+    version='2.0.1',
     packages=['jsonfield'],
     license='MIT',
+    include_package_data=True,
     author='Brad Jasper',
     author_email='bjasper@gmail.com',
     url='https://github.com/bradjasper/django-jsonfield/',

@@ -1,6 +1,11 @@
 Changes
 -------
 
+v2.0.1, 3/8/2017
+^^^^^^^^^^^^^^^^
+- Support upcoming Django 1.11 in test suite
+- Renamed method `get_db_prep_value` to `get_prep_value`
+
 v2.0.0, 3/4/2017
 ^^^^^^^^^^^^^^^^
 - Added Django 1.9 and 1.10 support, removed support for Django versions older than 1.8, fixed to_python to allow for empty string
