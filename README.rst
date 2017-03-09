@@ -1,23 +1,29 @@
 django-jsonfield
 ----------------
 
-**django-jsonfield is looking for maintainers that want to help keep the software up-to-date with bug patches & Django versions. Please email bjasper@gmail.com if interested.**
-
 django-jsonfield is a reusable Django field that allows you to store validated JSON in your model.
 
 It silently takes care of serialization. To use, simply add the field to one of your models.
 
 Python 3 & Django 1.8 through 1.11 supported!
 
-**Use PostgreSQL?** 1.0.0 introduced a breaking change to the underlying data type, so if you were using < 1.0.0 please read https://github.com/bradjasper/django-jsonfield/issues/57 before upgrading.
+**Use PostgreSQL?** 1.0.0 introduced a breaking change to the underlying data type, so if you were using < 1.0.0 please read https://github.com/dmkoch/django-jsonfield/issues/57 before upgrading. Also, consider switching to Django's native JSONField that was added in Django 1.9.
 
-**Note:** There are a couple of JSONField's for Django. This one is django-jsonfield here on GitHub but jsonfield on PyPi.
+**Note:** There are a couple of third-party add-on JSONFields for Django. This one is django-jsonfield here on GitHub but `jsonfield on PyPI`_. There is another `django-jsonfield on Bitbucket`_, but that one is `django-jsonfield on PyPI`_. I realize this naming conflict is confusing and I am open to merging the two projects.
+
+.. _jsonfield on PyPI: https://pypi.python.org/pypi/jsonfield
+.. _django-jsonfield on Bitbucket: https://bitbucket.org/schinckel/django-jsonfield
+.. _django-jsonfield on PyPI: https://pypi.python.org/pypi/django-jsonfield
+
+**Note:** Django 1.9 added native PostgreSQL JSON support in `django.contrib.postgres.fields.JSONField`_. This module is still useful if you need to support JSON in databases other than PostgreSQL or are creating a third-party module that needs to be database-agnostic. But if you're an end user using PostgreSQL and want full-featured JSON support, I recommend using the built-in JSONField from Django instead of this module.
+
+.. _django.contrib.postgres.fields.JSONField: https://docs.djangoproject.com/en/dev/ref/contrib/postgres/fields/#jsonfield
 
 **Note:** Semver is followed after the 1.0 release.
 
 
-Install
--------
+Installation
+------------
 
 .. code-block:: python
 
@@ -65,6 +71,7 @@ django-jsonfield aims to support the same versions of Django currently maintaine
   * Django 1.8 (LTS) with Python 2.7, 3.3, 3.4, or 3.5
   * Django 1.9 with Python 2.7, 3.4, or 3.5
   * Django 1.10 with Python 2.7, 3.4, or 3.5
+  * Django 1.11 (LTS) with Python 2.7, 3.4, 3.5 or 3.6
 
 .. _Django supported versions: https://www.djangoproject.com/download/#supported-versions
 
@@ -88,8 +95,8 @@ Or just one version (for example Django 1.10 on Python 3.5):
 Travis CI
 ---------
 
-.. image:: https://travis-ci.org/bradjasper/django-jsonfield.svg?branch=master
-   :target: https://travis-ci.org/bradjasper/django-jsonfield
+.. image:: https://travis-ci.org/dmkoch/django-jsonfield.svg?branch=master
+   :target: https://travis-ci.org/dmkoch/django-jsonfield
 
 Contact
 -------
@@ -109,4 +116,4 @@ Changes
 
 Take a look at the `changelog`_.
 
-.. _changelog: https://github.com/bradjasper/django-jsonfield/blob/master/CHANGES.rst
+.. _changelog: https://github.com/dmkoch/django-jsonfield/blob/master/CHANGES.rst
