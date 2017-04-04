@@ -9,7 +9,7 @@ Python 3 & Django 1.8 through 1.11 supported!
 
 **Use PostgreSQL?** 1.0.0 introduced a breaking change to the underlying data type, so if you were using < 1.0.0 please read https://github.com/dmkoch/django-jsonfield/issues/57 before upgrading. Also, consider switching to Django's native JSONField that was added in Django 1.9.
 
-**Note:** There are a couple of third-party add-on JSONFields for Django. This one is django-jsonfield here on GitHub but `jsonfield on PyPI`_. There is another `django-jsonfield on Bitbucket`_, but that one is `django-jsonfield on PyPI`_. I realize this naming conflict is confusing and I am open to merging the two projects.
+**Note:** There are a couple of third-party add-on JSONFields for Django. This project is django-jsonfield here on GitHub but is named `jsonfield on PyPI`_. There is another `django-jsonfield on Bitbucket`_, but that one is `django-jsonfield on PyPI`_. I realize this naming conflict is confusing and I am open to merging the two projects.
 
 .. _jsonfield on PyPI: https://pypi.python.org/pypi/jsonfield
 .. _django-jsonfield on Bitbucket: https://bitbucket.org/schinckel/django-jsonfield
