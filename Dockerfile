@@ -1,3 +1,3 @@
 FROM themattrix/tox
 
-MAINTAINER Brad Jasper <bjasper@gmail.com>
+MAINTAINER Dan Koch <dmkoch@gmail.com>
