@@ -33,7 +33,7 @@ class Creator(object):
     def __get__(self, obj, type=None):
         if obj is None:
             raise AttributeError('Can only be accessed via an instance.')
-        return obj.__dict__[self.field.name]
+        return self.field.to_python(obj.__dict__[self.field.name])
 
     def __set__(self, obj, value):
         # Usually this would call to_python, but we've changed it to pre_init
