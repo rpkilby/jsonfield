@@ -15,7 +15,7 @@ class TestCommand(Command):
         from django.conf import settings
         settings.configure(
             DATABASES={'default': {'NAME': ':memory:', 'ENGINE': 'django.db.backends.sqlite3'}},
-            INSTALLED_APPS=('jsonfield',)
+            INSTALLED_APPS=('jsonfield', 'django.contrib.contenttypes')
         )
         from django.core.management import call_command
         import django
