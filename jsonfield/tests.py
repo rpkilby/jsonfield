@@ -3,6 +3,8 @@ import django
 from django import forms
 from django.core.serializers import deserialize, serialize
 from django.core.serializers.base import DeserializationError
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.test import TestCase
 try:
@@ -26,6 +28,18 @@ class JsonModel(models.Model):
     default_json = JSONField(default={"check": 12})
     complex_default_json = JSONField(default=[{"checkcheck": 1212}])
     empty_default = JSONField(default={})
+
+
+class GenericForeignKeyObj(models.Model):
+    name = models.CharField('Foreign Obj', max_length=255, null=True)
+
+
+class JSONModelWithForeignKey(models.Model):
+    json = JSONField(null=True)
+    foreign_obj = GenericForeignKey()
+    object_id = models.PositiveIntegerField(blank=True, null=True, db_index=True)
+    content_type = models.ForeignKey(ContentType, blank=True, null=True,
+                                     on_delete=models.CASCADE)
 
 
 class JsonCharModel(models.Model):
@@ -57,6 +71,12 @@ class JSONModelCustomEncoders(models.Model):
         dump_kwargs={'cls': ComplexEncoder, "indent": 4},
         load_kwargs={'object_hook': as_complex},
     )
+
+
+class JSONModelWithForeignKeyTestCase(TestCase):
+    def test_object_create(self):
+        foreign_obj = GenericForeignKeyObj.objects.create(name='Brain')
+        JSONModelWithForeignKey.objects.create(foreign_obj=foreign_obj)
 
 
 class JSONFieldTest(TestCase):
