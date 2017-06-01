@@ -40,7 +40,7 @@ class JSONEncoder(json.JSONEncoder):
             return six.text_type(obj.total_seconds())
         elif isinstance(obj, decimal.Decimal):
             # Serializers will coerce decimals to strings by default.
-            return float(obj)
+            return str(obj)
         elif isinstance(obj, uuid.UUID):
             return six.text_type(obj)
         elif isinstance(obj, QuerySet):
