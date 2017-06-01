@@ -29,7 +29,7 @@ class JSONFormFieldBase(object):
     def to_python(self, value):
         if isinstance(value, six.string_types) and value:
             try:
-                return json.loads(value, **self.load_kwargs)
+                return json.loads(value, strict=False, **self.load_kwargs)
             except ValueError:
                 raise ValidationError(_("Enter valid JSON"))
         return value
@@ -80,7 +80,7 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
                 if getattr(obj, "pk", None) is not None:
                     if isinstance(value, six.string_types):
                         try:
-                            return json.loads(value, **self.load_kwargs)
+                            return json.loads(value, strict=False, **self.load_kwargs)
                         except ValueError:
                             raise ValidationError(_("Enter valid JSON"))
 
