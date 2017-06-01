@@ -7,9 +7,12 @@ except ImportError:
     import six
 
 try:
-    import json
+    import simplejson as json
 except ImportError:
-    from django.utils import simplejson as json
+    try:
+        import json
+    except ImportError:
+        from django.utils import simplejson as json
 
 from django.forms import fields
 try:
