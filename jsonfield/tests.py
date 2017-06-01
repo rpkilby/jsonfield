@@ -38,7 +38,8 @@ class JSONModelWithForeignKey(models.Model):
     json = JSONField(null=True)
     foreign_obj = GenericForeignKey()
     object_id = models.PositiveIntegerField(blank=True, null=True, db_index=True)
-    content_type = models.ForeignKey(ContentType, blank=True, null=True)
+    content_type = models.ForeignKey(ContentType, blank=True, null=True,
+                                     on_delete=models.CASCADE)
 
 
 class JsonCharModel(models.Model):
