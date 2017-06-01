@@ -45,6 +45,9 @@ class JSONFormFieldBase(object):
         except TypeError:
             raise ValidationError(_("Enter valid JSON"))
 
+    def prepare_value(self, value):
+        return value if isinstance(value, six.string_types) else fields.JSONField().dumps_for_display(value)
+
 
 class JSONFormField(JSONFormFieldBase, fields.CharField):
     pass
