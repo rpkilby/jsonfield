@@ -77,7 +77,9 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
                 # Make sure the primary key actually exists on the object before
                 # checking if it's empty. This is a special case for South datamigrations
                 # see: https://github.com/bradjasper/django-jsonfield/issues/52
-                if getattr(obj, "pk", None) is not None:
+                # Use id field instead of pk to support polymorphic objects as well
+                # see: https://github.com/dmkoch/django-jsonfield/issues/101
+                if getattr(obj, "id", None) is not None:
                     if isinstance(value, six.string_types):
                         try:
                             return json.loads(value, **self.load_kwargs)
