@@ -390,3 +390,28 @@ class TestFieldAPIMethods(TestCase):
         self.assertDictEqual(value,
                              json.loads(json.loads(double_prepared_value)))
         self.assertIs(json_field_instance.get_prep_value(None), None)
+
+
+class JsonModelWithCustomPrimaryKey(models.Model):
+    my_key = models.PositiveIntegerField(primary_key=True)
+    json = JSONField()
+    default_json = JSONField(default={"check": 12})
+    complex_default_json = JSONField(default=[{"checkcheck": 1212}])
+    empty_default = JSONField(default={})
+
+
+class JSONFieldWithCustomPrimaryKeyTest(TestCase):
+    """Tests objects with custom primary key"""
+
+    json_model = JsonModelWithCustomPrimaryKey
+
+    def test_json_field_create(self):
+        """Test saving a JSON object in our JSONField on an object with custom pk"""
+        json_obj = {
+            "item_1": "this is a json blah",
+            "blergh": "hey, hey, hey"}
+
+        obj = self.json_model.objects.create(json=json_obj, my_key=1)
+        new_obj = self.json_model.objects.get(pk=obj.pk)
+
+        self.assertEqual(new_obj.json, json_obj)

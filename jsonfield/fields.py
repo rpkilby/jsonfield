@@ -21,6 +21,13 @@ from .subclassing import SubfieldBase
 from .encoder import JSONEncoder
 
 
+def polymorphic_has_pk(obj):
+    if getattr(obj, 'polymorphic_primary_key_name', None):
+        if getattr(obj, obj.polymorphic_primary_key_name, None):
+            return True
+    return False
+
+
 class JSONFormFieldBase(object):
     def __init__(self, *args, **kwargs):
         self.load_kwargs = kwargs.pop('load_kwargs', {})
@@ -77,9 +84,9 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
                 # Make sure the primary key actually exists on the object before
                 # checking if it's empty. This is a special case for South datamigrations
                 # see: https://github.com/bradjasper/django-jsonfield/issues/52
-                # Use id field instead of pk to support polymorphic objects as well
+                # Check if its a polymorphic objects and has a primary key
                 # see: https://github.com/dmkoch/django-jsonfield/issues/101
-                if getattr(obj, "id", None) is not None:
+                if getattr(obj, "pk", None) is not None or polymorphic_has_pk(obj):
                     if isinstance(value, six.string_types):
                         try:
                             return json.loads(value, **self.load_kwargs)
