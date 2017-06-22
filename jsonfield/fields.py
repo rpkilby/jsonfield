@@ -1,4 +1,6 @@
 import copy
+from collections import namedtuple
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 try:
@@ -54,6 +56,9 @@ class JSONCharFormField(JSONFormFieldBase, fields.CharField):
     pass
 
 
+DeserializedValue = namedtuple('DeserializedValue', 'value')
+
+
 class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
 
     def __init__(self, *args, **kwargs):
@@ -71,6 +76,10 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
         SubfieldBase metaclass has been modified to call this method instead of
         to_python so that we can check the obj state and determine if it needs to be
         deserialized"""
+
+        if isinstance(value, DeserializedValue):
+            # value already deserialized, just return it
+            return value.value
 
         try:
             if obj._state.adding:
@@ -95,6 +104,12 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
     def to_python(self, value):
         """The SubfieldBase metaclass calls pre_init instead of to_python, however to_python
         is still necessary for Django's deserializer"""
+        if value and isinstance(value, six.string_types):
+            try:
+                # return a DeserializedValue object to indicate that we've already done the deserialization
+                return DeserializedValue(json.loads(value, **self.load_kwargs))
+            except ValueError:
+                raise ValidationError(_("Enter valid JSON"), )
         return value
 
     def get_prep_value(self, value):
