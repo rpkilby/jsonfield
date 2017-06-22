@@ -1,6 +1,6 @@
 Changes
 -------
-v2.0.2, 5/18/2017
+v2.0.2, 6/18/2017
 ^^^^^^^^^^^^^^^^^
 - Fixed issue with GenericForeignKey field
 
