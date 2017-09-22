@@ -78,7 +78,7 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
                 # checking if it's empty. This is a special case for South datamigrations
                 # see: https://github.com/bradjasper/django-jsonfield/issues/52
                 if getattr(obj, "pk", None) is not None:
-                    if isinstance(value, six.string_types):
+                    if isinstance(value, six.string_types) and value[0] in ['"', '[', '{']:
                         try:
                             return json.loads(value, **self.load_kwargs)
                         except ValueError:
