@@ -158,7 +158,7 @@ class JSONField(JSONFieldBase, models.TextField):
     def dumps_for_display(self, value):
         kwargs = {"indent": 2}
         kwargs.update(self.dump_kwargs)
-        return json.dumps(value, **kwargs)
+        return json.dumps(value, ensure_ascii=False, **kwargs)
 
 
 class JSONCharField(JSONFieldBase, models.CharField):
