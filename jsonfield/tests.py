@@ -273,6 +273,12 @@ class JSONFieldTest(TestCase):
         model1.save()
         self.assertEqual(model1.empty_default, {"hey": "now"})
 
+    def test_model_to_dict(self):
+        """Test Django model_to_dict returns data instead of string"""
+        instance = self.json_model.objects.create(json={1: 2})
+        as_dict = forms.model_to_dict(instance)
+        self.assertEqual(as_dict['json'], {1: 2})
+
 
 class JSONCharFieldTest(JSONFieldTest):
     json_model = JsonCharModel

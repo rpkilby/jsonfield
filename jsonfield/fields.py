@@ -104,10 +104,10 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
         return json.dumps(value, **self.dump_kwargs)
 
     def value_to_string(self, obj):
-        value = self.value_from_object(obj, dump=False)
+        value = self.value_from_object(obj)
         return self.get_db_prep_value(value, None)
 
-    def value_from_object(self, obj, dump=True):
+    def value_from_object(self, obj, dump=False):
         value = super(JSONFieldBase, self).value_from_object(obj)
         if self.null and value is None:
             return None
