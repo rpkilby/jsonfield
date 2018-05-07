@@ -53,6 +53,15 @@ class JSONFieldBase(models.Field):
 
         super(JSONFieldBase, self).__init__(*args, **kwargs)
 
+    def deconstruct(self):
+        name, path, args, kwargs = super().deconstruct()
+
+        if self.dump_kwargs is not None:
+            kwargs['dump_kwargs'] = self.dump_kwargs
+        if self.load_kwargs is not None:
+            kwargs['load_kwargs'] = self.load_kwargs
+        return name, path, args, kwargs
+
     def to_python(self, value):
         if self.null and value is None:
             return None
