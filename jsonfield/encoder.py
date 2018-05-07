@@ -1,11 +1,12 @@
-from django.db.models.query import QuerySet
-from django.utils import six, timezone
-from django.utils.encoding import force_text
-from django.utils.functional import Promise
 import datetime
 import decimal
 import json
 import uuid
+
+from django.db.models.query import QuerySet
+from django.utils import six, timezone
+from django.utils.encoding import force_text
+from django.utils.functional import Promise
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -15,7 +16,7 @@ class JSONEncoder(json.JSONEncoder):
 
     Taken from https://github.com/tomchristie/django-rest-framework/blob/master/rest_framework/utils/encoders.py
     """
-    def default(self, obj):  # noqa
+    def default(self, obj):  # noqa: C901
         # For Date Time string spec, see ECMA 262
         # https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.15
         if isinstance(obj, Promise):

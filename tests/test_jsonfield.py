@@ -1,26 +1,18 @@
+import json
+from collections import OrderedDict
 from decimal import Decimal
+
 import django
-from django import forms
-from django.core.serializers import deserialize, serialize
-from django.core.serializers.base import DeserializationError
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.serializers import deserialize, serialize
+from django.core.serializers.base import DeserializationError
 from django.db import models
+from django.forms import ModelForm, ValidationError
 from django.test import TestCase
-try:
-    import json
-except ImportError:
-    from django.utils import simplejson as json
-
-from jsonfield.fields import JSONField, JSONCharField
-try:
-    from django.forms.utils import ValidationError
-except ImportError:
-    from django.forms.util import ValidationError
-
 from django.utils.six import string_types
 
-from collections import OrderedDict
+from jsonfield.fields import JSONCharField, JSONField
 
 
 class JsonModel(models.Model):
@@ -338,7 +330,7 @@ class JsonNotRequiredModel(models.Model):
         app_label = 'jsonfield'
 
 
-class JsonNotRequiredForm(forms.ModelForm):
+class JsonNotRequiredForm(ModelForm):
     class Meta:
         model = JsonNotRequiredModel
         fields = '__all__'

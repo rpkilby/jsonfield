@@ -1,24 +1,13 @@
 import copy
+import json
+
 from django.db import models
+from django.forms import ValidationError, fields
+from django.utils import six
 from django.utils.translation import ugettext_lazy as _
-try:
-    from django.utils import six
-except ImportError:
-    import six
 
-try:
-    import json
-except ImportError:
-    from django.utils import simplejson as json
-
-from django.forms import fields
-try:
-    from django.forms.utils import ValidationError
-except ImportError:
-    from django.forms.util import ValidationError
-
-from .subclassing import SubfieldBase
 from .encoder import JSONEncoder
+from .subclassing import SubfieldBase
 
 
 class JSONFormFieldBase(object):
