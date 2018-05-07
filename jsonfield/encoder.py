@@ -14,7 +14,7 @@ class JSONEncoder(json.JSONEncoder):
     JSONEncoder subclass that knows how to encode date/time/timedelta,
     decimal types, generators and other basic python objects.
 
-    Taken from https://github.com/tomchristie/django-rest-framework/blob/master/rest_framework/utils/encoders.py
+    Taken from https://github.com/tomchristie/django-rest-framework/blob/3.8.2/rest_framework/utils/encoders.py
     """
     def default(self, obj):  # noqa: C901
         # For Date Time string spec, see ECMA 262
