@@ -32,7 +32,3 @@ class JSONFieldBase(object):
 
 class JSONField(JSONFieldBase, fields.CharField):
     pass
-
-
-class JSONCharField(JSONFieldBase, fields.CharField):
-    pass

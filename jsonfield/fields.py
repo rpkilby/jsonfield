@@ -10,6 +10,7 @@ from .encoder import JSONEncoder
 
 
 class JSONFieldBase(models.Field):
+    form_class = forms.JSONField
 
     def __init__(self, *args, dump_kwargs=None, load_kwargs=None, **kwargs):
         self.dump_kwargs = dump_kwargs if dump_kwargs is not None else {
@@ -92,16 +93,9 @@ class JSONFieldBase(models.Field):
 
 class JSONField(JSONFieldBase, models.TextField):
     """JSONField is a generic textfield that serializes/deserializes JSON objects"""
-    form_class = forms.JSONField
-
-    def dumps_for_display(self, value):
-        kwargs = {"indent": 2}
-        kwargs.update(self.dump_kwargs)
-        return json.dumps(value, ensure_ascii=False, **kwargs)
 
 
 class JSONCharField(JSONFieldBase, models.CharField):
     """JSONCharField is a generic textfield that serializes/deserializes JSON objects,
     stored in the database like a CharField, which enables it to be used
     e.g. in unique keys"""
-    form_class = forms.JSONCharField
