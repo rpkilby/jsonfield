@@ -12,7 +12,7 @@ try:
 except ImportError:
     from django.utils import simplejson as json
 
-from .fields import JSONField, JSONCharField
+from jsonfield.fields import JSONField, JSONCharField
 try:
     from django.forms.utils import ValidationError
 except ImportError:
@@ -29,9 +29,15 @@ class JsonModel(models.Model):
     complex_default_json = JSONField(default=[{"checkcheck": 1212}])
     empty_default = JSONField(default={})
 
+    class Meta:
+        app_label = 'jsonfield'
+
 
 class GenericForeignKeyObj(models.Model):
     name = models.CharField('Foreign Obj', max_length=255, null=True)
+
+    class Meta:
+        app_label = 'jsonfield'
 
 
 class JSONModelWithForeignKey(models.Model):
@@ -41,10 +47,16 @@ class JSONModelWithForeignKey(models.Model):
     content_type = models.ForeignKey(ContentType, blank=True, null=True,
                                      on_delete=models.CASCADE)
 
+    class Meta:
+        app_label = 'jsonfield'
+
 
 class JsonCharModel(models.Model):
     json = JSONCharField(max_length=100)
     default_json = JSONCharField(max_length=100, default={"check": 34})
+
+    class Meta:
+        app_label = 'jsonfield'
 
 
 class ComplexEncoder(json.JSONEncoder):
@@ -71,6 +83,9 @@ class JSONModelCustomEncoders(models.Model):
         dump_kwargs={'cls': ComplexEncoder, "indent": 4},
         load_kwargs={'object_hook': as_complex},
     )
+
+    class Meta:
+        app_label = 'jsonfield'
 
 
 class JSONModelWithForeignKeyTestCase(TestCase):
@@ -281,6 +296,9 @@ class JSONCharFieldTest(JSONFieldTest):
 class OrderedJsonModel(models.Model):
     json = JSONField(load_kwargs={'object_pairs_hook': OrderedDict})
 
+    class Meta:
+        app_label = 'jsonfield'
+
 
 class OrderedDictSerializationTest(TestCase):
     def setUp(self):
@@ -315,6 +333,9 @@ class OrderedDictSerializationTest(TestCase):
 
 class JsonNotRequiredModel(models.Model):
     json = JSONField(blank=True, null=True)
+
+    class Meta:
+        app_label = 'jsonfield'
 
 
 class JsonNotRequiredForm(forms.ModelForm):
