@@ -7,7 +7,6 @@ from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 
 from .encoder import JSONEncoder
-from .subclassing import SubfieldBase
 
 
 class JSONFormFieldBase(object):
@@ -43,7 +42,7 @@ class JSONCharFormField(JSONFormFieldBase, fields.CharField):
     pass
 
 
-class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
+class JSONFieldBase(models.Field):
 
     def __init__(self, *args, **kwargs):
         self.dump_kwargs = kwargs.pop('dump_kwargs', {
@@ -54,37 +53,19 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
 
         super(JSONFieldBase, self).__init__(*args, **kwargs)
 
-    def pre_init(self, value, obj):
-        """Convert a string value to JSON only if it needs to be deserialized.
-
-        SubfieldBase metaclass has been modified to call this method instead of
-        to_python so that we can check the obj state and determine if it needs to be
-        deserialized"""
+    def to_python(self, value):
+        if self.null and value is None:
+            return None
 
         try:
-            if obj._state.adding:
-                # Make sure the primary key actually exists on the object before
-                # checking if it's empty. This is a special case for South datamigrations
-                # see: https://github.com/bradjasper/django-jsonfield/issues/52
-                if getattr(obj, "pk", None) is not None:
-                    if isinstance(value, six.string_types):
-                        try:
-                            return json.loads(value, **self.load_kwargs)
-                        except ValueError:
-                            raise ValidationError(_("Enter valid JSON"))
+            return json.loads(value, **self.load_kwargs)
+        except ValueError:
+            raise ValidationError(_("Enter valid JSON"))
 
-        except AttributeError:
-            # south fake meta class doesn't create proper attributes
-            # see this:
-            # https://github.com/bradjasper/django-jsonfield/issues/52
-            pass
-
-        return value
-
-    def to_python(self, value):
-        """The SubfieldBase metaclass calls pre_init instead of to_python, however to_python
-        is still necessary for Django's deserializer"""
-        return value
+    def from_db_value(self, value, expression, connection):
+        if self.null and value is None:
+            return None
+        return json.loads(value, **self.load_kwargs)
 
     def get_prep_value(self, value):
         """Convert JSON object to a string"""
@@ -92,17 +73,10 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
             return None
         return json.dumps(value, **self.dump_kwargs)
 
-    def value_to_string(self, obj):
-        value = self.value_from_object(obj, dump=False)
-        return self.get_db_prep_value(value, None)
-
-    def value_from_object(self, obj, dump=True):
+    def value_from_object(self, obj):
         value = super(JSONFieldBase, self).value_from_object(obj)
         if self.null and value is None:
             return None
-        return self.dumps_for_display(value) if dump else value
-
-    def dumps_for_display(self, value):
         return json.dumps(value, **self.dump_kwargs)
 
     def formfield(self, **kwargs):
@@ -155,10 +129,3 @@ class JSONCharField(JSONFieldBase, models.CharField):
     stored in the database like a CharField, which enables it to be used
     e.g. in unique keys"""
     form_class = JSONCharFormField
-
-
-try:
-    from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^jsonfield\.fields\.(JSONField|JSONCharField)"])
-except ImportError:
-    pass
