@@ -2,44 +2,11 @@ import copy
 import json
 
 from django.db import models
-from django.forms import ValidationError, fields
-from django.utils import six
+from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
+from . import forms
 from .encoder import JSONEncoder
-
-
-class JSONFormFieldBase(object):
-    def __init__(self, *args, **kwargs):
-        self.load_kwargs = kwargs.pop('load_kwargs', {})
-        super(JSONFormFieldBase, self).__init__(*args, **kwargs)
-
-    def to_python(self, value):
-        if isinstance(value, six.string_types) and value:
-            try:
-                return json.loads(value, **self.load_kwargs)
-            except ValueError:
-                raise ValidationError(_("Enter valid JSON"))
-        return value
-
-    def clean(self, value):
-
-        if not value and not self.required:
-            return None
-
-        # Trap cleaning errors & bubble them up as JSON errors
-        try:
-            return super(JSONFormFieldBase, self).clean(value)
-        except TypeError:
-            raise ValidationError(_("Enter valid JSON"))
-
-
-class JSONFormField(JSONFormFieldBase, fields.CharField):
-    pass
-
-
-class JSONCharFormField(JSONFormFieldBase, fields.CharField):
-    pass
 
 
 class JSONFieldBase(models.Field):
@@ -95,7 +62,7 @@ class JSONFieldBase(models.Field):
 
         field = super(JSONFieldBase, self).formfield(**kwargs)
 
-        if isinstance(field, JSONFormFieldBase):
+        if isinstance(field, forms.JSONFieldBase):
             field.load_kwargs = self.load_kwargs
 
         if not field.help_text:
@@ -125,7 +92,7 @@ class JSONFieldBase(models.Field):
 
 class JSONField(JSONFieldBase, models.TextField):
     """JSONField is a generic textfield that serializes/deserializes JSON objects"""
-    form_class = JSONFormField
+    form_class = forms.JSONField
 
     def dumps_for_display(self, value):
         kwargs = {"indent": 2}
@@ -137,4 +104,4 @@ class JSONCharField(JSONFieldBase, models.CharField):
     """JSONCharField is a generic textfield that serializes/deserializes JSON objects,
     stored in the database like a CharField, which enables it to be used
     e.g. in unique keys"""
-    form_class = JSONCharFormField
+    form_class = forms.JSONCharField
