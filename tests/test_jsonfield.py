@@ -215,9 +215,10 @@ class JSONFieldTest(TestCase):
             '"fields": {"json": "{]", "default_json": "{]"}}]'
         with self.assertRaises(DeserializationError) as cm:
             next(deserialize('json', ser))
-        # Django 2.0+ uses PEP 3134 exception chaining
+        # Django 2 does not reraise DeserializationError as another DeserializationError
+        # Changed in: https://github.com/django/django/pull/7878
         if django.VERSION < (2, 0,):
-            inner = cm.exception.args[0]
+            inner = cm.exception.__context__.__context__
         else:
             inner = cm.exception.__context__
         self.assertTrue(isinstance(inner, ValidationError))

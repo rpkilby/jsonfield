@@ -71,7 +71,7 @@ class JSONFieldBase(models.Field):
         except ValueError:
             raise ValidationError(_("Enter valid JSON"))
 
-    def from_db_value(self, value, expression, connection):
+    def from_db_value(self, value, expression, connection, context=None):
         if self.null and value is None:
             return None
         return json.loads(value, **self.load_kwargs)
