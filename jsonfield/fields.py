@@ -44,12 +44,12 @@ class JSONCharFormField(JSONFormFieldBase, fields.CharField):
 
 class JSONFieldBase(models.Field):
 
-    def __init__(self, *args, **kwargs):
-        self.dump_kwargs = kwargs.pop('dump_kwargs', {
+    def __init__(self, *args, dump_kwargs=None, load_kwargs=None, **kwargs):
+        self.dump_kwargs = dump_kwargs if dump_kwargs is not None else {
             'cls': JSONEncoder,
             'separators': (',', ':')
-        })
-        self.load_kwargs = kwargs.pop('load_kwargs', {})
+        }
+        self.load_kwargs = load_kwargs if load_kwargs is not None else {}
 
         super(JSONFieldBase, self).__init__(*args, **kwargs)
 
