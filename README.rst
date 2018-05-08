@@ -1,25 +1,42 @@
-django-jsonfield
-----------------
+jsonfield2
+==========
 
-django-jsonfield is a reusable Django field that allows you to store validated JSON in your model.
+.. image:: https://travis-ci.org/rpkilby/jsonfield2.svg?branch=master
+  :target: https://travis-ci.org/rpkilby/jsonfield2
+.. image:: https://codecov.io/gh/rpkilby/jsonfield2/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/rpkilby/jsonfield2
+.. image:: https://img.shields.io/pypi/v/jsonfield2.svg
+  :target: https://pypi.org/project/jsonfield2
+.. image:: https://img.shields.io/pypi/l/jsonfield2.svg
+  :target: https://pypi.org/project/jsonfield2
 
-It silently takes care of serialization. To use, simply add the field to one of your models.
+A modern fork of `django-jsonfield`_, compatible with the latest versions of Django.
 
-Python 3 & Django 1.8 through 1.11 supported!
+.. _django-jsonfield: https://github.com/dmkoch/django-jsonfield
 
-**Use PostgreSQL?** 1.0.0 introduced a breaking change to the underlying data type, so if you were using < 1.0.0 please read https://github.com/dmkoch/django-jsonfield/issues/57 before upgrading. Also, consider switching to Django's native JSONField that was added in Django 1.9.
+-----
 
-**Note:** There are a couple of third-party add-on JSONFields for Django. This project is django-jsonfield here on GitHub but is named `jsonfield on PyPI`_. There is another `django-jsonfield on Bitbucket`_, but that one is `django-jsonfield on PyPI`_. I realize this naming conflict is confusing and I am open to merging the two projects.
+**jsonfield2** is a reusable model field that allows you to store validated JSON, automatically handling
+serialization to and from the database. To use, add ``jsonfield.JSONField`` to one of your models.
 
-.. _jsonfield on PyPI: https://pypi.python.org/pypi/jsonfield
-.. _django-jsonfield on Bitbucket: https://bitbucket.org/schinckel/django-jsonfield
-.. _django-jsonfield on PyPI: https://pypi.python.org/pypi/django-jsonfield
+**Note:** `django.contrib.postgres`_ now supports PostgreSQL's jsonb type, which includes extended querying
+capabilities. If you're an end user of PostgreSQL and want full-featured JSON support, then it is
+recommended that you use the built-in JSONField. However, jsonfield2 is still useful when your app
+needs to be database-agnostic, or when the built-in JSONField's extended querying is not being leveraged.
+e.g., a configuration field.
 
-**Note:** Django 1.9 added native PostgreSQL JSON support in `django.contrib.postgres.fields.JSONField`_. This module is still useful if you need to support JSON in databases other than PostgreSQL or are creating a third-party module that needs to be database-agnostic. But if you're an end user using PostgreSQL and want full-featured JSON support, I recommend using the built-in JSONField from Django instead of this module.
+.. _django.contrib.postgres: https://docs.djangoproject.com/en/dev/ref/contrib/postgres/fields/#jsonfield
 
-.. _django.contrib.postgres.fields.JSONField: https://docs.djangoproject.com/en/dev/ref/contrib/postgres/fields/#jsonfield
 
-**Note:** Semver is followed after the 1.0 release.
+Requirements
+------------
+
+jsonfield2 aims to support all current `versions of Django`_, however the explicity tested versions are:
+
+* **Python:** 3.4, 3.5, 3.6
+* **Django:** 1.11, 2.0
+
+.. _versions of Django: https://www.djangoproject.com/download/#supported-versions
 
 
 Installation
@@ -27,7 +44,7 @@ Installation
 
 .. code-block:: python
 
-    pip install jsonfield
+    pip install jsonfield2
 
 
 Usage
@@ -39,20 +56,22 @@ Usage
     from jsonfield import JSONField
 
     class MyModel(models.Model):
-      json = JSONField()
+        json = JSONField()
+
 
 Advanced Usage
 --------------
 
-By default python deserializes json into dict objects. This behavior differs from the standard json behavior because python dicts do not have ordered keys.
-
-To overcome this limitation and keep the sort order of OrderedDict keys the deserialisation can be adjusted on model initialisation:
+By default python deserializes json into dict objects. This behavior differs from the standard json
+behavior  because python dicts do not have ordered keys. To overcome this limitation and keep the
+sort order of OrderedDict keys the deserialisation can be adjusted on model initialisation:
 
 .. code-block:: python
 
     import collections
+
     class MyModel(models.Model):
-      json = JSONField(load_kwargs={'object_pairs_hook': collections.OrderedDict})
+        json = JSONField(load_kwargs={'object_pairs_hook': collections.OrderedDict})
 
 
 Other Fields
@@ -60,60 +79,50 @@ Other Fields
 
 **jsonfield.JSONCharField**
 
-If you need to use your JSON field in an index or other constraint, you can use **JSONCharField** which subclasses **CharField** instead of **TextField**. You'll also need to specify a **max_length** parameter if you use this field.
+Subclasses **models.CharField** instead of **models.TextField**.
 
 
-Compatibility
---------------
+Running the tests
+-----------------
 
-django-jsonfield aims to support the same versions of Django currently maintained by the main Django project. See `Django supported versions`_, currently:
-
-  * Django 1.8 (LTS) with Python 2.7, 3.3, 3.4, or 3.5
-  * Django 1.9 with Python 2.7, 3.4, or 3.5
-  * Django 1.10 with Python 2.7, 3.4, or 3.5
-  * Django 1.11 (LTS) with Python 2.7, 3.4, 3.5 or 3.6
-
-.. _Django supported versions: https://www.djangoproject.com/download/#supported-versions
-
-
-Testing django-jsonfield Locally
---------------------------------
-
-To test against all supported versions of Django:
+The test suite requires ``tox`` and ``tox-venv``.
 
 .. code-block:: shell
 
-    $ docker-compose build && docker-compose up
+    $ pip install tox tox-venv
 
-Or just one version (for example Django 1.10 on Python 3.5):
+
+To test against all supported versions of Django, install and run ``tox``:
 
 .. code-block:: shell
 
-    $ docker-compose build && docker-compose run tox tox -e py35-1.10
+    $ tox
+
+Or, to test just one version (for example Django 2.0 on Python 3.6):
+
+.. code-block:: shell
+
+    $ tox -e py36-django20
 
 
-Travis CI
----------
+Release Process
+---------------
 
-.. image:: https://travis-ci.org/dmkoch/django-jsonfield.svg?branch=master
-   :target: https://travis-ci.org/dmkoch/django-jsonfield
+* Update changelog
+* Update package version in setup.py
+* Create git tag for version
+* Upload release to PyPI
 
-Contact
--------
-Web: http://bradjasper.com
+.. code-block:: shell
 
-Twitter: `@bradjasper`_
+    $ pip install -U pip setuptools wheel
+    $ rm -rf dist/ build/
+    $ python setup.py bdist_wheel upload
 
-Email: `contact@bradjasper.com`_
-
-
-
-.. _contact@bradjasper.com: mailto:contact@bradjasper.com
-.. _@bradjasper: https://twitter.com/bradjasper
 
 Changes
 -------
 
 Take a look at the `changelog`_.
 
-.. _changelog: https://github.com/dmkoch/django-jsonfield/blob/master/CHANGES.rst
+.. _changelog: https://github.com/rpkilby/jsonfield2/blob/master/CHANGES.rst
