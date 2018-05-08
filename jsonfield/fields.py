@@ -9,7 +9,7 @@ from . import forms
 from .encoder import JSONEncoder
 
 
-class JSONFieldBase(models.Field):
+class JSONFieldMixin(models.Field):
     form_class = forms.JSONField
 
     def __init__(self, *args, dump_kwargs=None, load_kwargs=None, **kwargs):
@@ -19,7 +19,7 @@ class JSONFieldBase(models.Field):
         }
         self.load_kwargs = load_kwargs if load_kwargs is not None else {}
 
-        super(JSONFieldBase, self).__init__(*args, **kwargs)
+        super(JSONFieldMixin, self).__init__(*args, **kwargs)
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
@@ -51,7 +51,7 @@ class JSONFieldBase(models.Field):
         return json.dumps(value, **self.dump_kwargs)
 
     def value_from_object(self, obj):
-        value = super(JSONFieldBase, self).value_from_object(obj)
+        value = super(JSONFieldMixin, self).value_from_object(obj)
         if self.null and value is None:
             return None
         return json.dumps(value, **self.dump_kwargs)
@@ -61,9 +61,9 @@ class JSONFieldBase(models.Field):
         if "form_class" not in kwargs:
             kwargs["form_class"] = self.form_class
 
-        field = super(JSONFieldBase, self).formfield(**kwargs)
+        field = super(JSONFieldMixin, self).formfield(**kwargs)
 
-        if isinstance(field, forms.JSONFieldBase):
+        if isinstance(field, forms.JSONFieldMixin):
             field.load_kwargs = self.load_kwargs
 
         if not field.help_text:
@@ -88,14 +88,12 @@ class JSONFieldBase(models.Field):
                 return self.default()
             return copy.deepcopy(self.default)
         # If the field doesn't have a default, then we punt to models.Field.
-        return super(JSONFieldBase, self).get_default()
+        return super(JSONFieldMixin, self).get_default()
 
 
-class JSONField(JSONFieldBase, models.TextField):
+class JSONField(JSONFieldMixin, models.TextField):
     """JSONField is a generic textfield that serializes/deserializes JSON objects"""
 
 
-class JSONCharField(JSONFieldBase, models.CharField):
-    """JSONCharField is a generic textfield that serializes/deserializes JSON objects,
-    stored in the database like a CharField, which enables it to be used
-    e.g. in unique keys"""
+class JSONCharField(JSONFieldMixin, models.CharField):
+    """JSONCharField is a generic textfield that serializes/deserializes JSON objects"""

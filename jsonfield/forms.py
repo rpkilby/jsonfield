@@ -5,10 +5,10 @@ from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 
 
-class JSONFieldBase(object):
+class JSONFieldMixin(object):
     def __init__(self, *args, **kwargs):
         self.load_kwargs = kwargs.pop('load_kwargs', {})
-        super(JSONFieldBase, self).__init__(*args, **kwargs)
+        super(JSONFieldMixin, self).__init__(*args, **kwargs)
 
     def to_python(self, value):
         if isinstance(value, six.string_types) and value:
@@ -25,10 +25,10 @@ class JSONFieldBase(object):
 
         # Trap cleaning errors & bubble them up as JSON errors
         try:
-            return super(JSONFieldBase, self).clean(value)
+            return super(JSONFieldMixin, self).clean(value)
         except TypeError:
             raise ValidationError(_("Enter valid JSON"))
 
 
-class JSONField(JSONFieldBase, fields.CharField):
+class JSONField(JSONFieldMixin, fields.CharField):
     pass
