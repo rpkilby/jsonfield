@@ -1,5 +1,20 @@
 Changes
 -------
+
+v3.0.0 05/07/2017
+^^^^^^^^^^^^^^^^^
+- Add Django 2.0 support
+- Drop Django 1.8, 1.9, and 1.10 support
+- Drop Python 2.7 and 3.3 support
+- Rework field serialization/deserialization
+- Remove support for South
+- Rename JSONFieldBase to JSONFieldMixin
+- Move form fields into separate module
+- Rename JSONFormFieldBase to forms.JSONFieldMixin
+- Rename JSONFormField to forms.JSONField
+- Remove JSONCharFormField
+- Update JSONEncoder from DRF
+
 v2.0.2, 6/18/2017
 ^^^^^^^^^^^^^^^^^
 - Fixed issue with GenericForeignKey field
@@ -27,7 +42,6 @@ v1.0.1, 2/2/2015
 
 v1.0.0, 9/4/2014
 ^^^^^^^^^^^^^^^^
-
 - Removed native JSON datatype support for PostgreSQL (breaking change) & added Python 3.4 to tests
 
 v0.9.23, 9/3/2014
