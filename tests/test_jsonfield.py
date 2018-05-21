@@ -3,81 +3,23 @@ from collections import OrderedDict
 from decimal import Decimal
 
 import django
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.core.serializers import deserialize, serialize
 from django.core.serializers.base import DeserializationError
-from django.db import models
 from django.forms import ModelForm, ValidationError
 from django.test import TestCase
 from django.utils.six import string_types
 
-from jsonfield.fields import JSONCharField, JSONField
+from jsonfield.fields import JSONField
 
-
-class JsonModel(models.Model):
-    json = JSONField()
-    default_json = JSONField(default={"check": 12})
-    complex_default_json = JSONField(default=[{"checkcheck": 1212}])
-    empty_default = JSONField(default={})
-
-    class Meta:
-        app_label = 'jsonfield'
-
-
-class GenericForeignKeyObj(models.Model):
-    name = models.CharField('Foreign Obj', max_length=255, null=True)
-
-    class Meta:
-        app_label = 'jsonfield'
-
-
-class JSONModelWithForeignKey(models.Model):
-    json = JSONField(null=True)
-    foreign_obj = GenericForeignKey()
-    object_id = models.PositiveIntegerField(blank=True, null=True, db_index=True)
-    content_type = models.ForeignKey(ContentType, blank=True, null=True,
-                                     on_delete=models.CASCADE)
-
-    class Meta:
-        app_label = 'jsonfield'
-
-
-class JsonCharModel(models.Model):
-    json = JSONCharField(max_length=100)
-    default_json = JSONCharField(max_length=100, default={"check": 34})
-
-    class Meta:
-        app_label = 'jsonfield'
-
-
-class ComplexEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, complex):
-            return {
-                '__complex__': True,
-                'real': obj.real,
-                'imag': obj.imag,
-            }
-
-        return json.JSONEncoder.default(self, obj)
-
-
-def as_complex(dct):
-    if '__complex__' in dct:
-        return complex(dct['real'], dct['imag'])
-    return dct
-
-
-class JSONModelCustomEncoders(models.Model):
-    # A JSON field that can store complex numbers
-    json = JSONField(
-        dump_kwargs={'cls': ComplexEncoder, "indent": 4},
-        load_kwargs={'object_hook': as_complex},
-    )
-
-    class Meta:
-        app_label = 'jsonfield'
+from .models import (
+    GenericForeignKeyObj,
+    JSONCharModel,
+    JSONModel,
+    JSONModelCustomEncoders,
+    JSONModelWithForeignKey,
+    JSONNotRequiredModel,
+    OrderedJSONModel,
+)
 
 
 class JSONModelWithForeignKeyTestCase(TestCase):
@@ -89,7 +31,7 @@ class JSONModelWithForeignKeyTestCase(TestCase):
 class JSONFieldTest(TestCase):
     """JSONField Wrapper Tests"""
 
-    json_model = JsonModel
+    json_model = JSONModel
 
     def test_json_field_create(self):
         """Test saving a JSON object in our JSONField"""
@@ -201,7 +143,7 @@ class JSONFieldTest(TestCase):
 
     def test_default_parameters(self):
         """Test providing a default value to the model"""
-        model = JsonModel()
+        model = JSONModel()
         model.json = {"check": 12}
         self.assertEqual(model.json, {"check": 12})
         self.assertEqual(type(model.json), dict)
@@ -211,7 +153,7 @@ class JSONFieldTest(TestCase):
 
     def test_invalid_json(self):
         # invalid json data {] in the json and default_json fields
-        ser = '[{"pk": 1, "model": "jsonfield.jsoncharmodel", ' \
+        ser = '[{"pk": 1, "model": "tests.jsoncharmodel", ' \
             '"fields": {"json": "{]", "default_json": "{]"}}]'
         with self.assertRaises(DeserializationError) as cm:
             next(deserialize('json', ser))
@@ -221,7 +163,7 @@ class JSONFieldTest(TestCase):
             inner = cm.exception.__context__.__context__
         else:
             inner = cm.exception.__context__
-        self.assertTrue(isinstance(inner, ValidationError))
+        self.assertIsInstance(inner, ValidationError)
         self.assertEqual('Enter valid JSON', inner.messages[0])
 
     def test_integer_in_string_in_json_field(self):
@@ -242,7 +184,7 @@ class JSONFieldTest(TestCase):
 
     def test_pass_by_reference_pollution(self):
         """Make sure the default parameter is copied rather than passed by reference"""
-        model = JsonModel()
+        model = JSONModel()
         model.default_json["check"] = 144
         model.complex_default_json[0]["checkcheck"] = 144
         self.assertEqual(model.default_json["check"], 144)
@@ -250,32 +192,32 @@ class JSONFieldTest(TestCase):
 
         # Make sure when we create a new model, it resets to the default value
         # and not to what we just set it to (it would be if it were passed by reference)
-        model = JsonModel()
+        model = JSONModel()
         self.assertEqual(model.default_json["check"], 12)
         self.assertEqual(model.complex_default_json[0]["checkcheck"], 1212)
 
     def test_normal_regex_filter(self):
         """Make sure JSON model can filter regex"""
 
-        JsonModel.objects.create(json={"boom": "town"})
-        JsonModel.objects.create(json={"move": "town"})
-        JsonModel.objects.create(json={"save": "town"})
+        JSONModel.objects.create(json={"boom": "town"})
+        JSONModel.objects.create(json={"move": "town"})
+        JSONModel.objects.create(json={"save": "town"})
 
-        self.assertEqual(JsonModel.objects.count(), 3)
+        self.assertEqual(JSONModel.objects.count(), 3)
 
-        self.assertEqual(JsonModel.objects.filter(json__regex=r"boom").count(), 1)
-        self.assertEqual(JsonModel.objects.filter(json__regex=r"town").count(), 3)
+        self.assertEqual(JSONModel.objects.filter(json__regex=r"boom").count(), 1)
+        self.assertEqual(JSONModel.objects.filter(json__regex=r"town").count(), 3)
 
     def test_save_blank_object(self):
         """Test that JSON model can save a blank object as none"""
 
-        model = JsonModel()
+        model = JSONModel()
         self.assertEqual(model.empty_default, {})
 
         model.save()
         self.assertEqual(model.empty_default, {})
 
-        model1 = JsonModel(empty_default={"hey": "now"})
+        model1 = JSONModel(empty_default={"hey": "now"})
         self.assertEqual(model1.empty_default, {"hey": "now"})
 
         model1.save()
@@ -283,14 +225,7 @@ class JSONFieldTest(TestCase):
 
 
 class JSONCharFieldTest(JSONFieldTest):
-    json_model = JsonCharModel
-
-
-class OrderedJsonModel(models.Model):
-    json = JSONField(load_kwargs={'object_pairs_hook': OrderedDict})
-
-    class Meta:
-        app_label = 'jsonfield'
+    json_model = JSONCharModel
 
 
 class OrderedDictSerializationTest(TestCase):
@@ -310,34 +245,27 @@ class OrderedDictSerializationTest(TestCase):
         self.assertNotEqual(dict(self.ordered_dict).keys(), self.expected_key_order)
 
     def test_default_behaviour_loses_sort_order(self):
-        mod = JsonModel.objects.create(json=self.ordered_dict)
+        mod = JSONModel.objects.create(json=self.ordered_dict)
         self.assertEqual(list(mod.json.keys()), self.expected_key_order)
-        mod_from_db = JsonModel.objects.get(id=mod.id)
+        mod_from_db = JSONModel.objects.get(id=mod.id)
 
         # mod_from_db lost ordering information during json.loads()
         self.assertNotEqual(mod_from_db.json.keys(), self.expected_key_order)
 
     def test_load_kwargs_hook_does_not_lose_sort_order(self):
-        mod = OrderedJsonModel.objects.create(json=self.ordered_dict)
+        mod = OrderedJSONModel.objects.create(json=self.ordered_dict)
         self.assertEqual(list(mod.json.keys()), self.expected_key_order)
-        mod_from_db = OrderedJsonModel.objects.get(id=mod.id)
+        mod_from_db = OrderedJSONModel.objects.get(id=mod.id)
         self.assertEqual(list(mod_from_db.json.keys()), self.expected_key_order)
-
-
-class JsonNotRequiredModel(models.Model):
-    json = JSONField(blank=True, null=True)
-
-    class Meta:
-        app_label = 'jsonfield'
 
 
 class JsonNotRequiredForm(ModelForm):
     class Meta:
-        model = JsonNotRequiredModel
+        model = JSONNotRequiredModel
         fields = '__all__'
 
 
-class JsonModelFormTest(TestCase):
+class JSONModelFormTest(TestCase):
     def test_blank_form(self):
         form = JsonNotRequiredForm(data={'json': ''})
         self.assertFalse(form.has_changed())
