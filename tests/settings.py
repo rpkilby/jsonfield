@@ -9,7 +9,6 @@ DEBUG = True
 
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
-    'jsonfield',
     'tests',
 ]
 
