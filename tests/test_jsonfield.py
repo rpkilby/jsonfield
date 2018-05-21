@@ -223,6 +223,17 @@ class JSONFieldTest(TestCase):
         model1.save()
         self.assertEqual(model1.empty_default, {"hey": "now"})
 
+    def test_model_full_clean(self):
+        instances = [
+            JSONNotRequiredModel(),
+            JSONModel(json={'a': 'b'}),
+        ]
+
+        for instance in instances:
+            with self.subTest(instance=instance):
+                instance.full_clean()
+                instance.save()
+
 
 class JSONCharFieldTest(JSONFieldTest):
     json_model = JSONCharModel
@@ -275,6 +286,10 @@ class JSONModelFormTest(TestCase):
     def test_form_with_data(self):
         form = self.form_class(data={'json': '{}'})
         self.assertTrue(form.has_changed())
+
+    def test_form_save(self):
+        form = self.form_class(data={'json': ''})
+        form.save()
 
 
 class TestFieldAPIMethods(TestCase):

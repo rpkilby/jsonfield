@@ -34,6 +34,9 @@ class JSONFieldMixin(models.Field):
         if self.null and value is None:
             return None
 
+        if not isinstance(value, (str, bytes, bytearray)):
+            return value
+
         try:
             return json.loads(value, **self.load_kwargs)
         except ValueError:

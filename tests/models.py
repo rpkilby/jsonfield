@@ -39,7 +39,7 @@ class JSONModel(models.Model):
     json = JSONField()
     default_json = JSONField(default={"check": 12})
     complex_default_json = JSONField(default=[{"checkcheck": 1212}])
-    empty_default = JSONField(default={})
+    empty_default = JSONField(default={}, blank=True)
 
 
 class JSONModelCustomEncoders(models.Model):
