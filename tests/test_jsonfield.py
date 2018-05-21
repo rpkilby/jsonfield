@@ -259,19 +259,21 @@ class OrderedDictSerializationTest(TestCase):
         self.assertEqual(list(mod_from_db.json.keys()), self.expected_key_order)
 
 
-class JsonNotRequiredForm(ModelForm):
-    class Meta:
-        model = JSONNotRequiredModel
-        fields = '__all__'
-
-
 class JSONModelFormTest(TestCase):
+    def setUp(self):
+        class JSONNotRequiredForm(ModelForm):
+            class Meta:
+                model = JSONNotRequiredModel
+                fields = '__all__'
+
+        self.form_class = JSONNotRequiredForm
+
     def test_blank_form(self):
-        form = JsonNotRequiredForm(data={'json': ''})
+        form = self.form_class(data={'json': ''})
         self.assertFalse(form.has_changed())
 
     def test_form_with_data(self):
-        form = JsonNotRequiredForm(data={'json': '{}'})
+        form = self.form_class(data={'json': '{}'})
         self.assertTrue(form.has_changed())
 
 
