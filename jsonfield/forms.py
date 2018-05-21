@@ -15,11 +15,10 @@ class JSONFieldMixin(object):
             try:
                 return json.loads(value, **self.load_kwargs)
             except ValueError:
-                raise ValidationError(_("Enter valid JSON"))
+                raise ValidationError(_("Enter valid JSON."))
         return value
 
     def clean(self, value):
-
         if not value and not self.required:
             return None
 
@@ -27,7 +26,7 @@ class JSONFieldMixin(object):
         try:
             return super(JSONFieldMixin, self).clean(value)
         except TypeError:
-            raise ValidationError(_("Enter valid JSON"))
+            raise ValidationError(_("Enter valid JSON."))
 
 
 class JSONField(JSONFieldMixin, fields.CharField):

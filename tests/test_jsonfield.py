@@ -164,7 +164,7 @@ class JSONFieldTest(TestCase):
         else:
             inner = cm.exception.__context__
         self.assertIsInstance(inner, ValidationError)
-        self.assertEqual('Enter valid JSON', inner.messages[0])
+        self.assertEqual('Enter valid JSON.', inner.messages[0])
 
     def test_integer_in_string_in_json_field(self):
         """Test saving the Python string '123' in our JSONField"""

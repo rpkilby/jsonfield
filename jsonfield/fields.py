@@ -37,7 +37,7 @@ class JSONFieldMixin(models.Field):
         try:
             return json.loads(value, **self.load_kwargs)
         except ValueError:
-            raise ValidationError(_("Enter valid JSON"))
+            raise ValidationError(_("Enter valid JSON."))
 
     def from_db_value(self, value, expression, connection, context=None):
         if self.null and value is None:
@@ -57,7 +57,6 @@ class JSONFieldMixin(models.Field):
         return json.dumps(value, **self.dump_kwargs)
 
     def formfield(self, **kwargs):
-
         if "form_class" not in kwargs:
             kwargs["form_class"] = self.form_class
 
@@ -67,7 +66,7 @@ class JSONFieldMixin(models.Field):
             field.load_kwargs = self.load_kwargs
 
         if not field.help_text:
-            field.help_text = "Enter valid JSON"
+            field.help_text = "Enter valid JSON."
 
         return field
 
