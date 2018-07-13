@@ -1,11 +1,11 @@
 Changes
 -------
 
-v3.0.1 05/21/2017
+v3.0.1 05/21/2018
 ^^^^^^^^^^^^^^^^^
 - Fix model full_clean behavior
 
-v3.0.0 05/07/2017
+v3.0.0 05/07/2018
 ^^^^^^^^^^^^^^^^^
 - Add Django 2.0 support
 - Drop Django 1.8, 1.9, and 1.10 support
