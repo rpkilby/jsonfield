@@ -33,8 +33,8 @@ Requirements
 
 jsonfield2 aims to support all current `versions of Django`_, however the explicity tested versions are:
 
-* **Python:** 3.4, 3.5, 3.6
-* **Django:** 1.11, 2.0
+* **Python:** 3.4, 3.5, 3.6, 3.7
+* **Django:** 1.11, 2.0, 2.1
 
 .. _versions of Django: https://www.djangoproject.com/download/#supported-versions
 

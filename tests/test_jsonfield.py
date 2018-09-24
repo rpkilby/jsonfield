@@ -1,4 +1,5 @@
 import json
+import warnings
 from collections import OrderedDict
 from decimal import Decimal
 
@@ -132,7 +133,7 @@ class JSONFieldTest(TestCase):
                                                 'dict': {'k': 'v'}}]:
             obj = self.json_model.objects.create(json=json_obj)
             new_obj = self.json_model.objects.get(id=obj.id)
-            self.assert_(new_obj)
+            self.assertTrue(new_obj)
 
         queryset = self.json_model.objects.all()
         ser = serialize('json', queryset)
@@ -349,3 +350,14 @@ class TestFieldAPIMethods(TestCase):
         self.assertDictEqual(value,
                              json.loads(json.loads(double_prepared_value)))
         self.assertIs(json_field_instance.get_prep_value(None), None)
+
+    def test_from_db_value_deprecation_warning(self):
+        # Compatibility for Django 1.11 and earlier
+        # Django 2.0+ drops the `context` argument
+        JSONModel.objects.create(json='{}')
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            JSONModel.objects.get()
+
+        self.assertEqual(w, [])
