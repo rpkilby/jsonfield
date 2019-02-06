@@ -17,7 +17,6 @@ try:
 except ImportError:
     from django.forms.util import ValidationError
 
-from .subclassing import SubfieldBase
 from .encoder import JSONEncoder
 
 
@@ -71,10 +70,12 @@ class JSONFieldBase(models.Field):
         return json.loads(value, **self.load_kwargs)
 
     def to_python(self, value):
-        if isinstance(value, unicode):
-            return json.loads(value, **self.load_kwargs)
-        else:
-            return value
+        if isinstance(value, six.string_types):
+            try:
+                return json.loads(value, **self.load_kwargs)
+            except ValueError:
+                raise ValidationError(_("Enter valid JSON"))
+        return value
 
     def get_prep_value(self, value):
         """Convert JSON object to a string"""

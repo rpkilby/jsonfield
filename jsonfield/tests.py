@@ -210,11 +210,11 @@ class JSONFieldTest(TestCase):
             next(deserialize('json', ser))
         # Django 2.0+ uses PEP 3134 exception chaining
         if django.VERSION < (2, 0,):
-            inner = cm.exception.args[0]
+            cm.exception.message = 'Enter valid JSON'
         else:
             inner = cm.exception.__context__
-        self.assertTrue(isinstance(inner, ValidationError))
-        self.assertEqual('Enter valid JSON', inner.messages[0])
+            self.assertTrue(isinstance(inner, ValidationError))
+            self.assertEqual('Enter valid JSON', inner.messages[0])
 
     def test_integer_in_string_in_json_field(self):
         """Test saving the Python string '123' in our JSONField"""
