@@ -36,8 +36,8 @@ setup(
     url='https://github.com/dmkoch/django-jsonfield/',
     description='A reusable Django field that allows you to store validated JSON in your model.',
     long_description=open("README.rst").read(),
-    install_requires=['Django >= 1.8.0'],
-    tests_require=['Django >= 1.8.0'],
+    install_requires=['Django >= 1.11.0'],
+    tests_require=['Django >= 1.11.0'],
     cmdclass={'test': TestCommand},
     classifiers=[
         'Environment :: Web Environment',
@@ -46,7 +46,6 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
