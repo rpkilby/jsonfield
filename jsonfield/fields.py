@@ -1,4 +1,5 @@
 import copy
+import django
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 try:
@@ -64,10 +65,16 @@ class JSONFieldBase(models.Field):
 
         super(JSONFieldBase, self).__init__(*args, **kwargs)
 
-    def from_db_value(self, value, expression, connection, context):
-        if value is None:
-            return value
-        return json.loads(value, **self.load_kwargs)
+    if django.VERSION < (2, ):
+        def from_db_value(self, value, expression, connection, context):
+            if value is None:
+                return value
+            return json.loads(value, **self.load_kwargs)
+    else:
+        def from_db_value(self, value, expression, connection):
+            if value is None:
+                return value
+            return json.loads(value, **self.load_kwargs)
 
     def to_python(self, value):
         if isinstance(value, six.string_types):
