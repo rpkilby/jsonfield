@@ -185,7 +185,7 @@ class JSONFieldTest(TestCase):
                                                 'dict': {'k': 'v'}}]:
             obj = self.json_model.objects.create(json=json_obj)
             new_obj = self.json_model.objects.get(id=obj.id)
-            self.assert_(new_obj)
+            self.assertTrue(new_obj)
 
         queryset = self.json_model.objects.all()
         ser = serialize('json', queryset)
