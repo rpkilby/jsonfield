@@ -1,11 +1,11 @@
-.coverage
+.coverage*
 .tox
 htmlcov
 *.pyc
+*.egg-info/
 build/
 dist/
-MANIFEST
-.project
-.pydevproject
 .DS_Store
-.idea/*
+.env
+.env/
+.venv/
