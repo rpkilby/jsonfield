@@ -8,7 +8,6 @@ from django.core.serializers import deserialize, serialize
 from django.core.serializers.base import DeserializationError
 from django.forms import ModelForm, ValidationError
 from django.test import TestCase
-from django.utils.six import string_types
 
 from jsonfield.fields import JSONField
 
@@ -299,7 +298,7 @@ class TestFieldAPIMethods(TestCase):
         value = {'a': 1}
         prepared_value = json_field_instance.get_db_prep_value(
             value, connection=None, prepared=False)
-        self.assertIsInstance(prepared_value, string_types)
+        self.assertIsInstance(prepared_value, str)
         self.assertDictEqual(value, json.loads(prepared_value))
         self.assertIs(json_field_instance.get_db_prep_value(
             None, connection=None, prepared=True), None)
@@ -311,7 +310,7 @@ class TestFieldAPIMethods(TestCase):
         value = {'a': 1}
         prepared_value = json_field_instance.get_db_prep_value(
             value, connection=None, prepared=False)
-        self.assertIsInstance(prepared_value, string_types)
+        self.assertIsInstance(prepared_value, str)
         self.assertDictEqual(value, json.loads(prepared_value))
         self.assertIs(json_field_instance.get_db_prep_value(
             None, connection=None, prepared=True), None)
@@ -329,7 +328,7 @@ class TestFieldAPIMethods(TestCase):
         json_field_instance = JSONField(null=False)
         value = {'a': 1}
         prepared_value = json_field_instance.get_prep_value(value)
-        self.assertIsInstance(prepared_value, string_types)
+        self.assertIsInstance(prepared_value, str)
         self.assertDictEqual(value, json.loads(prepared_value))
         already_json = json.dumps(value)
         double_prepared_value = json_field_instance.get_prep_value(
@@ -342,7 +341,7 @@ class TestFieldAPIMethods(TestCase):
         json_field_instance = JSONField(null=True)
         value = {'a': 1}
         prepared_value = json_field_instance.get_prep_value(value)
-        self.assertIsInstance(prepared_value, string_types)
+        self.assertIsInstance(prepared_value, str)
         self.assertDictEqual(value, json.loads(prepared_value))
         already_json = json.dumps(value)
         double_prepared_value = json_field_instance.get_prep_value(
