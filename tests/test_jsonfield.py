@@ -1,5 +1,3 @@
-import json
-import warnings
 from collections import OrderedDict
 from decimal import Decimal
 
@@ -8,8 +6,6 @@ from django.core.serializers import deserialize, serialize
 from django.core.serializers.base import DeserializationError
 from django.forms import ModelForm, ValidationError
 from django.test import TestCase
-
-from jsonfield.fields import JSONField
 
 from .models import (
     GenericForeignKeyObj,
@@ -251,23 +247,15 @@ class OrderedDictSerializationTest(TestCase):
         ])
         self.expected_key_order = ['number', 'notes', 'alpha', 'romeo', 'juliet', 'bravo']
 
-    def test_ordered_dict_differs_from_normal_dict(self):
-        self.assertEqual(list(self.ordered_dict.keys()), self.expected_key_order)
-        self.assertNotEqual(dict(self.ordered_dict).keys(), self.expected_key_order)
+        self.instance = OrderedJSONModel.objects.create(json=self.ordered_dict)
 
-    def test_default_behaviour_loses_sort_order(self):
-        mod = JSONModel.objects.create(json=self.ordered_dict)
-        self.assertEqual(list(mod.json.keys()), self.expected_key_order)
-        mod_from_db = JSONModel.objects.get(id=mod.id)
+    def test_load_kwargs_hook(self):
+        from_db = OrderedJSONModel.objects.get(id=self.instance.id)
 
-        # mod_from_db lost ordering information during json.loads()
-        self.assertNotEqual(mod_from_db.json.keys(), self.expected_key_order)
-
-    def test_load_kwargs_hook_does_not_lose_sort_order(self):
-        mod = OrderedJSONModel.objects.create(json=self.ordered_dict)
-        self.assertEqual(list(mod.json.keys()), self.expected_key_order)
-        mod_from_db = OrderedJSONModel.objects.get(id=mod.id)
-        self.assertEqual(list(mod_from_db.json.keys()), self.expected_key_order)
+        # OrderedJSONModel explicitly sets `object_pairs_hook` to `OrderedDict`
+        self.assertEqual(list(self.instance.json), self.expected_key_order)
+        self.assertEqual(list(from_db.json), self.expected_key_order)
+        self.assertIsInstance(from_db.json, OrderedDict)
 
 
 class JSONModelFormTest(TestCase):
@@ -290,73 +278,3 @@ class JSONModelFormTest(TestCase):
     def test_form_save(self):
         form = self.form_class(data={'json': ''})
         form.save()
-
-
-class TestFieldAPIMethods(TestCase):
-    def test_get_db_prep_value_method_with_null(self):
-        json_field_instance = JSONField(null=True)
-        value = {'a': 1}
-        prepared_value = json_field_instance.get_db_prep_value(
-            value, connection=None, prepared=False)
-        self.assertIsInstance(prepared_value, str)
-        self.assertDictEqual(value, json.loads(prepared_value))
-        self.assertIs(json_field_instance.get_db_prep_value(
-            None, connection=None, prepared=True), None)
-        self.assertIs(json_field_instance.get_db_prep_value(
-            None, connection=None, prepared=False), None)
-
-    def test_get_db_prep_value_method_with_not_null(self):
-        json_field_instance = JSONField(null=False)
-        value = {'a': 1}
-        prepared_value = json_field_instance.get_db_prep_value(
-            value, connection=None, prepared=False)
-        self.assertIsInstance(prepared_value, str)
-        self.assertDictEqual(value, json.loads(prepared_value))
-        self.assertIs(json_field_instance.get_db_prep_value(
-            None, connection=None, prepared=True), None)
-        self.assertEqual(json_field_instance.get_db_prep_value(
-            None, connection=None, prepared=False), 'null')
-
-    def test_get_db_prep_value_method_skips_prepared_values(self):
-        json_field_instance = JSONField(null=False)
-        value = {'a': 1}
-        prepared_value = json_field_instance.get_db_prep_value(
-            value, connection=None, prepared=True)
-        self.assertIs(prepared_value, value)
-
-    def test_get_prep_value_always_json_dumps_if_not_null(self):
-        json_field_instance = JSONField(null=False)
-        value = {'a': 1}
-        prepared_value = json_field_instance.get_prep_value(value)
-        self.assertIsInstance(prepared_value, str)
-        self.assertDictEqual(value, json.loads(prepared_value))
-        already_json = json.dumps(value)
-        double_prepared_value = json_field_instance.get_prep_value(
-            already_json)
-        self.assertDictEqual(value,
-                             json.loads(json.loads(double_prepared_value)))
-        self.assertEqual(json_field_instance.get_prep_value(None), 'null')
-
-    def test_get_prep_value_can_return_none_if_null(self):
-        json_field_instance = JSONField(null=True)
-        value = {'a': 1}
-        prepared_value = json_field_instance.get_prep_value(value)
-        self.assertIsInstance(prepared_value, str)
-        self.assertDictEqual(value, json.loads(prepared_value))
-        already_json = json.dumps(value)
-        double_prepared_value = json_field_instance.get_prep_value(
-            already_json)
-        self.assertDictEqual(value,
-                             json.loads(json.loads(double_prepared_value)))
-        self.assertIs(json_field_instance.get_prep_value(None), None)
-
-    def test_from_db_value_deprecation_warning(self):
-        # Compatibility for Django 1.11 and earlier
-        # Django 2.0+ drops the `context` argument
-        JSONModel.objects.create(json='{}')
-
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter('always')
-            JSONModel.objects.get()
-
-        self.assertEqual(w, [])

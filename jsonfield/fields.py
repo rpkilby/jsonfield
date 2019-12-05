@@ -1,7 +1,6 @@
 import copy
 import json
 
-import django
 from django.db import models
 from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
@@ -43,16 +42,10 @@ class JSONFieldMixin(models.Field):
         except ValueError:
             raise ValidationError(_("Enter valid JSON."))
 
-    if django.VERSION < (2, 0):
-        def from_db_value(self, value, expression, connection, context=None):
-            if self.null and value is None:
-                return None
-            return json.loads(value, **self.load_kwargs)
-    else:
-        def from_db_value(self, value, expression, connection):
-            if self.null and value is None:
-                return None
-            return json.loads(value, **self.load_kwargs)
+    def from_db_value(self, value, expression, connection):
+        if self.null and value is None:
+            return None
+        return json.loads(value, **self.load_kwargs)
 
     def get_prep_value(self, value):
         """Convert JSON object to a string"""
