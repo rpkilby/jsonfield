@@ -62,3 +62,22 @@ class TestFieldAPIMethods(TestCase):
         self.assertDictEqual(value,
                              json.loads(json.loads(double_prepared_value)))
         self.assertIs(json_field_instance.get_prep_value(None), None)
+
+    def test_deconstruct_default_kwargs(self):
+        field = JSONField()
+
+        _, _, _, kwargs = field.deconstruct()
+
+        self.assertNotIn('dump_kwargs', kwargs)
+        self.assertNotIn('load_kwargs', kwargs)
+
+    def test_deconstruct_non_default_kwargs(self):
+        field = JSONField(
+            dump_kwargs={'separators': (',', ':')},
+            load_kwargs={'object_pairs_hook': dict},
+        )
+
+        _, _, _, kwargs = field.deconstruct()
+
+        self.assertEqual(kwargs['dump_kwargs'], {'separators': (',', ':')})
+        self.assertEqual(kwargs['load_kwargs'], {'object_pairs_hook': dict})

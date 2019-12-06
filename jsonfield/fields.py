@@ -8,25 +8,30 @@ from django.utils.translation import ugettext_lazy as _
 from . import forms
 from .encoder import JSONEncoder
 
+DEFAULT_DUMP_KWARGS = {
+    'cls': JSONEncoder,
+    'separators': (',', ':'),
+}
+
+DEFAULT_LOAD_KWARGS = {}
+
 
 class JSONFieldMixin(models.Field):
+
     form_class = forms.JSONField
 
     def __init__(self, *args, dump_kwargs=None, load_kwargs=None, **kwargs):
-        self.dump_kwargs = dump_kwargs if dump_kwargs is not None else {
-            'cls': JSONEncoder,
-            'separators': (',', ':')
-        }
-        self.load_kwargs = load_kwargs if load_kwargs is not None else {}
+        self.dump_kwargs = DEFAULT_DUMP_KWARGS if dump_kwargs is None else dump_kwargs
+        self.load_kwargs = DEFAULT_LOAD_KWARGS if load_kwargs is None else load_kwargs
 
         super(JSONFieldMixin, self).__init__(*args, **kwargs)
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
 
-        if self.dump_kwargs is not None:
+        if self.dump_kwargs != DEFAULT_DUMP_KWARGS:
             kwargs['dump_kwargs'] = self.dump_kwargs
-        if self.load_kwargs is not None:
+        if self.load_kwargs != DEFAULT_LOAD_KWARGS:
             kwargs['load_kwargs'] = self.load_kwargs
         return name, path, args, kwargs
 
