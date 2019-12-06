@@ -111,13 +111,16 @@ Release Process
 * Update changelog
 * Update package version in setup.py
 * Create git tag for version
-* Upload release to PyPI
+* Upload release to PyPI test server
+* Upload release to official PyPI server
 
 .. code-block:: shell
 
-    $ pip install -U pip setuptools wheel
+    $ pip install -U pip setuptools wheel twine
     $ rm -rf dist/ build/
-    $ python setup.py bdist_wheel upload
+    $ python setup.py bdist_wheel
+    $ twine upload -r test dist/*
+    $ twine upload dist/*
 
 
 Changes
