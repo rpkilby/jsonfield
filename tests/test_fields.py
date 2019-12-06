@@ -1,11 +1,8 @@
 import json
-import warnings
 
 from django.test import TestCase
 
 from jsonfield.fields import JSONField
-
-from .models import JSONModel
 
 
 class TestFieldAPIMethods(TestCase):
@@ -65,14 +62,3 @@ class TestFieldAPIMethods(TestCase):
         self.assertDictEqual(value,
                              json.loads(json.loads(double_prepared_value)))
         self.assertIs(json_field_instance.get_prep_value(None), None)
-
-    def test_from_db_value_deprecation_warning(self):
-        # Compatibility for Django 1.11 and earlier
-        # Django 2.0+ drops the `context` argument
-        JSONModel.objects.create(json='{}')
-
-        with warnings.catch_warnings(record=True) as w:
-            warnings.simplefilter('always')
-            JSONModel.objects.get()
-
-        self.assertEqual(w, [])

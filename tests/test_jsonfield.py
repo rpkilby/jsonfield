@@ -15,6 +15,7 @@ from .models import (
     JSONModelWithForeignKey,
     JSONNotRequiredModel,
     OrderedJSONModel,
+    RemoteJSONModel,
 )
 
 
@@ -22,6 +23,20 @@ class JSONModelWithForeignKeyTestCase(TestCase):
     def test_object_create(self):
         foreign_obj = GenericForeignKeyObj.objects.create(name='Brain')
         JSONModelWithForeignKey.objects.create(foreign_obj=foreign_obj)
+
+
+class RemoteJSONFieldTests(TestCase):
+    """Test JSON fields across a ForeignKey"""
+
+    @classmethod
+    def setUpTestData(cls):
+        RemoteJSONModel.objects.create()
+
+    def test_related_accessor(self):
+        RemoteJSONModel.objects.get().foreign
+
+    def test_select_related(self):
+        RemoteJSONModel.objects.select_related('foreign').get()
 
 
 class JSONFieldTest(TestCase):

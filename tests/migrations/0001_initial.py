@@ -72,4 +72,11 @@ class Migration(migrations.Migration):
                 ('content_type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='contenttypes.ContentType')),
             ],
         ),
+        migrations.CreateModel(
+            name='RemoteJSONModel',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('foreign', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='tests.JSONModel')),
+            ],
+        ),
     ]

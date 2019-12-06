@@ -43,7 +43,7 @@ class JSONFieldMixin(models.Field):
             raise ValidationError(_("Enter valid JSON."))
 
     def from_db_value(self, value, expression, connection):
-        if self.null and value is None:
+        if value is None:
             return None
         return json.loads(value, **self.load_kwargs)
 

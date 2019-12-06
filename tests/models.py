@@ -63,3 +63,7 @@ class JSONNotRequiredModel(models.Model):
 
 class OrderedJSONModel(models.Model):
     json = JSONField(load_kwargs={'object_pairs_hook': OrderedDict})
+
+
+class RemoteJSONModel(models.Model):
+    foreign = models.ForeignKey(JSONModel, blank=True, null=True, on_delete=models.CASCADE)
