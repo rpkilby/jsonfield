@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='jsonfield2',
-    version='3.0.3',
+    version='3.1.0',
     packages=['jsonfield'],
     license='MIT',
     include_package_data=True,
