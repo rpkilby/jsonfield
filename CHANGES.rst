@@ -1,6 +1,13 @@
 Changes
 -------
 
+v3.1.0 12/06/2019
+^^^^^^^^^^^^^^^^^
+- Fix use with `select_related` across a foreign key
+- Fix field deconstruction
+- Drop Python 3.5 support
+- Drop Django 2.1 (and below) support
+
 v3.0.3 10/23/2019
 ^^^^^^^^^^^^^^^^^
 - Add Python 3.8 & Django 3.0 support
