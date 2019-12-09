@@ -34,7 +34,7 @@ Requirements
 jsonfield2 aims to support all current `versions of Django`_, however the explicity tested versions are:
 
 * **Python:** 3.6, 3.7, 3.8
-* **Django:** 1.11, 2.0, 2.1, 2.2
+* **Django:** 2.2, 3.0
 
 .. _versions of Django: https://www.djangoproject.com/download/#supported-versions
 
@@ -110,6 +110,7 @@ Release Process
 
 * Update changelog
 * Update package version in setup.py
+* Check supported versions in setup.py and readme
 * Create git tag for version
 * Upload release to PyPI test server
 * Upload release to official PyPI server
