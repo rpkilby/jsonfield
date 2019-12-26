@@ -1,7 +1,12 @@
 from django.db.models.query import QuerySet
-from django.utils import six, timezone
 from django.utils.encoding import force_text
 from django.utils.functional import Promise
+from django.utils import timezone
+try:
+    from django.utils import six
+except ImportError:
+    import six
+
 import datetime
 import decimal
 import json
