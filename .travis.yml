@@ -33,7 +33,7 @@ matrix:
     - python: "3.6"
       env: DJANGO=1.10
 install:
-  - pip install tox coveralls
+  - pip install tox coveralls six
 script:
   - tox -e py${TRAVIS_PYTHON_VERSION//[.]/}-$DJANGO
 after_success:
