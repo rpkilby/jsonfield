@@ -18,7 +18,10 @@ try:
 except ImportError:
     from django.forms.util import ValidationError
 
-from django.utils.six import string_types
+try:
+    from django.utils.six import string_types
+except ImportError:
+    from six import string_types
 
 from collections import OrderedDict
 
