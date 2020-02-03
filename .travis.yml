@@ -2,11 +2,9 @@ language: python
 sudo: false
 python:
   - "2.7"
-  - "3.4"
   - "3.5"
   - "3.6"
   - "3.7"
-  - "3.8"
 env:
   - DJANGO=1.11
   - DJANGO=2.0
@@ -29,8 +27,6 @@ matrix:
       env: DJANGO=3.0
     - python: "2.7"
       env: DJANGO=master
-    - python: "3.8"
-      env: DJANGO=1.11
 
 install:
   - pip install tox coveralls six
