@@ -14,7 +14,15 @@ class TestCommand(Command):
     def run(self):
         from django.conf import settings
         settings.configure(
-            DATABASES={'default': {'NAME': ':memory:', 'ENGINE': 'django.db.backends.sqlite3'}},
+            DATABASES={
+                'default': {
+                    'NAME': ':memory:',
+                    'ENGINE': 'django.db.backends.sqlite3',
+                    'TEST': {
+                        'NAME': 'test_jsonfield',
+                    }
+                }
+            },
             INSTALLED_APPS=('jsonfield', 'django.contrib.contenttypes')
         )
         from django.core.management import call_command
@@ -36,8 +44,8 @@ setup(
     url='https://github.com/dmkoch/django-jsonfield/',
     description='A reusable Django field that allows you to store validated JSON in your model.',
     long_description=open("README.rst").read(),
-    install_requires=['Django >= 1.8.0', 'six>=1.12'],
-    tests_require=['Django >= 1.8.0'],
+    install_requires=['Django >= 1.11', 'six>=1.12'],
+    tests_require=['Django >= 1.11'],
     cmdclass={'test': TestCommand},
     classifiers=[
         'Environment :: Web Environment',
