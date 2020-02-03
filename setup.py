@@ -16,14 +16,11 @@ class TestCommand(Command):
         settings.configure(
             DATABASES={
                 'default': {
-                    'NAME': ':memory:',
+                    'NAME': 'jsonfield',
                     'ENGINE': 'django.db.backends.sqlite3',
-                    'TEST': {
-                        'NAME': 'test_jsonfield',
-                    }
                 }
             },
-            INSTALLED_APPS=('jsonfield', 'django.contrib.contenttypes')
+            INSTALLED_APPS=('django.contrib.contenttypes', 'jsonfield')
         )
         from django.core.management import call_command
         import django
@@ -53,10 +50,9 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Framework :: Django',
     ],
 )
