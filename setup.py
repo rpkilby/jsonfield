@@ -20,14 +20,14 @@ class TestCommand(Command):
                     'ENGINE': 'django.db.backends.sqlite3',
                 }
             },
-            INSTALLED_APPS=('django.contrib.contenttypes', 'jsonfield')
+            INSTALLED_APPS=('django.contrib.contenttypes', 'jsonfield', 'jsonfield.tests')
         )
         from django.core.management import call_command
         import django
 
         if django.VERSION[:2] >= (1, 7):
             django.setup()
-        call_command('test', 'jsonfield')
+        call_command('test', 'jsonfield.tests')
 
 
 setup(

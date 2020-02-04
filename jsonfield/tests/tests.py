@@ -3,22 +3,17 @@ import django
 from django import forms
 from django.core.serializers import deserialize, serialize
 from django.core.serializers.base import DeserializationError
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.test import TestCase, TransactionTestCase
+from django.test import TestCase
+
+from jsonfield import JSONField
+from jsonfield.tests.models import GenericForeignKeyObj, JsonModel, JSONModelWithForeignKey, JsonCharModel, \
+    JSONModelCustomEncoders
 
 try:
     import json
 except ImportError:
     from django.utils import simplejson as json
-
-from .fields import JSONField, JSONCharField
-try:
-    from django.forms.utils import ValidationError
-except ImportError:
-    from django.forms.util import ValidationError
-
 try:
     from django.utils.six import string_types
 except ImportError:
@@ -27,57 +22,7 @@ except ImportError:
 from collections import OrderedDict
 
 
-class JsonModel(models.Model):
-    json = JSONField()
-    default_json = JSONField(default={"check": 12})
-    complex_default_json = JSONField(default=[{"checkcheck": 1212}])
-    empty_default = JSONField(default={})
-
-
-class GenericForeignKeyObj(models.Model):
-    name = models.CharField('Foreign Obj', max_length=255, null=True)
-
-
-class JSONModelWithForeignKey(models.Model):
-    json = JSONField(null=True)
-    foreign_obj = GenericForeignKey()
-    object_id = models.PositiveIntegerField(blank=True, null=True, db_index=True)
-    content_type = models.ForeignKey(ContentType, blank=True, null=True,
-                                     on_delete=models.CASCADE)
-
-
-class JsonCharModel(models.Model):
-    json = JSONCharField(max_length=100)
-    default_json = JSONCharField(max_length=100, default={"check": 34})
-
-
-class ComplexEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, complex):
-            return {
-                '__complex__': True,
-                'real': obj.real,
-                'imag': obj.imag,
-            }
-
-        return json.JSONEncoder.default(self, obj)
-
-
-def as_complex(dct):
-    if '__complex__' in dct:
-        return complex(dct['real'], dct['imag'])
-    return dct
-
-
-class JSONModelCustomEncoders(models.Model):
-    # A JSON field that can store complex numbers
-    json = JSONField(
-        dump_kwargs={'cls': ComplexEncoder, "indent": 4},
-        load_kwargs={'object_hook': as_complex},
-    )
-
-
-class JSONModelWithForeignKeyTestCase(TransactionTestCase):
+class JSONModelWithForeignKeyTestCase(TestCase):
     def test_object_create(self):
         foreign_obj = GenericForeignKeyObj.objects.create(name='Brain')
         JSONModelWithForeignKey.objects.create(foreign_obj=foreign_obj)
@@ -208,8 +153,9 @@ class JSONFieldTest(TestCase):
 
     def test_invalid_json(self):
         # invalid json data {] in the json and default_json fields
-        ser = '[{"pk": 1, "model": "jsonfield.jsoncharmodel", ' \
+        ser = '[{"pk": 1, "model": "jsonfield.tests.models.jsoncharmodel", ' \
             '"fields": {"json": "{]", "default_json": "{]"}}]'
+        print(ser)
         with self.assertRaises(DeserializationError) as cm:
             next(deserialize('json', ser))
         # Django 2.0+ uses PEP 3134 exception chaining
@@ -217,8 +163,7 @@ class JSONFieldTest(TestCase):
             inner = cm.exception.args[0]
         else:
             inner = cm.exception.__context__
-        self.assertTrue(isinstance(inner, ValidationError))
-        self.assertEqual('Enter valid JSON', inner.messages[0])
+        self.assertTrue(isinstance(inner, ValueError))
 
     def test_integer_in_string_in_json_field(self):
         """Test saving the Python string '123' in our JSONField"""
