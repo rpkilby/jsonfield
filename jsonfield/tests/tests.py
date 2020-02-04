@@ -155,7 +155,6 @@ class JSONFieldTest(TestCase):
         # invalid json data {] in the json and default_json fields
         ser = '[{"pk": 1, "model": "jsonfield.tests.models.jsoncharmodel", ' \
             '"fields": {"json": "{]", "default_json": "{]"}}]'
-        print(ser)
         with self.assertRaises(DeserializationError) as cm:
             next(deserialize('json', ser))
         # Django 2.0+ uses PEP 3134 exception chaining
