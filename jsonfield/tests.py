@@ -6,7 +6,8 @@ from django.core.serializers.base import DeserializationError
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
+
 try:
     import json
 except ImportError:
@@ -76,7 +77,7 @@ class JSONModelCustomEncoders(models.Model):
     )
 
 
-class JSONModelWithForeignKeyTestCase(TestCase):
+class JSONModelWithForeignKeyTestCase(TransactionTestCase):
     def test_object_create(self):
         foreign_obj = GenericForeignKeyObj.objects.create(name='Brain')
         JSONModelWithForeignKey.objects.create(foreign_obj=foreign_obj)

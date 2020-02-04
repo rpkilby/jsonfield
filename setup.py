@@ -16,7 +16,7 @@ class TestCommand(Command):
         settings.configure(
             DATABASES={
                 'default': {
-                    'NAME': 'jsonfield',
+                    'NAME': ':memory:',
                     'ENGINE': 'django.db.backends.sqlite3',
                 }
             },
