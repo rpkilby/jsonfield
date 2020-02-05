@@ -1,43 +1,40 @@
 language: python
+
 sudo: false
+
 python:
   - "2.7"
-  - "3.3"
-  - "3.4"
-  - "3.5"
   - "3.6"
+  - "3.7"
+  - "3.8"
+
 env:
-  - DJANGO=1.8
-  - DJANGO=1.9
-  - DJANGO=1.10
-  - DJANGO=1.11
-  - DJANGO=master
+  - DJANGO=111
+  - DJANGO=20
+  - DJANGO=21
+  - DJANGO=22
+  - DJANGO=30
+
 matrix:
   exclude:
     - python: "2.7"
-      env: DJANGO=master
-    - python: "3.3"
-      env: DJANGO=1.9
-    - python: "3.3"
-      env: DJANGO=1.10
-    - python: "3.3"
-      env: DJANGO=1.11
-    - python: "3.3"
-      env: DJANGO=master
-    - python: "3.4"
-      env: DJANGO=master
-    - python: "3.6"
-      env: DJANGO=1.8
-    - python: "3.6"
-      env: DJANGO=1.9
-    - python: "3.6"
-      env: DJANGO=1.10
+      env: DJANGO=20
+    - python: "2.7"
+      env: DJANGO=21
+    - python: "2.7"
+      env: DJANGO=22
+    - python: "2.7"
+      env: DJANGO=30
+
 install:
   - pip install tox coveralls
+
 script:
-  - tox -e py${TRAVIS_PYTHON_VERSION//[.]/}-$DJANGO
+  - tox -e py${TRAVIS_PYTHON_VERSION//[.]/}-dj$DJANGO
+
 after_success:
   - coveralls
+
 notifications:
     email:
         recipients:

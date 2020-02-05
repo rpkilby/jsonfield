@@ -1,11 +1,14 @@
-from django.db.models.query import QuerySet
-from django.utils import six, timezone
-from django.utils.encoding import force_text
-from django.utils.functional import Promise
 import datetime
 import decimal
 import json
 import uuid
+
+import six
+
+from django.db.models.query import QuerySet
+from django.utils import timezone
+from django.utils.encoding import force_text
+from django.utils.functional import Promise
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -51,7 +54,7 @@ class JSONEncoder(json.JSONEncoder):
         elif hasattr(obj, '__getitem__'):
             try:
                 return dict(obj)
-            except:
+            except KeyError:
                 pass
         elif hasattr(obj, '__iter__'):
             return tuple(item for item in obj)

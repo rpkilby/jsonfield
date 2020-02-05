@@ -1,6 +1,12 @@
 import copy
+
 from django.db import models
+from django.forms import fields
 from django.utils.translation import ugettext_lazy as _
+
+from .encoder import JSONEncoder
+from .subclassing import SubfieldBase
+
 try:
     from django.utils import six
 except ImportError:
@@ -11,14 +17,10 @@ try:
 except ImportError:
     from django.utils import simplejson as json
 
-from django.forms import fields
 try:
     from django.forms.utils import ValidationError
 except ImportError:
     from django.forms.util import ValidationError
-
-from .subclassing import SubfieldBase
-from .encoder import JSONEncoder
 
 
 class JSONFormFieldBase(object):
@@ -166,10 +168,3 @@ class JSONCharField(JSONFieldBase, models.CharField):
     stored in the database like a CharField, which enables it to be used
     e.g. in unique keys"""
     form_class = JSONCharFormField
-
-
-try:
-    from south.modelsinspector import add_introspection_rules
-    add_introspection_rules([], ["^jsonfield\.fields\.(JSONField|JSONCharField)"])
-except ImportError:
-    pass

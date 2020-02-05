@@ -9,3 +9,4 @@ MANIFEST
 .pydevproject
 .DS_Store
 .idea/*
+jsonfield.egg-info/

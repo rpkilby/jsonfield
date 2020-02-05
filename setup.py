@@ -14,14 +14,13 @@ class TestCommand(Command):
     def run(self):
         from django.conf import settings
         settings.configure(
-            DATABASES={'default': {'NAME': ':memory:', 'ENGINE': 'django.db.backends.sqlite3'}},
-            INSTALLED_APPS=('jsonfield', 'django.contrib.contenttypes')
+            DATABASES={'default': {'NAME': 'test_jsonfield:', 'ENGINE': 'django.db.backends.sqlite3'}},
+            INSTALLED_APPS=('django.contrib.contenttypes', 'jsonfield')
         )
         from django.core.management import call_command
         import django
 
-        if django.VERSION[:2] >= (1, 7):
-            django.setup()
+        django.setup()
         call_command('test', 'jsonfield')
 
 
@@ -36,8 +35,8 @@ setup(
     url='https://github.com/dmkoch/django-jsonfield/',
     description='A reusable Django field that allows you to store validated JSON in your model.',
     long_description=open("README.rst").read(),
-    install_requires=['Django >= 1.8.0'],
-    tests_require=['Django >= 1.8.0'],
+    install_requires=['Django >= 1.11', 'six'],
+    tests_require=['Django >= 1.11', 'six'],
     cmdclass={'test': TestCommand},
     classifiers=[
         'Environment :: Web Environment',
@@ -46,10 +45,9 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Framework :: Django',
     ],
 )
