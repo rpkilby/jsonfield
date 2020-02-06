@@ -5,7 +5,7 @@ django-jsonfield is a reusable Django field that allows you to store validated J
 
 It silently takes care of serialization. To use, simply add the field to one of your models.
 
-Python 3 & Django 1.8 through 1.11 supported!
+Python 3 & Django 1.11 through 3.0 supported!
 
 **Use PostgreSQL?** 1.0.0 introduced a breaking change to the underlying data type, so if you were using < 1.0.0 please read https://github.com/dmkoch/django-jsonfield/issues/57 before upgrading. Also, consider switching to Django's native JSONField that was added in Django 1.9.
 
@@ -15,7 +15,7 @@ Python 3 & Django 1.8 through 1.11 supported!
 .. _django-jsonfield on Bitbucket: https://bitbucket.org/schinckel/django-jsonfield
 .. _django-jsonfield on PyPI: https://pypi.python.org/pypi/django-jsonfield
 
-**Note:** Django 1.9 added native PostgreSQL JSON support in `django.contrib.postgres.fields.JSONField`_. This module is still useful if you need to support JSON in databases other than PostgreSQL or are creating a third-party module that needs to be database-agnostic. But if you're an end user using PostgreSQL and want full-featured JSON support, I recommend using the built-in JSONField from Django instead of this module.
+**Note:** Since version 1.9, Django added native PostgreSQL JSON support in `django.contrib.postgres.fields.JSONField`_. This module is still useful if you need to support JSON in databases other than PostgreSQL or are creating a third-party module that needs to be database-agnostic. But if you're an end user using PostgreSQL and want full-featured JSON support, I recommend using the built-in JSONField from Django instead of this module.
 
 .. _django.contrib.postgres.fields.JSONField: https://docs.djangoproject.com/en/dev/ref/contrib/postgres/fields/#jsonfield
 
