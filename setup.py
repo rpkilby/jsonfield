@@ -21,6 +21,7 @@ class TestCommand(Command):
         import django
 
         django.setup()
+        call_command('migrate')
         call_command('test', 'jsonfield')
 
 
