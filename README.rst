@@ -68,10 +68,11 @@ Compatibility
 
 django-jsonfield aims to support the same versions of Django currently maintained by the main Django project. See `Django supported versions`_, currently:
 
-  * Django 1.8 (LTS) with Python 2.7, 3.3, 3.4, or 3.5
-  * Django 1.9 with Python 2.7, 3.4, or 3.5
-  * Django 1.10 with Python 2.7, 3.4, or 3.5
-  * Django 1.11 (LTS) with Python 2.7, 3.4, 3.5 or 3.6
+  * Django 1.11 (LTS) with Python 2.7, 3.6 3.7, or 3.8
+  * Django 2.0 with Python 3.6, 3.7, or 3.8
+  * Django 2.1 with Python 3.6, 3.7, or 3.8
+  * Django 2.2 (LTS) with Python 3.6, 3.7, or 3.8
+  * Django 3.0 with Python 3.6, 3.7, or 3.8
 
 .. _Django supported versions: https://www.djangoproject.com/download/#supported-versions
 
@@ -85,11 +86,11 @@ To test against all supported versions of Django:
 
     $ docker-compose build && docker-compose up
 
-Or just one version (for example Django 1.10 on Python 3.5):
+Or just one version (for example Django 2.2 on Python 3.8):
 
 .. code-block:: shell
 
-    $ docker-compose build && docker-compose run tox tox -e py35-1.10
+    $ docker-compose build && docker-compose run tox tox -e py38-d38
 
 
 Travis CI
