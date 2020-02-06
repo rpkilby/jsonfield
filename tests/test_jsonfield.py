@@ -1,3 +1,4 @@
+import json
 from collections import OrderedDict
 from decimal import Decimal
 
@@ -15,18 +16,9 @@ from demo.models import (
 )
 from django.core.serializers import deserialize, serialize
 from django.core.serializers.base import DeserializationError
+from django.forms.utils import ValidationError
 from django.test import TestCase
 from jsonfield.fields import JSONField
-
-try:
-    import json
-except ImportError:
-    from django.utils import simplejson as json
-
-try:
-    from django.forms.utils import ValidationError
-except ImportError:
-    from django.forms.util import ValidationError
 
 
 class JSONModelWithForeignKeyTestCase(TestCase):

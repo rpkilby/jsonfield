@@ -1,4 +1,5 @@
 from distutils.core import Command
+
 from setuptools import setup
 
 
@@ -10,18 +11,6 @@ class TestCommand(Command):
 
     def finalize_options(self):
         pass
-
-    # def run(self):
-    #     from django.conf import settings
-    #     settings.configure(
-    #         DATABASES={'default': {'NAME': 'test_jsonfield:', 'ENGINE': 'django.db.backends.sqlite3'}},
-    #         INSTALLED_APPS=('django.contrib.contenttypes', 'jsonfield', 'demo')
-    #     )
-    #     from django.core.management import call_command
-    #     import django
-    #
-    #     django.setup()
-    #     call_command('test')
 
 
 setup(
