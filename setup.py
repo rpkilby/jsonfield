@@ -1,16 +1,5 @@
 from distutils.core import Command
-
 from setuptools import setup
-
-
-class TestCommand(Command):
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
 
 
 setup(
@@ -26,7 +15,6 @@ setup(
     long_description=open("README.rst").read(),
     install_requires=['Django >= 1.11', 'six'],
     tests_require=['Django >= 1.11', 'six'],
-    cmdclass={'test': TestCommand},
     classifiers=[
         'Environment :: Web Environment',
         'Intended Audience :: Developers',

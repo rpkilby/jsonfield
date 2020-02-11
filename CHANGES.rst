@@ -1,5 +1,9 @@
 Changes
 -------
+v2.1.0, 2/11/2020
+^^^^^^^^^^^^^^^^^
+- Add Django 3.0 support, removed older Python and Django versions
+
 v2.0.2, 6/18/2017
 ^^^^^^^^^^^^^^^^^
 - Fixed issue with GenericForeignKey field
