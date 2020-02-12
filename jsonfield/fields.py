@@ -34,6 +34,20 @@ class JSONFormFieldBase(object):
         if not value and not self.required:
             return None
 
+        # RFC 7159
+        if value == 'true':
+            return True
+        if value == 'false':
+            return False
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            pass
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            pass
+
         # Trap cleaning errors & bubble them up as JSON errors
         try:
             return super(JSONFormFieldBase, self).clean(value)
@@ -161,3 +175,10 @@ class JSONCharField(JSONFieldBase, models.CharField):
     stored in the database like a CharField, which enables it to be used
     e.g. in unique keys"""
     form_class = JSONCharFormField
+
+
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([], [r"^jsonfield\.fields\.(JSONField|JSONCharField)"])
+except ImportError:
+    pass

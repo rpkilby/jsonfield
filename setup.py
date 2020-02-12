@@ -2,9 +2,34 @@ from distutils.core import Command
 from setuptools import setup
 
 
+class TestCommand(Command):
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        from django.conf import settings
+        settings.configure(
+            DATABASES={'default': {'NAME': ':memory:', 'ENGINE': 'django.db.backends.sqlite3'}},
+            INSTALLED_APPS=('jsonfield', 'django.contrib.contenttypes')
+        )
+        from django.core.management import call_command
+        import django
+
+        if django.VERSION[:2] >= (1, 7):
+            django.setup()
+        call_command('makemigrations')
+        call_command('migrate')
+        call_command('test', 'jsonfield')
+
+
 setup(
     name='jsonfield',
-    version='2.1.0',
+    version='2.1.1',
     packages=['jsonfield'],
     license='MIT',
     include_package_data=True,

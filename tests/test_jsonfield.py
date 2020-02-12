@@ -221,6 +221,20 @@ class JSONFieldTest(TestCase):
         model1.save()
         self.assertEqual(model1.empty_default, {"hey": "now"})
 
+    def test_rfc7159_spec(self):
+        """Tests that JSON can be a literal (null/true/false) or a number too"""
+        values = [
+            None,
+            True,
+            False,
+            0.125,
+        ]
+
+        for value in values:
+            obj = self.json_model.objects.create(json=value)
+            new_obj = self.json_model.objects.get(id=obj.id)
+            self.assertEqual(new_obj.json, value)
+
 
 class JSONCharFieldTest(JSONFieldTest):
     json_model = JsonCharModel
