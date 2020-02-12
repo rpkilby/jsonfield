@@ -10,17 +10,11 @@ python:
 
 env:
   - DJANGO=111
-  - DJANGO=20
-  - DJANGO=21
   - DJANGO=22
   - DJANGO=30
 
 matrix:
   exclude:
-    - python: "2.7"
-      env: DJANGO=20
-    - python: "2.7"
-      env: DJANGO=21
     - python: "2.7"
       env: DJANGO=22
     - python: "2.7"
@@ -38,6 +32,4 @@ after_success:
 notifications:
     email:
         recipients:
-            - bjasper@gmail.com
-            - paltman@gmail.com
-            - dkoch@mm.st
+            - dmkoch@gmail.com
