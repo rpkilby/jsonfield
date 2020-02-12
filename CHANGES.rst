@@ -1,5 +1,10 @@
 Changes
 -------
+v2.1.1, 2/12/2020
+^^^^^^^^^^^^^^^^^
+- Added RFC 7159 support
+- Allow callables in field defaults
+
 v2.1.0, 2/11/2020
 ^^^^^^^^^^^^^^^^^
 - Add Django 3.0 support, removed older Python and Django versions
