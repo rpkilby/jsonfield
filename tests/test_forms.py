@@ -37,9 +37,9 @@ class JSONModelFormTest(TestCase):
             ('null', 'null', None),
         ]
 
-        for vtype, form_value, db_value in values:
-            with self.subTest(type=vtype, input=form_value, db=db_value):
-                form = self.form_class(data={'json': form_value})
+        for vtype, form_input, db_value in values:
+            with self.subTest(type=vtype, input=form_input, db=db_value):
+                form = self.form_class(data={'json': form_input})
                 self.assertTrue(form.is_valid(), msg=form.errors)
 
                 instance = form.save()
@@ -57,12 +57,12 @@ class JSONModelFormTest(TestCase):
             ('null', None, 'null'),
         ]
 
-        for vtype, db_value, form_value in values:
-            with self.subTest(type=vtype, db=db_value, output=form_value):
+        for vtype, db_value, form_output in values:
+            with self.subTest(type=vtype, db=db_value, output=form_output):
                 instance = JSONNotRequiredModel.objects.create(json=db_value)
 
                 form = self.form_class(instance=instance)
-                self.assertEqual(form['json'].value(), form_value)
+                self.assertEqual(form['json'].value(), form_output)
 
     def test_render_bound_values(self):
         values = [
