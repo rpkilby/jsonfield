@@ -76,7 +76,7 @@ class JSONFieldMixin(models.Field):
         field = super().formfield(**kwargs)
 
         if not field.help_text:
-            field.help_text = "Enter valid JSON."
+            field.help_text = _("Enter valid JSON.")
 
         return field
 
