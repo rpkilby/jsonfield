@@ -70,7 +70,7 @@ class JSONFieldMixin(models.Field):
 
         field = super(JSONFieldMixin, self).formfield(**kwargs)
 
-        if isinstance(field, forms.JSONFieldMixin):
+        if isinstance(field, forms.JSONField):
             field.load_kwargs = self.load_kwargs
 
         if not field.help_text:

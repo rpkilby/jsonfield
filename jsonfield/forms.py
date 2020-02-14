@@ -4,10 +4,10 @@ from django.forms import ValidationError, fields
 from django.utils.translation import gettext_lazy as _
 
 
-class JSONFieldMixin(object):
+class JSONField(fields.CharField):
     def __init__(self, *args, **kwargs):
         self.load_kwargs = kwargs.pop('load_kwargs', {})
-        super(JSONFieldMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def to_python(self, value):
         if isinstance(value, str) and value:
@@ -23,10 +23,6 @@ class JSONFieldMixin(object):
 
         # Trap cleaning errors & bubble them up as JSON errors
         try:
-            return super(JSONFieldMixin, self).clean(value)
+            return super().clean(value)
         except TypeError:
             raise ValidationError(_("Enter valid JSON."))
-
-
-class JSONField(JSONFieldMixin, fields.CharField):
-    pass
