@@ -53,6 +53,10 @@ class JSONFieldMixin(models.Field):
             return None
         return json.dumps(value, **self.dump_kwargs)
 
+    def value_to_string(self, obj):
+        value = self.value_from_object(obj)
+        return json.dumps(value, **self.dump_kwargs)
+
     def formfield(self, **kwargs):
         if 'form_class' not in kwargs:
             kwargs['form_class'] = self.form_class
