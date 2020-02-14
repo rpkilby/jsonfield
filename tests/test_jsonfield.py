@@ -330,3 +330,12 @@ class JSONModelFormTest(TestCase):
 
                 form = self.form_class(instance=instance)
                 self.assertEqual(form['json'].value(), form_value)
+
+    def test_invalid_value(self):
+        form = self.form_class(data={'json': 'foo'})
+
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors, {
+            'json': ['"foo" value must be valid JSON.'],
+        })
+        self.assertEqual(form['json'].value(), 'foo')

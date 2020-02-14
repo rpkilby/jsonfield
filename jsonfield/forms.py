@@ -6,6 +6,10 @@ from django.utils.translation import gettext_lazy as _
 from .json import checked_loads
 
 
+class InvalidJSONInput(str):
+    pass
+
+
 class JSONField(fields.CharField):
     default_error_messages = {
         'invalid': _('"%(value)s" value must be valid JSON.'),
@@ -33,5 +37,15 @@ class JSONField(fields.CharField):
                 params={'value': value},
             )
 
+    def bound_data(self, data, initial):
+        if self.disabled:
+            return initial
+        try:
+            return json.loads(data, **self.load_kwargs)
+        except json.JSONDecodeError:
+            return InvalidJSONInput(data)
+
     def prepare_value(self, value):
+        if isinstance(value, InvalidJSONInput):
+            return value
         return json.dumps(value, **self.dump_kwargs)
