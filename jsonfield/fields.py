@@ -33,6 +33,7 @@ class JSONFieldMixin(models.Field):
             kwargs['dump_kwargs'] = self.dump_kwargs
         if self.load_kwargs != DEFAULT_LOAD_KWARGS:
             kwargs['load_kwargs'] = self.load_kwargs
+
         return name, path, args, kwargs
 
     def to_python(self, value):
@@ -65,13 +66,14 @@ class JSONFieldMixin(models.Field):
         return json.dumps(value, **self.dump_kwargs)
 
     def formfield(self, **kwargs):
-        if "form_class" not in kwargs:
-            kwargs["form_class"] = self.form_class
+        if 'form_class' not in kwargs:
+            kwargs['form_class'] = self.form_class
+
+        if issubclass(kwargs['form_class'], forms.JSONField):
+            kwargs.setdefault('dump_kwargs', self.dump_kwargs)
+            kwargs.setdefault('load_kwargs', self.load_kwargs)
 
         field = super().formfield(**kwargs)
-
-        if isinstance(field, forms.JSONField):
-            field.load_kwargs = self.load_kwargs
 
         if not field.help_text:
             field.help_text = "Enter valid JSON."

@@ -5,8 +5,10 @@ from django.utils.translation import gettext_lazy as _
 
 
 class JSONField(fields.CharField):
-    def __init__(self, *args, **kwargs):
-        self.load_kwargs = kwargs.pop('load_kwargs', {})
+    def __init__(self, *args, dump_kwargs=None, load_kwargs=None, **kwargs):
+        self.dump_kwargs = dump_kwargs if dump_kwargs else {}
+        self.load_kwargs = load_kwargs if load_kwargs else {}
+
         super().__init__(*args, **kwargs)
 
     def to_python(self, value):
