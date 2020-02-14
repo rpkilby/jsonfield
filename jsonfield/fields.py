@@ -24,7 +24,7 @@ class JSONFieldMixin(models.Field):
         self.dump_kwargs = DEFAULT_DUMP_KWARGS if dump_kwargs is None else dump_kwargs
         self.load_kwargs = DEFAULT_LOAD_KWARGS if load_kwargs is None else load_kwargs
 
-        super(JSONFieldMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
@@ -68,7 +68,7 @@ class JSONFieldMixin(models.Field):
         if "form_class" not in kwargs:
             kwargs["form_class"] = self.form_class
 
-        field = super(JSONFieldMixin, self).formfield(**kwargs)
+        field = super().formfield(**kwargs)
 
         if isinstance(field, forms.JSONField):
             field.load_kwargs = self.load_kwargs
@@ -95,7 +95,7 @@ class JSONFieldMixin(models.Field):
                 return self.default()
             return copy.deepcopy(self.default)
         # If the field doesn't have a default, then we punt to models.Field.
-        return super(JSONFieldMixin, self).get_default()
+        return super().get_default()
 
 
 class JSONField(JSONFieldMixin, models.TextField):
