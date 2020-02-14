@@ -300,7 +300,8 @@ class JSONModelFormTest(TestCase):
             ('object', '{"a": "b"}', {'a': 'b'}),
             ('array', '[1, 2]', [1, 2]),
             ('string', '"test"', 'test'),
-            ('number', '1.0', 1.0),
+            ('float', '1.2', 1.2),
+            ('int', '1234', 1234),
             ('bool', 'true', True),
             ('null', 'null', None),
         ]
@@ -319,7 +320,8 @@ class JSONModelFormTest(TestCase):
             ('object', {'a': 'b'}, '{\n    "a": "b"\n}'),
             ('array', [1, 2], "[\n    1,\n    2\n]"),
             ('string', 'test', '"test"'),
-            ('number', 1.0, '1.0'),
+            ('float', 1.2, '1.2'),
+            ('int', 1234, '1234'),
             ('bool', True, 'true'),
             ('null', None, 'null'),
         ]
