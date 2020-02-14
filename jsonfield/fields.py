@@ -10,7 +10,6 @@ from .encoder import JSONEncoder
 
 DEFAULT_DUMP_KWARGS = {
     'cls': JSONEncoder,
-    'separators': (',', ':'),
 }
 
 DEFAULT_LOAD_KWARGS = {}
@@ -102,6 +101,13 @@ class JSONFieldMixin(models.Field):
 
 class JSONField(JSONFieldMixin, models.TextField):
     """JSONField is a generic textfield that serializes/deserializes JSON objects"""
+
+    def formfield(self, **kwargs):
+        field = super().formfield(**kwargs)
+        if isinstance(field, forms.JSONField):
+            # Note: TextField sets the Textarea widget
+            field.dump_kwargs.setdefault('indent', 4)
+        return field
 
 
 class JSONCharField(JSONFieldMixin, models.CharField):
