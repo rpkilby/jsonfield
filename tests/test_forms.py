@@ -89,3 +89,15 @@ class JSONModelFormTest(TestCase):
             'json': ['"foo" value must be valid JSON.'],
         })
         self.assertEqual(form['json'].value(), 'foo')
+
+    def test_disabled_field(self):
+        instance = JSONNotRequiredModel.objects.create(json=100)
+
+        form = self.form_class(data={'json': '{"foo": "bar"}'}, instance=instance)
+        form.fields['json'].disabled = True
+
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data, {'json': 100})
+
+        # rendered value
+        self.assertEqual(form['json'].value(), '100')
