@@ -293,3 +293,40 @@ class JSONModelFormTest(TestCase):
     def test_form_save(self):
         form = self.form_class(data={'json': ''})
         form.save()
+
+    def test_save_values(self):
+        values = [
+            # (type, form input, db value)
+            ('object', '{"a": "b"}', {'a': 'b'}),
+            ('array', '[1, 2]', [1, 2]),
+            ('string', '"test"', 'test'),
+            ('number', '1.0', 1.0),
+            ('bool', 'true', True),
+            ('null', 'null', None),
+        ]
+
+        for vtype, form_value, db_value in values:
+            with self.subTest(type=vtype, input=form_value, db=db_value):
+                form = self.form_class(data={'json': form_value})
+                self.assertTrue(form.is_valid(), msg=form.errors)
+
+                instance = form.save()
+                self.assertEqual(instance.json, db_value)
+
+    def test_render_values(self):
+        values = [
+            # (type, db value, form output)
+            ('object', {'a': 'b'}, '{\n    "a": "b"\n}'),
+            ('array', [1, 2], "[\n    1,\n    2\n]"),
+            ('string', 'test', '"test"'),
+            ('number', 1.0, '1.0'),
+            ('bool', True, 'true'),
+            ('null', None, 'null'),
+        ]
+
+        for vtype, db_value, form_value in values:
+            with self.subTest(type=vtype, db=db_value, output=form_value):
+                instance = JSONNotRequiredModel.objects.create(json=db_value)
+
+                form = self.form_class(instance=instance)
+                self.assertEqual(form['json'].value(), form_value)
