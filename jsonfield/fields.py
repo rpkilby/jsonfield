@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 from . import forms
 from .encoder import JSONEncoder
+from .json import checked_loads
 
 DEFAULT_DUMP_KWARGS = {
     'cls': JSONEncoder,
@@ -36,14 +37,8 @@ class JSONFieldMixin(models.Field):
         return name, path, args, kwargs
 
     def to_python(self, value):
-        if self.null and value is None:
-            return None
-
-        if not isinstance(value, (str, bytes, bytearray)):
-            return value
-
         try:
-            return json.loads(value, **self.load_kwargs)
+            return checked_loads(value, **self.load_kwargs)
         except ValueError:
             raise ValidationError(_("Enter valid JSON."))
 
@@ -54,12 +49,6 @@ class JSONFieldMixin(models.Field):
 
     def get_prep_value(self, value):
         """Convert JSON object to a string"""
-        if self.null and value is None:
-            return None
-        return json.dumps(value, **self.dump_kwargs)
-
-    def value_from_object(self, obj):
-        value = super(JSONFieldMixin, self).value_from_object(obj)
         if self.null and value is None:
             return None
         return json.dumps(value, **self.dump_kwargs)

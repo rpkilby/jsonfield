@@ -3,6 +3,8 @@ import json
 from django.forms import ValidationError, fields
 from django.utils.translation import gettext_lazy as _
 
+from .json import checked_loads
+
 
 class JSONField(fields.CharField):
     def __init__(self, *args, dump_kwargs=None, load_kwargs=None, **kwargs):
@@ -12,19 +14,16 @@ class JSONField(fields.CharField):
         super().__init__(*args, **kwargs)
 
     def to_python(self, value):
-        if isinstance(value, str) and value:
-            try:
-                return json.loads(value, **self.load_kwargs)
-            except ValueError:
-                raise ValidationError(_("Enter valid JSON."))
-        return value
+        if self.disabled:
+            return value
 
-    def clean(self, value):
-        if not value and not self.required:
+        if value in self.empty_values:
             return None
 
-        # Trap cleaning errors & bubble them up as JSON errors
         try:
-            return super().clean(value)
-        except TypeError:
+            return checked_loads(value, **self.load_kwargs)
+        except json.JSONDecodeError:
             raise ValidationError(_("Enter valid JSON."))
+
+    def prepare_value(self, value):
+        return json.dumps(value, **self.dump_kwargs)
