@@ -45,7 +45,7 @@ class JSONFieldMixin(models.Field):
     def from_db_value(self, value, expression, connection):
         if value is None:
             return None
-        return json.loads(value, **self.load_kwargs)
+        return checked_loads(value, **self.load_kwargs)
 
     def get_prep_value(self, value):
         """Convert JSON object to a string"""

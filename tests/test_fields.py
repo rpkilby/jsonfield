@@ -3,6 +3,7 @@ import json
 from django.test import TestCase
 
 from jsonfield.fields import JSONField
+from jsonfield.json import JSONString
 
 
 class TestFieldAPIMethods(TestCase):
@@ -81,3 +82,21 @@ class TestFieldAPIMethods(TestCase):
 
         self.assertEqual(kwargs['dump_kwargs'], {'separators': (',', ':')})
         self.assertEqual(kwargs['load_kwargs'], {'object_pairs_hook': dict})
+
+    def test_from_db_value_loaded_types(self):
+        values = [
+            # (label, db value, loaded type)
+            ('object', '{"a": "b"}', dict),
+            ('array', '[1, 2]', list),
+            ('string', '"test"', JSONString),
+            ('float', '1.2', float),
+            ('int', '1234', int),
+            ('bool', 'true', bool),
+            ('null', 'null', type(None)),
+        ]
+
+        for label, db_value, inst_type in values:
+            with self.subTest(type=label, db_value=db_value):
+                value = JSONField().from_db_value(db_value, None, None)
+
+                self.assertIsInstance(value, inst_type)
