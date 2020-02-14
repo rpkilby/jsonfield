@@ -7,6 +7,10 @@ from .json import checked_loads
 
 
 class JSONField(fields.CharField):
+    default_error_messages = {
+        'invalid': _('"%(value)s" value must be valid JSON.'),
+    }
+
     def __init__(self, *args, dump_kwargs=None, load_kwargs=None, **kwargs):
         self.dump_kwargs = dump_kwargs if dump_kwargs else {}
         self.load_kwargs = load_kwargs if load_kwargs else {}
@@ -23,7 +27,11 @@ class JSONField(fields.CharField):
         try:
             return checked_loads(value, **self.load_kwargs)
         except json.JSONDecodeError:
-            raise ValidationError(_("Enter valid JSON."))
+            raise ValidationError(
+                self.error_messages['invalid'],
+                code='invalid',
+                params={'value': value},
+            )
 
     def prepare_value(self, value):
         return json.dumps(value, **self.dump_kwargs)
