@@ -38,6 +38,19 @@ class JSONField(fields.CharField):
             )
 
     def bound_data(self, data, initial):
+        # Note: This is a bit confusing, as there are multiple things occurring.
+        #   First, the `initial` value is the *unencoded* python object provided
+        #   via the form instance, while `data` is the *encoded* form input. The
+        #   outgoing value needs to be uniform, so we decode `data` here.
+        #
+        #   Second, it may seem counterintuitive to encode data, just to decode
+        #   it in `prepare_value`. Why not just decode `initial` here? This is
+        #   due to `BoundField.value()`, which only calls `bound_data` when the
+        #   form is bound. If unbound, the `initial` value is provided directly
+        #   to `prepare_value`, and the value would still need to be encoded.
+        #
+        #   Lastly, we don't want to run `checked_loads` here, since we *know*
+        #   that the input `data` isn't a decoded value (e.g., via `to_python`).
         if self.disabled:
             return initial
         try:

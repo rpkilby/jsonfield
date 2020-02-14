@@ -45,7 +45,7 @@ class JSONModelFormTest(TestCase):
                 instance = form.save()
                 self.assertEqual(instance.json, db_value)
 
-    def test_render_values(self):
+    def test_render_initial_values(self):
         values = [
             # (type, db value, form output)
             ('object', {'a': 'b'}, '{\n    "a": "b"\n}'),
@@ -63,6 +63,23 @@ class JSONModelFormTest(TestCase):
 
                 form = self.form_class(instance=instance)
                 self.assertEqual(form['json'].value(), form_value)
+
+    def test_render_bound_values(self):
+        values = [
+            # (type, db value, form input, form output)
+            ('object', '{"a": "b"}', '{\n    "a": "b"\n}'),
+            ('array', '[1, 2]', "[\n    1,\n    2\n]"),
+            ('string', '"test"', '"test"'),
+            ('float', '1.2', '1.2'),
+            ('int', '1234', '1234'),
+            ('bool', 'true', 'true'),
+            ('null', 'null', 'null'),
+        ]
+
+        for vtype, form_input, form_output in values:
+            with self.subTest(type=vtype, input=form_input, output=form_output):
+                form = self.form_class(data={'json': form_input})
+                self.assertEqual(form['json'].value(), form_output)
 
     def test_invalid_value(self):
         form = self.form_class(data={'json': 'foo'})
