@@ -1,0 +1,102 @@
+version: 2.1
+
+aliases:
+  - &environ
+    run:
+      name: setup virtual environment
+      # The below ensures the venv is activated for every subsequent step
+      command: |
+        virtualenv venv
+        echo "source /home/circleci/project/venv/bin/activate" >> $BASH_ENV
+
+  - &install
+    run:
+      name: install dependencies
+      command: |
+        pip install -U pip setuptools wheel tox tox-factor codecov
+
+  - &test-steps
+    steps:
+      - checkout
+      - *environ
+      - *install
+      - run: tox
+      - run: coverage combine
+      - run: coverage report
+      - run: codecov
+
+jobs:
+  lint:
+    steps:
+      - checkout
+      - *environ
+      - *install
+      - run: tox -e isort,lint
+    docker:
+      - image: circleci/python:3.8
+
+  dist:
+    steps:
+      - checkout
+      - *environ
+      - *install
+      - run: |
+          python setup.py bdist_wheel
+          tox -e dist --installpkg ./dist/jsonfield-*.whl
+          tox -e dist
+    docker:
+      - image: circleci/python:3.8
+
+  test-py38:
+    <<: *test-steps
+    docker:
+      - image: circleci/python:3.8
+    environment:
+      TOXFACTOR: py38
+
+  test-py37:
+    <<: *test-steps
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      TOXFACTOR: py37
+
+  test-py36:
+    <<: *test-steps
+    docker:
+      - image: circleci/python:3.6
+    environment:
+      TOXFACTOR: py36
+
+
+workflows:
+  version: 2
+  commit: &test-workflow
+    jobs:
+      - lint
+      - dist:
+          requires:
+            - lint
+
+      - test-py38:
+          requires:
+            - lint
+
+      - test-py37:
+          requires:
+            - lint
+
+      - test-py36:
+          requires:
+            - lint
+
+  weekly:
+    <<: *test-workflow
+    triggers:
+      - schedule:
+          # 8/9 AM PST/PDT every Monday
+          cron: "0 16 * * 1"
+          filters:
+            branches:
+              only:
+                - master

@@ -1,3 +1,4 @@
-include CHANGES.rst
-include LICENSE
-include README.rst
+include README.rst CHANGES.rst LICENSE
+
+include tox.ini
+recursive-include tests *.py

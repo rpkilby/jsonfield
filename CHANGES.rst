@@ -1,5 +1,55 @@
 Changes
 -------
+
+v3.0.0 02/14/2020
+^^^^^^^^^^^^^^^^^
+
+This release is a major rewrite of ``jsonfield``, merging in changes from the
+``jsonfield2`` fork. Changelog entries for ``jsonfield2`` are included below
+for completeness.
+
+- Add source distribution to release process
+- Update ``JSONEncoder`` from DRF
+- Fix re-rendering of invalid field inputs
+- Fix form field cleaning of string inputs
+- Fix indentation for ``Textarea`` widgets
+- Allow form field error message to be overridden
+- Obey form ``Field.disabled``
+
+jsonfield2 v3.1.0 12/06/2019
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- Fix use with ``select_related`` across a foreign key
+- Fix field deconstruction
+- Drop Python 3.5 support
+- Drop Django 2.1 (and below) support
+
+jsonfield2 v3.0.3 10/23/2019
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- Add Python 3.8 & Django 3.0 support
+- Drop Python 3.4 support
+
+jsonfield2 v3.0.2 12/21/2018
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- Add Python 3.7 & Django 2.1 support
+
+jsonfield2 v3.0.1 05/21/2018
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- Fix model full_clean behavior
+
+jsonfield2 v3.0.0 05/07/2018
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+- Add Django 2.0 support
+- Drop Django 1.8, 1.9, and 1.10 support
+- Drop Python 2.7 and 3.3 support
+- Rework field serialization/deserialization
+- Remove support for South
+- Rename JSONFieldBase to JSONFieldMixin
+- Move form fields into separate module
+- Rename JSONFormFieldBase to forms.JSONFieldMixin
+- Rename JSONFormField to forms.JSONField
+- Remove JSONCharFormField
+- Update JSONEncoder from DRF
+
 v2.0.2, 6/18/2017
 ^^^^^^^^^^^^^^^^^
 - Fixed issue with GenericForeignKey field
@@ -7,7 +57,7 @@ v2.0.2, 6/18/2017
 v2.0.1, 3/8/2017
 ^^^^^^^^^^^^^^^^
 - Support upcoming Django 1.11 in test suite
-- Renamed method `get_db_prep_value` to `get_prep_value`
+- Renamed method ``get_db_prep_value`` to ``get_prep_value``
 
 v2.0.0, 3/4/2017
 ^^^^^^^^^^^^^^^^
@@ -27,7 +77,6 @@ v1.0.1, 2/2/2015
 
 v1.0.0, 9/4/2014
 ^^^^^^^^^^^^^^^^
-
 - Removed native JSON datatype support for PostgreSQL (breaking change) & added Python 3.4 to tests
 
 v0.9.23, 9/3/2014
