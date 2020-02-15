@@ -1,11 +1,12 @@
 Changes
 -------
 
-v4.0.0 02/14/2020 <3
-^^^^^^^^^^^^^^^^^^^^
+v3.0.0 02/14/2020
+^^^^^^^^^^^^^^^^^
 
-Note: This is the final release of ``jsonfield2``, as this fork is being merged
-back into ``jsonfield``.
+This release is a major rewrite of ``jsonfield``, merging in changes from the
+``jsonfield2`` fork. Changelog entries for ``jsonfield2`` are included below
+for completeness.
 
 - Add source distribution to release process
 - Update ``JSONEncoder`` from DRF
@@ -15,28 +16,28 @@ back into ``jsonfield``.
 - Allow form field error message to be overridden
 - Obey form ``Field.disabled``
 
-v3.1.0 12/06/2019
-^^^^^^^^^^^^^^^^^
+jsonfield2 v3.1.0 12/06/2019
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - Fix use with ``select_related`` across a foreign key
 - Fix field deconstruction
 - Drop Python 3.5 support
 - Drop Django 2.1 (and below) support
 
-v3.0.3 10/23/2019
-^^^^^^^^^^^^^^^^^
+jsonfield2 v3.0.3 10/23/2019
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - Add Python 3.8 & Django 3.0 support
 - Drop Python 3.4 support
 
-v3.0.2 12/21/2018
-^^^^^^^^^^^^^^^^^
+jsonfield2 v3.0.2 12/21/2018
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - Add Python 3.7 & Django 2.1 support
 
-v3.0.1 05/21/2018
-^^^^^^^^^^^^^^^^^
+jsonfield2 v3.0.1 05/21/2018
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - Fix model full_clean behavior
 
-v3.0.0 05/07/2018
-^^^^^^^^^^^^^^^^^
+jsonfield2 v3.0.0 05/07/2018
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 - Add Django 2.0 support
 - Drop Django 1.8, 1.9, and 1.10 support
 - Drop Python 2.7 and 3.3 support
