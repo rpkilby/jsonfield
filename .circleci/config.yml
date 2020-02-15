@@ -42,7 +42,7 @@ jobs:
       - *install
       - run: |
           python setup.py bdist_wheel
-          tox -e dist --installpkg ./dist/jsonfield2-*.whl
+          tox -e dist --installpkg ./dist/jsonfield-*.whl
           tox -e dist
     docker:
       - image: circleci/python:3.8

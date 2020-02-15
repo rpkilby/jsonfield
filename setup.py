@@ -2,14 +2,16 @@ from setuptools import setup
 
 
 setup(
-    name='jsonfield2',
+    name='jsonfield',
     version='4.0.0',
     packages=['jsonfield'],
     license='MIT',
     include_package_data=True,
-    author='Ryan P Kilby',
-    author_email='rpkilby@ncsu.edu',
-    url='https://github.com/rpkilby/jsonfield2/',
+    author='Brad Jasper',
+    author_email='contact@bradjasper.com',
+    maintainer='Ryan P Kilby',
+    maintainer_email='kilbyr@gmail.com',
+    url='https://github.com/rpkilby/jsonfield/',
     description='A reusable Django field that allows you to store validated JSON in your model.',
     long_description=open("README.rst").read(),
     install_requires=['Django >= 2.2'],
