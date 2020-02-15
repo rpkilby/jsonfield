@@ -1,9 +1,23 @@
 Changes
 -------
 
+v4.0.0 02/14/2020 <3
+^^^^^^^^^^^^^^^^^^^^
+
+Note: This is the final release of ``jsonfield2``, as this fork is being merged
+back into ``jsonfield``.
+
+- Add source distribution to release process
+- Update ``JSONEncoder`` from DRF
+- Fix re-rendering of invalid field inputs
+- Fix form field cleaning of string inputs
+- Fix indentation for ``Textarea`` widgets
+- Allow form field error message to be overridden
+- Obey form ``Field.disabled``
+
 v3.1.0 12/06/2019
 ^^^^^^^^^^^^^^^^^
-- Fix use with `select_related` across a foreign key
+- Fix use with ``select_related`` across a foreign key
 - Fix field deconstruction
 - Drop Python 3.5 support
 - Drop Django 2.1 (and below) support
@@ -42,7 +56,7 @@ v2.0.2, 6/18/2017
 v2.0.1, 3/8/2017
 ^^^^^^^^^^^^^^^^
 - Support upcoming Django 1.11 in test suite
-- Renamed method `get_db_prep_value` to `get_prep_value`
+- Renamed method ``get_db_prep_value`` to ``get_prep_value``
 
 v2.0.0, 3/4/2017
 ^^^^^^^^^^^^^^^^
