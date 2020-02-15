@@ -7,36 +7,6 @@ from jsonfield.json import JSONString
 
 
 class TestFieldAPIMethods(TestCase):
-    def test_get_db_prep_value_method_with_null(self):
-        json_field_instance = JSONField(null=True)
-        value = {'a': 1}
-        prepared_value = json_field_instance.get_db_prep_value(
-            value, connection=None, prepared=False)
-        self.assertIsInstance(prepared_value, str)
-        self.assertDictEqual(value, json.loads(prepared_value))
-        self.assertIs(json_field_instance.get_db_prep_value(
-            None, connection=None, prepared=True), None)
-        self.assertIs(json_field_instance.get_db_prep_value(
-            None, connection=None, prepared=False), None)
-
-    def test_get_db_prep_value_method_with_not_null(self):
-        json_field_instance = JSONField(null=False)
-        value = {'a': 1}
-        prepared_value = json_field_instance.get_db_prep_value(
-            value, connection=None, prepared=False)
-        self.assertIsInstance(prepared_value, str)
-        self.assertDictEqual(value, json.loads(prepared_value))
-        self.assertIs(json_field_instance.get_db_prep_value(
-            None, connection=None, prepared=True), None)
-        self.assertEqual(json_field_instance.get_db_prep_value(
-            None, connection=None, prepared=False), 'null')
-
-    def test_get_db_prep_value_method_skips_prepared_values(self):
-        json_field_instance = JSONField(null=False)
-        value = {'a': 1}
-        prepared_value = json_field_instance.get_db_prep_value(
-            value, connection=None, prepared=True)
-        self.assertIs(prepared_value, value)
 
     def test_get_prep_value_always_json_dumps_if_not_null(self):
         json_field_instance = JSONField(null=False)
