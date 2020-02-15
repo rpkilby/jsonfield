@@ -17,7 +17,6 @@ DEFAULT_LOAD_KWARGS = {}
 
 
 class JSONFieldMixin(models.Field):
-
     form_class = forms.JSONField
 
     def __init__(self, *args, dump_kwargs=None, load_kwargs=None, **kwargs):
@@ -58,9 +57,7 @@ class JSONFieldMixin(models.Field):
         return json.dumps(value, **self.dump_kwargs)
 
     def formfield(self, **kwargs):
-        if 'form_class' not in kwargs:
-            kwargs['form_class'] = self.form_class
-
+        kwargs.setdefault('form_class', self.form_class)
         if issubclass(kwargs['form_class'], forms.JSONField):
             kwargs.setdefault('dump_kwargs', self.dump_kwargs)
             kwargs.setdefault('load_kwargs', self.load_kwargs)
@@ -82,7 +79,6 @@ class JSONFieldMixin(models.Field):
         without calling force_unicode on it. Note that if you set a
         callable as a default, the field will still call it. It will
         *not* try to pickle and encode it.
-
         """
         if self.has_default():
             if callable(self.default):
