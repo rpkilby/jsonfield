@@ -1,10 +1,9 @@
-from setuptools import setup
+from setuptools import find_packages, setup
 
 
 setup(
     name='jsonfield',
     version='4.0.0',
-    packages=['jsonfield'],
     license='MIT',
     include_package_data=True,
     author='Brad Jasper',
@@ -14,6 +13,8 @@ setup(
     url='https://github.com/rpkilby/jsonfield/',
     description='A reusable Django field that allows you to store validated JSON in your model.',
     long_description=open("README.rst").read(),
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
     install_requires=['Django >= 2.2'],
     classifiers=[
         'Environment :: Web Environment',
