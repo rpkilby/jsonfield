@@ -19,6 +19,7 @@ class JSONField(fields.CharField):
         self.dump_kwargs = dump_kwargs if dump_kwargs else {}
         self.load_kwargs = load_kwargs if load_kwargs else {}
 
+        kwargs.setdefault('help_text', _("Enter valid JSON."))
         super().__init__(*args, **kwargs)
 
     def to_python(self, value):

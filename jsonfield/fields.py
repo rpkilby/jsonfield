@@ -62,12 +62,7 @@ class JSONFieldMixin(models.Field):
             kwargs.setdefault('dump_kwargs', self.dump_kwargs)
             kwargs.setdefault('load_kwargs', self.load_kwargs)
 
-        field = super().formfield(**kwargs)
-
-        if not field.help_text:
-            field.help_text = _("Enter valid JSON.")
-
-        return field
+        return super().formfield(**kwargs)
 
     def get_default(self):
         """
