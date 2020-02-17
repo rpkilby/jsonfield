@@ -30,4 +30,5 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Framework :: Django',
     ],
+    python_requires='>=3.6',
 )
