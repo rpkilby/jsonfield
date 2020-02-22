@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django import forms
 from django.test import TestCase
 
 from .models import JSONNotRequiredModel
@@ -6,7 +6,7 @@ from .models import JSONNotRequiredModel
 
 class JSONModelFormTest(TestCase):
     def setUp(self):
-        class JSONNotRequiredForm(ModelForm):
+        class JSONNotRequiredForm(forms.ModelForm):
             class Meta:
                 model = JSONNotRequiredModel
                 fields = '__all__'
@@ -110,3 +110,37 @@ class JSONModelFormTest(TestCase):
 
         form = self.form_class(data={'json': '[3, 4]'}, instance=instance)
         self.assertTrue(form.has_changed())
+
+
+class NonJSONFieldModelFormTest(TestCase):
+    """Test model form behavior when field class has been overridden."""
+
+    def setUp(self):
+        class JSONNotRequiredForm(forms.ModelForm):
+            class Meta:
+                model = JSONNotRequiredModel
+                fields = ['json']
+                field_classes = {
+                    'json': forms.CharField,
+                }
+
+        self.form_class = JSONNotRequiredForm
+
+    def test_field_type(self):
+        form = self.form_class()
+        field = form.fields['json']
+
+        self.assertIsInstance(field, forms.CharField)
+
+    def test_field_kwargs(self):
+        form = self.form_class()
+        field = form.fields['json']
+
+        self.assertFalse(hasattr(field, 'dump_kwargs'))
+        self.assertFalse(hasattr(field, 'load_kwargs'))
+
+    def test_no_indent(self):
+        # Because we're using a regular CharField, the value is not parsed and
+        # rerendered with indentation. Compare with `test_render_bound_values`.
+        form = self.form_class(data={'json': '{"a": "b"}'})
+        self.assertEqual(form['json'].value(), '{"a": "b"}')
