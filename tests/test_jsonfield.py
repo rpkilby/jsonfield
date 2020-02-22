@@ -281,3 +281,14 @@ class MiscTests(TestCase):
 
         instance.refresh_from_db()
         self.assertTrue(instance.json, {'example': 'data'})
+
+
+class QueryTests(TestCase):
+    def test_values_deserializes_result(self):
+        JSONModel.objects.create(json={'a': 'b'})
+
+        instance = JSONModel.objects.values('json').get()
+        self.assertEqual(instance['json'], {'a': 'b'})
+
+        data = JSONModel.objects.values_list('json', flat=True).get()
+        self.assertEqual(data, {'a': 'b'})
