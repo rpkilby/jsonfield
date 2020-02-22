@@ -251,9 +251,9 @@ class JSONCharFieldTest(JSONFieldTest):
     json_model = JSONCharModel
 
 
-class OrderedDictSerializationTest(TestCase):
-    def setUp(self):
-        self.ordered_dict = OrderedDict([
+class MiscTests(TestCase):
+    def test_load_kwargs_hook(self):
+        data = OrderedDict([
             ('number', [1, 2, 3, 4]),
             ('notes', True),
             ('alpha', True),
@@ -261,20 +261,16 @@ class OrderedDictSerializationTest(TestCase):
             ('juliet', True),
             ('bravo', True),
         ])
-        self.expected_key_order = ['number', 'notes', 'alpha', 'romeo', 'juliet', 'bravo']
+        instance = OrderedJSONModel.objects.create(json=data)
+        from_db = OrderedJSONModel.objects.get()
 
-        self.instance = OrderedJSONModel.objects.create(json=self.ordered_dict)
-
-    def test_load_kwargs_hook(self):
-        from_db = OrderedJSONModel.objects.get(id=self.instance.id)
+        expected_key_order = ['number', 'notes', 'alpha', 'romeo', 'juliet', 'bravo']
 
         # OrderedJSONModel explicitly sets `object_pairs_hook` to `OrderedDict`
-        self.assertEqual(list(self.instance.json), self.expected_key_order)
-        self.assertEqual(list(from_db.json), self.expected_key_order)
+        self.assertEqual(list(instance.json), expected_key_order)
+        self.assertEqual(list(from_db.json), expected_key_order)
         self.assertIsInstance(from_db.json, OrderedDict)
 
-
-class MiscTests(TestCase):
     def test_callable_default_function(self):
         instance = CallableDefaultModel.objects.create()
         self.assertTrue(instance.json, {'example': 'data'})
