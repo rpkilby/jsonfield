@@ -326,3 +326,9 @@ class QueryTests(TestCase):
 
         data = JSONModel.objects.values_list('json', flat=True).get()
         self.assertEqual(data, {'a': 'b'})
+
+    def test_deferred_value(self):
+        JSONModel.objects.create(json={'a': 'b'})
+
+        instance = JSONModel.objects.defer('json').get()
+        self.assertEqual(instance.json, {'a': 'b'})
