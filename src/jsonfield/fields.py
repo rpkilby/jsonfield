@@ -91,6 +91,7 @@ class JSONField(JSONFieldMixin, models.TextField):
         if isinstance(field, forms.JSONField):
             # Note: TextField sets the Textarea widget
             field.dump_kwargs.setdefault('indent', 4)
+            field.dump_kwargs.setdefault('ensure_ascii', False)
         return field
 
 
