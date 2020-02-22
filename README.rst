@@ -53,6 +53,43 @@ Usage
         json = JSONField()
 
 
+Querying
+--------
+
+As stated above, ``JSONField`` is not intended to provide extended querying capabilities.
+That said, you may perform the same basic lookups provided by regular text fields (e.g.,
+``exact`` or ``regex`` lookups). Since values are stored as serialized JSON, it is highly
+recommended that you test your queries to ensure the expected results are returned.
+
+
+Handling null values
+--------------------
+
+A model field's ``null`` argument typically controls whether null values may be stored in
+its column by setting a not-null constraint. However, because ``JSONField`` serializes its
+values (including nulls), this option instead controls _how_ null values are persisted. If
+``null=True``, then nulls are **not** serialized and are stored as a null value in the
+database. If ``null=False``, then the null is instead stored in its serialized form.
+
+This in turn affects how null values may be queried. Both fields support exact matching:
+
+.. code-block:: python
+
+    MyModel.objects.filter(json=None)
+
+However, if you want to use the ``isnull`` lookup, you must set ``null=True``.
+
+.. code-block:: python
+
+    class MyModel(models.Model):
+        json = JSONField(null=True)
+
+    MyModel.objects.filter(json__isnull=True)
+
+Note that as ``JSONField.null`` does not prevent nulls from being stored, achieving this
+must instead be handled with a validator.
+
+
 Advanced Usage
 --------------
 
