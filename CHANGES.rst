@@ -1,15 +1,17 @@
 Changes
 -------
 
-Unreleased
-^^^^^^^^^^
+v3.1.0 02/22/2020
+^^^^^^^^^^^^^^^^^
+- Handle loading invalid JSON from db
+- Remove default ``help_text`` string
+- Change form field to render non-ascii values
 - Add setuptoools ``python_requires`` check
 - Add README section on querying and null value handling
 - Improve test suite coverage
 
 v3.0.0 02/14/2020
 ^^^^^^^^^^^^^^^^^
-
 This release is a major rewrite of ``jsonfield``, merging in changes from the
 ``jsonfield2`` fork. Changelog entries for ``jsonfield2`` are included below
 for completeness.
