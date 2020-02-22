@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='jsonfield',
-    version='3.0.0',
+    version='3.1.0',
     license='MIT',
     include_package_data=True,
     author='Brad Jasper',
