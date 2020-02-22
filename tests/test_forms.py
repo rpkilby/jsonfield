@@ -101,3 +101,12 @@ class JSONModelFormTest(TestCase):
 
         # rendered value
         self.assertEqual(form['json'].value(), '100')
+
+    def test_initial_data_has_changed(self):
+        instance = JSONNotRequiredModel.objects.create(json=[1, 2])
+
+        form = self.form_class(data={'json': '[1, 2]'}, instance=instance)
+        self.assertFalse(form.has_changed())
+
+        form = self.form_class(data={'json': '[3, 4]'}, instance=instance)
+        self.assertTrue(form.has_changed())

@@ -57,6 +57,10 @@ class JSONModelWithForeignKey(models.Model):
     content_type = models.ForeignKey(ContentType, blank=True, null=True, on_delete=models.CASCADE)
 
 
+class JSONRequiredModel(models.Model):
+    json = JSONField()
+
+
 class JSONNotRequiredModel(models.Model):
     json = JSONField(blank=True, null=True)
 
@@ -67,3 +71,19 @@ class OrderedJSONModel(models.Model):
 
 class RemoteJSONModel(models.Model):
     foreign = models.ForeignKey(JSONModel, blank=True, null=True, on_delete=models.CASCADE)
+
+
+def default():
+    return {'example': 'data'}
+
+
+class CallableDefaultModel(models.Model):
+    json = JSONField(default=default)
+
+
+class MTIParentModel(models.Model):
+    parent_data = JSONField()
+
+
+class MTIChildModel(MTIParentModel):
+    child_data = JSONField()
