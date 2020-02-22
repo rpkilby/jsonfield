@@ -161,10 +161,21 @@ class JSONFieldTest(TestCase):
         for f in ['python', 'json', 'xml']:
             with self.subTest(format=f):
                 data = serialize(f, self.json_model.objects.all())
-                instance, = deserialize(f, data)
+                deserialized, = deserialize(f, data)
 
                 # The actual model instance is accessed as `object`.
-                self.assertEqual(instance.object.json, {'foo': 'bar'})
+                self.assertEqual(deserialized.object.json, {'foo': 'bar'})
+
+    def test_serialize_deserialize_unsaved(self):
+        unsaved = self.json_model(json={'foo': 'bar'})
+
+        for f in ['python', 'json', 'xml']:
+            with self.subTest(format=f):
+                data = serialize(f, [unsaved])
+                deserialized, = deserialize(f, data)
+
+                # The actual model instance is accessed as `object`.
+                self.assertEqual(deserialized.object.json, {'foo': 'bar'})
 
     def test_default_parameters(self):
         """Test providing a default value to the model"""
