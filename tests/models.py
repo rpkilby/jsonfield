@@ -75,3 +75,11 @@ def default():
 
 class CallableDefaultModel(models.Model):
     json = JSONField(default=default)
+
+
+class MTIParentModel(models.Model):
+    parent_data = JSONField()
+
+
+class MTIChildModel(MTIParentModel):
+    child_data = JSONField()

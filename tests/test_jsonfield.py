@@ -15,6 +15,8 @@ from .models import (
     JSONModelCustomEncoders,
     JSONModelWithForeignKey,
     JSONNotRequiredModel,
+    MTIChildModel,
+    MTIParentModel,
     OrderedJSONModel,
     RemoteJSONModel,
 )
@@ -277,6 +279,20 @@ class MiscTests(TestCase):
 
         instance.refresh_from_db()
         self.assertTrue(instance.json, {'example': 'data'})
+
+    def test_mti_deserialization(self):
+        # Note that jsonfields are present on both the child and parent models.
+        MTIChildModel.objects.create(
+            parent_data={'parent': 'data'},
+            child_data={'child': 'data'},
+        )
+
+        parent = MTIParentModel.objects.get()
+        self.assertEqual(parent.parent_data, {'parent': 'data'})
+
+        child = MTIChildModel.objects.get()
+        self.assertEqual(child.parent_data, {'parent': 'data'})
+        self.assertEqual(child.child_data, {'child': 'data'})
 
 
 class QueryTests(TestCase):
