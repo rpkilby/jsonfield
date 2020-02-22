@@ -81,6 +81,14 @@ class JSONModelFormTest(TestCase):
                 form = self.form_class(data={'json': form_input})
                 self.assertEqual(form['json'].value(), form_output)
 
+    def test_render_indent(self):
+        form = self.form_class(initial={'json': {'a': 'b'}})
+        self.assertEqual(form['json'].value(), '{\n    "a": "b"\n}')
+
+    def test_render_unicode(self):
+        form = self.form_class(initial={'json': '✨'})
+        self.assertEqual(form['json'].value(), '"✨"')
+
     def test_invalid_value(self):
         form = self.form_class(data={'json': 'foo'})
 
