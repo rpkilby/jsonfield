@@ -116,20 +116,20 @@ Subclasses **models.CharField** instead of **models.TextField**.
 Running the tests
 -----------------
 
-The test suite requires ``tox`` and ``tox-venv``.
+The test suite requires ``tox``.
 
 .. code-block:: shell
 
-    $ pip install tox tox-venv
+    $ pip install tox
 
 
-To test against all supported versions of Django, install and run ``tox``:
+Then, run the ``tox`` command, which will run all test jobs.
 
 .. code-block:: shell
 
     $ tox
 
-Or, to test just one version (for example Django 2.0 on Python 3.6):
+Or, to test just one job (for example Django 2.0 on Python 3.6):
 
 .. code-block:: shell
 
