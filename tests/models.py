@@ -67,3 +67,11 @@ class OrderedJSONModel(models.Model):
 
 class RemoteJSONModel(models.Model):
     foreign = models.ForeignKey(JSONModel, blank=True, null=True, on_delete=models.CASCADE)
+
+
+def default():
+    return {'example': 'data'}
+
+
+class CallableDefaultModel(models.Model):
+    json = JSONField(default=default)

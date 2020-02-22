@@ -8,6 +8,7 @@ from django.forms import ValidationError
 from django.test import TestCase
 
 from .models import (
+    CallableDefaultModel,
     GenericForeignKeyObj,
     JSONCharModel,
     JSONModel,
@@ -271,3 +272,12 @@ class OrderedDictSerializationTest(TestCase):
         self.assertEqual(list(self.instance.json), self.expected_key_order)
         self.assertEqual(list(from_db.json), self.expected_key_order)
         self.assertIsInstance(from_db.json, OrderedDict)
+
+
+class MiscTests(TestCase):
+    def test_callable_default_function(self):
+        instance = CallableDefaultModel.objects.create()
+        self.assertTrue(instance.json, {'example': 'data'})
+
+        instance.refresh_from_db()
+        self.assertTrue(instance.json, {'example': 'data'})
