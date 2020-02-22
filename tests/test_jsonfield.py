@@ -15,6 +15,7 @@ from .models import (
     JSONModelCustomEncoders,
     JSONModelWithForeignKey,
     JSONNotRequiredModel,
+    JSONRequiredModel,
     MTIChildModel,
     MTIParentModel,
     OrderedJSONModel,
@@ -327,6 +328,33 @@ class QueryTests(TestCase):
 
         self.assertEqual(JSONModel.objects.count(), 2)
         self.assertEqual(JSONModel.objects.filter(json={'foo': 'bar'}).count(), 1)
+
+    def test_exact_none_lookup(self):
+        # Note that nullable JSON fields store a 'null' value, while non-nullable
+        # fields serialize as '"null"'. That said, the query prep will ensure the
+        # correct value is passed.
+        JSONNotRequiredModel.objects.create(json=None)
+        JSONNotRequiredModel.objects.create(json=100)
+        self.assertEqual(JSONNotRequiredModel.objects.count(), 2)
+        self.assertEqual(JSONNotRequiredModel.objects.filter(json=None).count(), 1)
+
+        JSONRequiredModel.objects.create(json=None)
+        JSONRequiredModel.objects.create(json=100)
+        self.assertEqual(JSONRequiredModel.objects.count(), 2)
+        self.assertEqual(JSONRequiredModel.objects.filter(json=None).count(), 1)
+
+    def test_isnull_lookup(self):
+        JSONNotRequiredModel.objects.create(json=None)
+        JSONNotRequiredModel.objects.create(json=100)
+        self.assertEqual(JSONNotRequiredModel.objects.count(), 2)
+        self.assertEqual(JSONNotRequiredModel.objects.filter(json__isnull=True).count(), 1)
+
+        # isnull is incompatible with non-nullable fields, as the value is
+        # serialized as '"null"'.
+        JSONRequiredModel.objects.create(json=None)
+        JSONRequiredModel.objects.create(json=100)
+        self.assertEqual(JSONRequiredModel.objects.count(), 2)
+        self.assertEqual(JSONRequiredModel.objects.filter(json__isnull=True).count(), 0)
 
     def test_regex_lookup(self):
         JSONModel.objects.create(json={'boom': 'town'})
