@@ -232,18 +232,6 @@ class JSONFieldTest(TestCase):
         self.assertEqual(model.default_json["check"], 12)
         self.assertEqual(model.complex_default_json[0]["checkcheck"], 1212)
 
-    def test_normal_regex_filter(self):
-        """Make sure JSON model can filter regex"""
-
-        JSONModel.objects.create(json={"boom": "town"})
-        JSONModel.objects.create(json={"move": "town"})
-        JSONModel.objects.create(json={"save": "town"})
-
-        self.assertEqual(JSONModel.objects.count(), 3)
-
-        self.assertEqual(JSONModel.objects.filter(json__regex=r"boom").count(), 1)
-        self.assertEqual(JSONModel.objects.filter(json__regex=r"town").count(), 3)
-
     def test_save_blank_object(self):
         """Test that JSON model can save a blank object as none"""
 
@@ -332,3 +320,12 @@ class QueryTests(TestCase):
 
         instance = JSONModel.objects.defer('json').get()
         self.assertEqual(instance.json, {'a': 'b'})
+
+    def test_regex_lookup(self):
+        JSONModel.objects.create(json={'boom': 'town'})
+        JSONModel.objects.create(json={'move': 'town'})
+        JSONModel.objects.create(json={'save': 'town'})
+
+        self.assertEqual(JSONModel.objects.count(), 3)
+        self.assertEqual(JSONModel.objects.filter(json__regex=r'boom').count(), 1)
+        self.assertEqual(JSONModel.objects.filter(json__regex=r'town').count(), 3)
