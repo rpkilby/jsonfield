@@ -1,3 +1,4 @@
+import warnings
 from collections import OrderedDict
 from decimal import Decimal
 
@@ -304,6 +305,51 @@ class MiscTests(TestCase):
         child = MTIChildModel.objects.get()
         self.assertEqual(child.parent_data, {'parent': 'data'})
         self.assertEqual(child.child_data, {'child': 'data'})
+
+    def test_load_invalid_json(self):
+        # Ensure invalid DB values don't crash deserialization.
+        from django.db import connection
+
+        with connection.cursor() as cursor:
+            cursor.execute('INSERT INTO tests_jsonnotrequiredmodel (json) VALUES ("foo")')
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            instance = JSONNotRequiredModel.objects.get()
+
+        self.assertEqual(len(w), 1)
+        self.assertIs(w[0].category, RuntimeWarning)
+        self.assertEqual(str(w[0].message), (
+            'tests.JSONNotRequiredModel.json failed to load invalid json (foo) '
+            'from the database. The value has been returned as a string instead.'
+        ))
+
+        self.assertEqual(instance.json, 'foo')
+
+    def test_resave_invalid_json(self):
+        # Ensure invalid DB values are resaved as a JSON string.
+        from django.db import connection
+
+        with connection.cursor() as cursor:
+            cursor.execute('INSERT INTO tests_jsonnotrequiredmodel (json) VALUES ("foo")')
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            instance = JSONNotRequiredModel.objects.get()
+
+        self.assertEqual(len(w), 1)
+        self.assertEqual(instance.json, 'foo')
+
+        # Save instance and reload from the database.
+        instance.save()
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            instance = JSONNotRequiredModel.objects.get()
+
+        # No deserialization issues, as 'foo' was saved as a serialized string.
+        self.assertEqual(len(w), 0)
+        self.assertEqual(instance.json, 'foo')
 
 
 class QueryTests(TestCase):

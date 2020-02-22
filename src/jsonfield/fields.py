@@ -1,5 +1,6 @@
 import copy
 import json
+import warnings
 
 from django.db import models
 from django.forms import ValidationError
@@ -7,13 +8,18 @@ from django.utils.translation import gettext_lazy as _
 
 from . import forms
 from .encoder import JSONEncoder
-from .json import checked_loads
+from .json import JSONString, checked_loads
 
 DEFAULT_DUMP_KWARGS = {
     'cls': JSONEncoder,
 }
 
 DEFAULT_LOAD_KWARGS = {}
+
+INVALID_JSON_WARNING = (
+    '{0!s} failed to load invalid json ({1}) from the database. The value has '
+    'been returned as a string instead.'
+)
 
 
 class JSONFieldMixin(models.Field):
@@ -44,7 +50,12 @@ class JSONFieldMixin(models.Field):
     def from_db_value(self, value, expression, connection):
         if value is None:
             return None
-        return checked_loads(value, **self.load_kwargs)
+
+        try:
+            return checked_loads(value, **self.load_kwargs)
+        except json.JSONDecodeError:
+            warnings.warn(INVALID_JSON_WARNING.format(self, value), RuntimeWarning)
+            return JSONString(value)
 
     def get_prep_value(self, value):
         """Convert JSON object to a string"""
