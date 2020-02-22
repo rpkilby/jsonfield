@@ -321,6 +321,13 @@ class QueryTests(TestCase):
         instance = JSONModel.objects.defer('json').get()
         self.assertEqual(instance.json, {'a': 'b'})
 
+    def test_exact_lookup(self):
+        JSONModel.objects.create(json={'foo': 'bar'})
+        JSONModel.objects.create(json={'bar': 'baz'})
+
+        self.assertEqual(JSONModel.objects.count(), 2)
+        self.assertEqual(JSONModel.objects.filter(json={'foo': 'bar'}).count(), 1)
+
     def test_regex_lookup(self):
         JSONModel.objects.create(json={'boom': 'town'})
         JSONModel.objects.create(json={'move': 'town'})
