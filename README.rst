@@ -67,7 +67,7 @@ Handling null values
 
 A model field's ``null`` argument typically controls whether null values may be stored in
 its column by setting a not-null constraint. However, because ``JSONField`` serializes its
-values (including nulls), this option instead controls _how_ null values are persisted. If
+values (including nulls), this option instead controls *how* null values are persisted. If
 ``null=True``, then nulls are **not** serialized and are stored as a null value in the
 database. If ``null=False``, then the null is instead stored in its serialized form.
 

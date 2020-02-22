@@ -16,6 +16,7 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     install_requires=['Django >= 2.2'],
+    python_requires='>=3.6',
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -28,7 +29,5 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
-        'Framework :: Django',
     ],
-    python_requires='>=3.6',
 )

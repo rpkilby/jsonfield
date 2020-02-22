@@ -3,8 +3,9 @@ Changes
 
 Unreleased
 ^^^^^^^^^^
-
 - Add setuptoools ``python_requires`` check
+- Add README section on querying and null value handling
+- Improve test suite coverage
 
 v3.0.0 02/14/2020
 ^^^^^^^^^^^^^^^^^
