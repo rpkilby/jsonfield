@@ -87,3 +87,8 @@ class MTIParentModel(models.Model):
 
 class MTIChildModel(MTIParentModel):
     child_data = JSONField()
+
+
+class GetOrCreateModel(models.Model):
+    text = models.CharField(max_length=80, unique=True)
+    json = JSONField()

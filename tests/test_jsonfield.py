@@ -10,6 +10,7 @@ from django.test import TestCase
 from .models import (
     CallableDefaultModel,
     GenericForeignKeyObj,
+    GetOrCreateModel,
     JSONCharModel,
     JSONModel,
     JSONModelCustomEncoders,
@@ -344,6 +345,14 @@ class MiscTests(TestCase):
         # No deserialization issues, as 'foo' was saved as a serialized string.
         self.assertEqual(len(w), 0)
         self.assertEqual(instance.json, 'foo')
+
+    def test_get_or_create(self):
+        _, c1 = GetOrCreateModel.objects.get_or_create(text='test', json={'a': 'b'})
+        _, c2 = GetOrCreateModel.objects.get_or_create(text='test', json={'a': 'b'})
+
+        self.assertTrue(c1)
+        self.assertFalse(c2)
+        self.assertEqual(GetOrCreateModel.objects.count(), 1)
 
 
 class QueryTests(TestCase):
