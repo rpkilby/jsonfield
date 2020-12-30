@@ -25,7 +25,7 @@ e.g., a configuration field.
 Requirements
 ------------
 
-**jsonfield** aims to support all current `versions of Django`_, however the explicity tested versions are:
+**jsonfield** aims to support all current `versions of Django`_, however the explicitly tested versions are:
 
 * **Python:** 3.6, 3.7, 3.8
 * **Django:** 2.2, 3.0
