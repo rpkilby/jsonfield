@@ -1,6 +1,10 @@
 Changes
 -------
 
+v3.1.1 07/12/2020
+^^^^^^^^^^^^^^^^^
+- Added explicit support for django 3.1 and 3.2 versions
+
 v3.1.0 02/22/2020
 ^^^^^^^^^^^^^^^^^
 - Handle loading invalid JSON from db

@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='jsonfield',
-    version='3.1.0',
+    version='3.1.1',
     license='MIT',
     include_package_data=True,
     author='Brad Jasper',
@@ -22,6 +22,8 @@ setup(
         'Framework :: Django',
         'Framework :: Django :: 2.2',
         'Framework :: Django :: 3.0',
+        'Framework :: Django :: 3.1',
+        'Framework :: Django :: 3.2',
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
