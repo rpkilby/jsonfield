@@ -309,6 +309,7 @@ class MiscTests(TestCase):
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
+            warnings.filterwarnings("ignore", module="django.utils.asyncio")
             instance = JSONNotRequiredModel.objects.get()
 
         self.assertEqual(len(w), 1)
@@ -329,6 +330,7 @@ class MiscTests(TestCase):
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
+            warnings.filterwarnings("ignore", module="django.utils.asyncio")
             instance = JSONNotRequiredModel.objects.get()
 
         self.assertEqual(len(w), 1)
@@ -339,6 +341,7 @@ class MiscTests(TestCase):
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
+            warnings.filterwarnings("ignore", module="django.utils.asyncio")
             instance = JSONNotRequiredModel.objects.get()
 
         # No deserialization issues, as 'foo' was saved as a serialized string.
