@@ -59,6 +59,6 @@ class JSONField(fields.CharField):
             return InvalidJSONInput(data)
 
     def prepare_value(self, value):
-        if isinstance(value, InvalidJSONInput):
+        if isinstance(value, InvalidJSONInput) or value is None:
             return value
         return json.dumps(value, **self.dump_kwargs)
