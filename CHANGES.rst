@@ -1,6 +1,13 @@
 Changes
 -------
 
+Unreleased
+^^^^^^^^^^
+
+- Add support for Django 3.2, 4.1 & 4.2
+- Drop support for Django 2.2, 3.0, 3.1
+- Drop support for Python 3.6, 3.7
+
 v3.1.0 02/22/2020
 ^^^^^^^^^^^^^^^^^
 - Handle loading invalid JSON from db
