@@ -27,8 +27,8 @@ Requirements
 
 **jsonfield** aims to support all current `versions of Django`_, however the explicity tested versions are:
 
-* **Python:** 3.6, 3.7, 3.8
-* **Django:** 2.2, 3.0
+* **Python:** 3.8
+* **Django:** 3.2+
 
 .. _versions of Django: https://www.djangoproject.com/download/#supported-versions
 
@@ -133,7 +133,7 @@ Or, to test just one job (for example Django 2.0 on Python 3.6):
 
 .. code-block:: shell
 
-    $ tox -e py36-django20
+    $ tox -e py38-django42
 
 
 Release Process
