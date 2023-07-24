@@ -13,7 +13,7 @@ aliases:
     run:
       name: install dependencies
       command: |
-        pip install -U pip setuptools wheel tox tox-factor codecov
+        pip install -U pip setuptools wheel tox codecov
 
   - &test-steps
     steps:
