@@ -31,7 +31,8 @@ jobs:
       - checkout
       - *environ
       - *install
-      - run: tox -e isort,lint
+      - run: tox -e isort
+      - run: tox -e lint
     docker:
       - image: circleci/python:3.8
 
