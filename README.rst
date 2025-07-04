@@ -119,11 +119,11 @@ Then, run the ``tox`` command, which will run all test jobs.
 
     $ tox
 
-Or, to test just one job (for example Django 2.0 on Python 3.6):
+Or, to test just one job (for example Django 5.2 on Python 3.13):
 
 .. code-block:: shell
 
-    $ tox -e py36-django20
+    $ tox -e py313-django52
 
 
 Release Process
