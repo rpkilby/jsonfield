@@ -1,12 +1,13 @@
 Changes
 -------
 
-Unreleased
-^^^^^^^^^^
+v3.2.0 07/04/2025
+^^^^^^^^^^^^^^^^^
 
 - Set Python version support to 3.10 through 3.13
 - Set Django version support to 4.2 through 5.2
 - Modernize packaging to use `pyproject.toml`
+- Deprecate project, add migration instructions
 
 v3.1.0 02/22/2020
 ^^^^^^^^^^^^^^^^^
