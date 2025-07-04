@@ -9,3 +9,4 @@ dist/
 .env
 .env/
 .venv/
+*.sqlite3
