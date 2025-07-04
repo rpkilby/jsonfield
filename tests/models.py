@@ -9,21 +9,16 @@ from jsonfield import JSONCharField, JSONField
 
 
 class ComplexEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, complex):
-            return {
-                '__complex__': True,
-                'real': obj.real,
-                'imag': obj.imag,
-            }
-
-        return json.JSONEncoder.default(self, obj)
+    def default(self, o):
+        return {
+            '__complex__': True,
+            'real': o.real,
+            'imag': o.imag,
+        }
 
 
 def as_complex(dct):
-    if '__complex__' in dct:
-        return complex(dct['real'], dct['imag'])
-    return dct
+    return complex(dct['real'], dct['imag'])
 
 
 class GenericForeignKeyObj(models.Model):
