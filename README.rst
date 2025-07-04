@@ -1,13 +1,15 @@
 jsonfield
 =========
 
-.. image:: https://circleci.com/gh/rpkilby/jsonfield.svg?style=shield
-  :target: https://circleci.com/gh/rpkilby/jsonfield
-.. image:: https://codecov.io/gh/rpkilby/jsonfield/branch/master/graph/badge.svg
+.. image:: https://github.com/rpkilby/jsonfield/actions/workflows/main.yml/badge.svg
+  :target: https://github.com/rpkilby/jsonfield/actions/workflows/main.yml
+.. image:: https://codecov.io/gh/rpkilby/jsonfield/graph/badge.svg
   :target: https://codecov.io/gh/rpkilby/jsonfield
+.. image:: https://img.shields.io/pypi/l/jsonfield.svg
+  :target: https://pypi.org/project/jsonfield
 .. image:: https://img.shields.io/pypi/v/jsonfield.svg
   :target: https://pypi.org/project/jsonfield
-.. image:: https://img.shields.io/pypi/l/jsonfield.svg
+.. image:: https://img.shields.io/pypi/pyversions/jsonfield.svg
   :target: https://pypi.org/project/jsonfield
 
 **jsonfield** is a reusable model field that allows you to store validated JSON, automatically handling
@@ -19,17 +21,6 @@ serialization to and from the database. To use, add ``jsonfield.JSONField`` to o
     preference Django's implemenation to ``jsonfield``, and existing users should migrate off of this package.
 
 .. _introduced: https://docs.djangoproject.com/en/stable/releases/3.1/#jsonfield-for-all-supported-database-backends
-
-
-Requirements
-------------
-
-**jsonfield** aims to support all current `versions of Django`_, however the explicitly tested versions are:
-
-* **Python:** 3.6, 3.7, 3.8
-* **Django:** 2.2, 3.0
-
-.. _versions of Django: https://www.djangoproject.com/download/#supported-versions
 
 
 Installation
@@ -128,11 +119,11 @@ Then, run the ``tox`` command, which will run all test jobs.
 
     $ tox
 
-Or, to test just one job (for example Django 2.0 on Python 3.6):
+Or, to test just one job (for example Django 5.2 on Python 3.13):
 
 .. code-block:: shell
 
-    $ tox -e py36-django20
+    $ tox -e py313-django52
 
 
 Release Process

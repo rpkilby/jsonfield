@@ -1,6 +1,13 @@
 Changes
 -------
 
+Unreleased
+^^^^^^^^^^
+
+- Set Python version support to 3.10 through 3.13
+- Set Django version support to 4.2 through 5.2
+- Modernize packaging to use `pyproject.toml`
+
 v3.1.0 02/22/2020
 ^^^^^^^^^^^^^^^^^
 - Handle loading invalid JSON from db

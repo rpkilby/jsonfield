@@ -10,6 +10,7 @@ from . import forms
 from .encoder import JSONEncoder
 from .json import JSONString, checked_loads
 
+
 DEFAULT_DUMP_KWARGS = {
     'cls': JSONEncoder,
 }

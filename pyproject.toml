@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "jsonfield"
+version = "3.1.0"
+
+dependencies = ["django >= 4.2"]
+requires-python = ">=3.10"
+
+authors = [{name = "Brad Jasper", email = "contact@bradjasper.com"}]
+maintainers = [{name = "Ryan P Kilby", email = "kilbyr@gmail.com"}]
+description = "A reusable Django field that allows you to store validated JSON in your model."
+readme = "README.rst"
+license = "MIT"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+[project.urls]
+Repository = "https://github.com/rpkilby/jsonfield"
+Issues = "https://github.com/rpkilby/jsonfield/issues"
+Changelog = "https://github.com/rpkilby/jsonfield/blob/master/CHANGELOG"
+
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.coverage.run]
+branch = true
+include = ["src/*", "tests/*"]
+omit = ["src/jsonfield/encoder.py"]
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.flake8]
+max-line-length = 120
+max-complexity = 10
+
+[tool.isort]
+profile = "black"
+atomic = true
+line_length = 120
+combine_as_imports = true
+lines_after_imports = 2
+known_first_party = ["jsonfield", "tests"]
+known_third_party = ["django"]
+src_paths = ["src", "tests"]

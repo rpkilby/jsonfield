@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
+
+jobs:
+  checks:
+    name: Run ${{ matrix.toxenv }} check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.13"]
+        toxenv: ["dist", "lint", "warnings"]
+    continue-on-error: ${{ matrix.toxenv == 'warnings' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install tox
+        run: python -m pip install tox
+
+      - name: Run check (${{ matrix.toxenv }})
+        run: tox -e ${{ matrix.toxenv }}
+
+
+  tests:
+    name: Test on Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install job dependencies
+        run: python -m pip install tox "coverage[toml]"
+
+      - name: Run tests (${{ matrix.python-version }})
+        run: tox run-parallel -f $(echo py${{ matrix.python-version }} | tr -d .)
+
+      - name: Combine coverage
+        run: coverage combine
+
+      - name: Report coverage
+        run: coverage report
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
