@@ -15,12 +15,31 @@ jsonfield
 **jsonfield** is a reusable model field that allows you to store validated JSON, automatically handling
 serialization to and from the database. To use, add ``jsonfield.JSONField`` to one of your models.
 
-**Warning!**
 
-    Django 3.1 `introduced`_ a native ``JSONField`` that supports all database backends. New projects should
-    preference Django's implemenation to ``jsonfield``, and existing users should migrate off of this package.
+Deprecation & Migration to Django's native ``JSONField``
+--------------------------------------------------------
+
+Django 3.1 `introduced`_ a native ``JSONField`` that supports all database backends. As such, this package is
+considered deprecated and will be archived in the future. Existing projects should migrate to Django's implemenation.
 
 .. _introduced: https://docs.djangoproject.com/en/stable/releases/3.1/#jsonfield-for-all-supported-database-backends
+
+
+Migrating from ``jsonfield.JSONField`` to ``models.JSONField`` *should* generally be straightforward. After swapping
+field classes, ``python manage.py migrate`` will generate ``AlterField`` operations that should correctly migrate
+your field data. However, if this does not work for your case, you will instead need to create a data migration.
+The process will roughly look like:
+
+* Rename ``<field>`` to ``old_<field>``, create migration.
+* Add a nullable ``<field> = models.JSONField(null=True, ...)``, create migration.
+* Create an empty migration file, add  ``RunPython`` operation that reserializes
+  the ``old_<field>`` data into the new ``<field>``.
+* Update ``<field>`` to not nullable, delete ``old_<field>``, create migration.
+* Manually combine the operations into a single migration file.
+
+Examples can be found in the `migration-example`_ project.
+
+.. _migration-example: https://github.com/rpkilby/jsonfield/tree/master/migration-example/
 
 
 Installation
