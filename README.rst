@@ -13,8 +13,13 @@ jsonfield
 **jsonfield** is a reusable model field that allows you to store validated JSON, automatically handling
 serialization to and from the database. To use, add ``jsonfield.JSONField`` to one of your models.
 
-**Note:** Django 3.1 introduced a similar ``JSONField``, you should probably prefer that now. See its
-`documentation <https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.JSONField>`__.
+**Warning!**
+
+    Django 3.1 `introduced`_ a native ``JSONField`` that supports all database backends. New projects should
+    preference Django's implemenation to ``jsonfield``, and existing users should migrate off of this package.
+
+.. _introduced: https://docs.djangoproject.com/en/stable/releases/3.1/#jsonfield-for-all-supported-database-backends
+
 
 Requirements
 ------------
